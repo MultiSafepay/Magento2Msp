@@ -1,5 +1,5 @@
 {
-  "name": "echron/magento2msp",
+  "name": "multisafepay/magento2msp",
   "description": "MultiSafepay module for Magento2",
   "type": "magento2-module",
   "version": "1.1.0",
