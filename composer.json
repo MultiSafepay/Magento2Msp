@@ -1,5 +1,5 @@
 {
-  "name": "multisafepay/connect",
+  "name": "echron/magento2msp",
   "description": "MultiSafepay module for Magento2",
   "type": "magento2-module",
   "version": "1.1.0",
@@ -8,6 +8,13 @@
     "AFL-3.0"
   ],
   "require": {
+    "echron/magento2msp": "dev-develop"
+  },
+  "repositories": {
+    "multisafepay/connect": {
+      "type": "vcs",
+      "url": "https://github.com/Echron/Magento2Msp.git"
+    }
   },
   "autoload": {
     "files": [
