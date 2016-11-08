@@ -7,15 +7,6 @@
     "OSL-3.0",
     "AFL-3.0"
   ],
-  "require": {
-    "echron/magento2msp": "dev-develop"
-  },
-  "repositories": {
-    "multisafepay/connect": {
-      "type": "vcs",
-      "url": "https://github.com/Echron/Magento2Msp.git"
-    }
-  },
   "autoload": {
     "files": [
       "registration.php"
