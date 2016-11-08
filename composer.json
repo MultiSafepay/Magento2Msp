@@ -1,0 +1,20 @@
+{
+  "name": "multisafepay/connect",
+  "description": "MultiSafepay module for Magento2",
+  "type": "magento2-module",
+  "version": "1.1.0",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "require": {
+  },
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "MultiSafepay\\Connect\\": ""
+    }
+  }
+}
