@@ -60,11 +60,9 @@ class Cancel extends \Magento\Framework\App\Action\Action {
     }
 
     public function execute() {
-
         if (isset($_GET['transactionid'])) {
             $incrementId = $_GET['transactionid'];
         }
-
 
         if ($incrementId) {
             /* @var $order \Magento\Sales\Model\Order */
@@ -72,26 +70,20 @@ class Cancel extends \Magento\Framework\App\Action\Action {
 
             if ($order->getId()) {
                 try {
-
                     /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */
                     $quoteRepository = $this->_objectManager->create('Magento\Quote\Api\CartRepositoryInterface');
                     /** @var \Magento\Quote\Model\Quote $quote */
                     $quote = $quoteRepository->get($order->getQuoteId());
-
                     $quote->setIsActive(1)->setReservedOrderId(null);
                     $quoteRepository->save($quote);
                 } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
                     
                 }
-                //Cancel the order so a new one can created
+                //Cancel the order so a new one can be created
                 $order->registerCancellation('Order cancelled by customer')->save();
             }
         }
-
-
-
         $this->_redirect('checkout/cart');
         return;
     }
-
 }

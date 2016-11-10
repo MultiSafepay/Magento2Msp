@@ -32,16 +32,11 @@
 namespace MultiSafepay\Connect\Controller\Connect;
 
 /**
- * Responsible for loading page content.
- *
- * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
- * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
+ * Responsible for redirecting to the payment url
  */
 class Redirect extends \Magento\Framework\App\Action\Action {
 
     public function execute() {
-
-
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
         $order = $this->_objectManager->create('Magento\Sales\Model\Order')->load($session->getLastOrderId());
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
@@ -52,7 +47,6 @@ class Redirect extends \Magento\Framework\App\Action\Action {
         }
 
         $transactionObject = $paymentMethod->transactionRequest($order, $productRepo);
-
         if ($order->getId()) {
             /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */
             $quoteRepository = $this->_objectManager->create('Magento\Quote\Api\CartRepositoryInterface');
@@ -66,16 +60,15 @@ class Redirect extends \Magento\Framework\App\Action\Action {
             $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
             $this->_redirect('checkout/cart');
         } else {
-	        if(!empty($transactionObject->result->data->payment_details->type)){
-		      	if($transactionObject->result->data->payment_details->type == "BANKTRANS"){
-		        $this->getResponse()->setRedirect($paymentMethod->banktransurl); 
-		        }else{
-			       $this->getResponse()->setRedirect($transactionObject->result->data->payment_url); 
-		        }  
-	        }else{
-		       $this->getResponse()->setRedirect($transactionObject->result->data->payment_url); 
-			}
+            if (!empty($transactionObject->result->data->payment_details->type)) {
+                if ($transactionObject->result->data->payment_details->type == "BANKTRANS") {
+                    $this->getResponse()->setRedirect($paymentMethod->banktransurl);
+                } else {
+                    $this->getResponse()->setRedirect($transactionObject->result->data->payment_url);
+                }
+            } else {
+                $this->getResponse()->setRedirect($transactionObject->result->data->payment_url);
+            }
         }
     }
-
 }

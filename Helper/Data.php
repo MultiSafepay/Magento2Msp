@@ -82,5 +82,4 @@ class Data {
             return 'giftcards';
         }
     }
-
 }

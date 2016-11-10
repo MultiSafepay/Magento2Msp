@@ -32,16 +32,12 @@
 namespace MultiSafepay\Connect\Controller\Connect;
 
 /**
- * Responsible for loading page content.
- *
- * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
- * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
+ * Responsible for processing transaction updates.
  */
 class Notification extends \Magento\Framework\App\Action\Action {
 
     public function execute() {
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
-        //$order = $this->_objectManager->create('Magento\Sales\Model\Order')->load($_GET['transactionid']);
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
         $order_information = $order->loadByIncrementId($_GET['transactionid']);
         
@@ -61,5 +57,4 @@ class Notification extends \Magento\Framework\App\Action\Action {
             echo 'Error updating order!';
         }
     }
-
 }
