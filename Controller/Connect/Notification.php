@@ -37,6 +37,9 @@ namespace MultiSafepay\Connect\Controller\Connect;
 class Notification extends \Magento\Framework\App\Action\Action {
 
     public function execute() {
+        if(!isset($_GET['timestamp'])){
+            echo 'No timestamp is set so we are stopping the callback';exit;
+        }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
         $order_information = $order->loadByIncrementId($_GET['transactionid']);
