@@ -36,7 +36,6 @@ namespace MultiSafepay\Connect\Model\Config\Source;
  */
 class Creditcards {
 
-
     /**
      * @return array
      */

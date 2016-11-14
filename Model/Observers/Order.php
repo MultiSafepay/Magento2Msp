@@ -33,7 +33,7 @@ namespace MultiSafepay\Connect\Model\Observers;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class Shipment implements ObserverInterface {
+class Order implements ObserverInterface {
 
     /**
      * @var \Magento\Framework\ObjectManagerInterface
@@ -55,16 +55,41 @@ class Shipment implements ObserverInterface {
 
     public function execute(\Magento\Framework\Event\Observer $observer) {
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
+        /** @var $event Varien_Event */
         $event = $observer->getEvent();
-        $shipment = $event->getShipment();
-        $order = $shipment->getOrder();
+
+        $orderId = $observer->getEvent()->getOrder()->getId();
+
+
+        /** @var $order Mage_Sales_Model_Order */
+        $order = $observer->getEvent()->getOrder();
+
+        $app_state = $this->_objectManager->get('\Magento\Framework\App\State');
+        $area_code = $app_state->getAreaCode();
+        if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+            return $this;
+        } else {
+            $paymentMethod->_isAdmin = true;
+        }
+
+        if ($order->getEditIncrement()) {
+            return $this;
+        }
+
         $payment = $order->getPayment()->getMethodInstance();
 
-        $shipped = $paymentMethod->shipOrder($order);
-        if ($shipped['success']) {
-            $this->_messageManager->addSuccess(__('Your shipment has been processed. Your transaction has also been updated at MultiSafepay'));
-        } elseif ($shipped['error']) {
-            $this->_messageManager->addError(__('Your shipment has been processed, but the transaction could not be updated at MultiSafepay. If needed you need to update your transaction manually using MultiSafepay Control'));
+        if (!in_array($payment->getCode(), $this->_objectManager->create('MultiSafepay\Connect\Helper\Data')->gateways)) {
+            return $this;
+        }
+
+        $paymentMethod->_manualGateway = $payment->getCode();
+
+        $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
+
+        $transactionObject = $paymentMethod->transactionRequest($order, $productRepo);
+
+        if (!empty($transactionObject->result->error_code)) {
+            $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
         }
         return $this;
     }

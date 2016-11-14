@@ -38,7 +38,8 @@ namespace MultiSafepay\Connect\Controller\Connect;
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
 class Notification extends \Magento\Framework\App\Action\Action {
-	/**
+
+    /**
      * Core registry
      *
      * @var \Magento\Framework\Registry
@@ -49,7 +50,7 @@ class Notification extends \Magento\Framework\App\Action\Action {
      * @var \Magento\Authorizenet\Helper\DataFactory
      */
     protected $dataFactory;
-    
+
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
@@ -65,29 +66,29 @@ class Notification extends \Magento\Framework\App\Action\Action {
     }
 
     public function execute() {
-	    $params = $this->_requestHttp->getParams();
-        if(!isset($params['timestamp'])){
-             $this->getResponse()->setContent('No timestamp is set so we are stopping the callback');
-             return false;
+        $params = $this->_requestHttp->getParams();
+        if (!isset($params['timestamp'])) {
+            $this->getResponse()->setContent('No timestamp is set so we are stopping the callback');
+            return false;
         }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
         $order_information = $order->loadByIncrementId($params['transactionid']);
-        
+
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         $storeManager = $this->_objectManager->create('\Magento\Store\Model\StoreManagerInterface');
         $paymentMethod->_stockInterface = $this->_objectManager->create('\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface');
-        
+
         $updated = $paymentMethod->notification($order);
         if ($updated) {
             if (isset($params['type']) && $params['type'] == 'initial') {
                 $this->getResponse()->setContent('<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>');
             } else {
-                 $this->getResponse()->setContent('ok');
+                $this->getResponse()->setContent('ok');
             }
         } else {
-             $this->getResponse()->setContent('There was an error updating the order');
+            $this->getResponse()->setContent('There was an error updating the order');
         }
     }
 

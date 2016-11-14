@@ -7,122 +7,122 @@
 -->
 <payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
-	  <groups>
-        <group id="multisafepay_connect">
-            <label>MultiSafepay</label>
-        </group>
-    </groups>
-    <methods>
-        <method name="ideal">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="creditcard">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="dotpay">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="visa">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="eps">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="ferbuy">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="mastercard">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="giropay">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="mspbanktransfer">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="sofort">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="maestro">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="bancontact">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="americanexpress">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="directdebit">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="betaalnaontvangst">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="einvoice">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="klarnainvoice">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="paypalmsp">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="wijncadeau">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="fashiongiftcard">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="podium">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="vvvbon">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="sportenfit">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="goodcard">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="nationaletuinbon">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="nationaleverwencadeaubon">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="gezondheidsbon">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="babygiftcard">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="boekenbon">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="erotiekbon">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="fashioncheque">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="parfumcadeaukaart">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="webshopgiftcard">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="beautyandwellness">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="fietsenbon">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="wellnessgiftcard">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-        <method name="winkelcheque">
-            <allow_multiple_address>1</allow_multiple_address>
-        </method>
-    </methods>
+  <groups>
+    <group id="multisafepay_connect">
+      <label>MultiSafepay</label>
+    </group>
+  </groups>
+  <methods>
+    <method name="ideal">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="creditcard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="dotpay">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="visa">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="eps">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="ferbuy">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="mastercard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="giropay">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="mspbanktransfer">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="sofort">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="maestro">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="bancontact">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="americanexpress">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="directdebit">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="betaalnaontvangst">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="einvoice">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="klarnainvoice">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="paypalmsp">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="wijncadeau">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="fashiongiftcard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="podium">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="vvvbon">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="sportenfit">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="goodcard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="nationaletuinbon">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="nationaleverwencadeaubon">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="gezondheidsbon">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="babygiftcard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="boekenbon">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="erotiekbon">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="fashioncheque">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="parfumcadeaukaart">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="webshopgiftcard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="beautyandwellness">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="fietsenbon">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="wellnessgiftcard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="winkelcheque">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+  </methods>
 </payment>

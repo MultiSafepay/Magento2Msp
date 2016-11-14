@@ -50,7 +50,7 @@ class Cancel extends \Magento\Framework\App\Action\Action {
      * @var \Magento\Authorizenet\Helper\DataFactory
      */
     protected $dataFactory;
-    
+
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
@@ -66,7 +66,7 @@ class Cancel extends \Magento\Framework\App\Action\Action {
     }
 
     public function execute() {
-		$params = $this->_requestHttp->getParams();
+        $params = $this->_requestHttp->getParams();
         if (isset($params['transactionid'])) {
             $incrementId = $params['transactionid'];
         }

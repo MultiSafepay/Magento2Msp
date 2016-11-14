@@ -43,11 +43,11 @@ class Cancelled implements \Magento\Framework\Option\ArrayInterface {
     protected $_stateStatuses = [
         Order::STATE_NEW,
         //Order::STATE_PENDING_PAYMENT,
-            // \Magento\Sales\Model\Order::STATE_PROCESSING,
-            //\Magento\Sales\Model\Order::STATE_COMPLETE,
+        // \Magento\Sales\Model\Order::STATE_PROCESSING,
+        //\Magento\Sales\Model\Order::STATE_COMPLETE,
         //Order::STATE_CLOSED,
         Order::STATE_CANCELED,
-        //Order::STATE_HOLDED,
+            //Order::STATE_HOLDED,
     ];
 
     /**

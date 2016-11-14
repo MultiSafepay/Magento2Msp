@@ -28,7 +28,8 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace MultiSafepay\Connect\Model\Api\Objects; 
+
+namespace MultiSafepay\Connect\Model\Api\Objects;
 
 class Gateways extends \MultiSafepay\Connect\Model\Api\Objects\Core {
 

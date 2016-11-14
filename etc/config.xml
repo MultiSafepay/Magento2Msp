@@ -25,7 +25,7 @@
         <group>multisafepay_connect</group>
       </ideal>
       
-            <!-- Start Creditcard -->
+      <!-- Start Creditcard -->
       <creditcard>
         <active>0</active>
         <title>Creditcard</title>
@@ -538,7 +538,7 @@
         <group>multisafepay_connect</group>
       </visa>
       
-       <!-- Start Eps -->
+      <!-- Start Eps -->
       <eps>
         <active>0</active>
         <title>Eps</title>

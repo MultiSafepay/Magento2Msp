@@ -35,13 +35,12 @@ class Creditcard extends \MultiSafepay\Connect\Model\Connect {
 
     protected $_code = 'creditcard';
     protected $_gatewayCode = 'CREDITCARD';
-    
-    public function assignData(\Magento\Framework\DataObject $data)
-    {
+
+    public function assignData(\Magento\Framework\DataObject $data) {
         if (!$data instanceof \Magento\Framework\DataObject) {
             $data = new \Magento\Framework\DataObject($data);
         }
-		
+
         $this->getInfoInstance()->setAdditionalInformation('creditcard', $data->getCreditcard());
         return $this;
     }

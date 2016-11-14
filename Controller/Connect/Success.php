@@ -39,9 +39,7 @@ namespace MultiSafepay\Connect\Controller\Connect;
  */
 class Success extends \Magento\Framework\App\Action\Action {
 
-
-
-		/**
+    /**
      * Core registry
      *
      * @var \Magento\Framework\Registry
@@ -52,7 +50,7 @@ class Success extends \Magento\Framework\App\Action\Action {
      * @var \Magento\Authorizenet\Helper\DataFactory
      */
     protected $dataFactory;
-    
+
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
@@ -67,11 +65,10 @@ class Success extends \Magento\Framework\App\Action\Action {
         parent::__construct($context);
     }
 
-
     public function execute() {
-	    $params = $this->_requestHttp->getParams();
+        $params = $this->_requestHttp->getParams();
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
-        
+
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
         $order_information = $order->loadByIncrementId($params['transactionid']);
 

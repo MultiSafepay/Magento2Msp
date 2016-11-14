@@ -48,31 +48,31 @@ define(
                 checkoutData,
                 additionalValidators,
                 url) {
-                   var configConnect = window.checkoutConfig.payment.connect;
+          var configConnect = window.checkoutConfig.payment.connect;
           'use strict';
 
           return Component.extend({
             defaults: {
               template: 'MultiSafepay_Connect/payment/connect',
               issuerid: '',
-              creditcard:'',
+              creditcard: '',
             },
             initObservable: function () {
-                    this._super()
-                    .observe('issuerid');
-                    this._super()
-                    .observe('creditcard');
-                    return this;
-                },
+              this._super()
+                      .observe('issuerid');
+              this._super()
+                      .observe('creditcard');
+              return this;
+            },
             getData: function () {
-                    return {
-                        "method": this.item.method,
-                        "additional_data": {
-                            'issuerid': this.issuerid(),
-                            'creditcard': this.creditcard()
-			}
-                    };
-                },
+              return {
+                "method": this.item.method,
+                "additional_data": {
+                  'issuerid': this.issuerid(),
+                  'creditcard': this.creditcard()
+                }
+              };
+            },
             /** Returns send check to info */
             getMailingAddress: function () {
               return window.checkoutConfig.payment.checkmo.mailingAddress;
@@ -107,41 +107,41 @@ define(
               return true;
             },
             afterPlaceOrder: function () {
-                if(this.item.method == 'ideal'){
-                        window.location.replace(url.build('multisafepay/connect/redirect/?issuer='+$('[name="issuerid"]').val()));
-                    }else{
-                        window.location.replace(url.build('multisafepay/connect/redirect/'));
-                    }
-                    
-                 if(this.item.method == 'creditcard'){
-                        window.location.replace(url.build('multisafepay/connect/redirect/?creditcard='+$('[name="creditcard"]').val()));
-                    }else{
-                        window.location.replace(url.build('multisafepay/connect/redirect/'));
-                    }
-              
+              if (this.item.method == 'ideal') {
+                window.location.replace(url.build('multisafepay/connect/redirect/?issuer=' + $('[name="issuerid"]').val()));
+              } else {
+                window.location.replace(url.build('multisafepay/connect/redirect/'));
+              }
+
+              if (this.item.method == 'creditcard') {
+                window.location.replace(url.build('multisafepay/connect/redirect/?creditcard=' + $('[name="creditcard"]').val()));
+              } else {
+                window.location.replace(url.build('multisafepay/connect/redirect/'));
+              }
+
             },
             getGatewayImage: function () {
-                    return configConnect.images[this.item.method];
-                },
-            showIssuers: function(){
-                    if(this.item.method == 'ideal'){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                },
-                showCards: function(){
-                    if(this.item.method == 'creditcard'){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                },
+              return configConnect.images[this.item.method];
+            },
+            showIssuers: function () {
+              if (this.item.method == 'ideal') {
+                return true;
+              } else {
+                return false;
+              }
+            },
+            showCards: function () {
+              if (this.item.method == 'creditcard') {
+                return true;
+              } else {
+                return false;
+              }
+            },
             getIssuers: function () {
-                return configConnect.issuers;
+              return configConnect.issuers;
             },
             getCreditcards: function () {
-                return configConnect.creditcards;
+              return configConnect.creditcards;
             }
           });
         }

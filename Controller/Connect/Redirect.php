@@ -46,7 +46,7 @@ class Redirect extends \Magento\Framework\App\Action\Action {
         $order = $this->_objectManager->create('Magento\Sales\Model\Order')->load($session->getLastOrderId());
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
-        
+
 
         $transactionObject = $paymentMethod->transactionRequest($order, $productRepo);
 
@@ -63,15 +63,15 @@ class Redirect extends \Magento\Framework\App\Action\Action {
             $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
             $this->_redirect('checkout/cart');
         } else {
-	        if(!empty($transactionObject->result->data->payment_details->type)){
-		      	if($transactionObject->result->data->payment_details->type == "BANKTRANS"){
-		        $this->getResponse()->setRedirect($paymentMethod->banktransurl); 
-		        }else{
-			       $this->getResponse()->setRedirect($transactionObject->result->data->payment_url); 
-		        }  
-	        }else{
-		       $this->getResponse()->setRedirect($transactionObject->result->data->payment_url); 
-			}
+            if (!empty($transactionObject->result->data->payment_details->type)) {
+                if ($transactionObject->result->data->payment_details->type == "BANKTRANS") {
+                    $this->getResponse()->setRedirect($paymentMethod->banktransurl);
+                } else {
+                    $this->getResponse()->setRedirect($transactionObject->result->data->payment_url);
+                }
+            } else {
+                $this->getResponse()->setRedirect($transactionObject->result->data->payment_url);
+            }
         }
     }
 
