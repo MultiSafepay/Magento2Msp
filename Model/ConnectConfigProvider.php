@@ -20,6 +20,12 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         return $issuers;
     }
     
+    public function GetCreditcards() {
+        $cards = $this->_objectManager->create('MultiSafepay\Connect\Model\Config\Source\Creditcards');
+        $creditcards = $cards->toOptionArray();
+        return $creditcards;
+    }
+    
     public function getImageURLs(){
 	    $images = array();
 	    //gateways
@@ -84,6 +90,7 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
             'payment' => [
                 'connect' => [
                     'issuers' => $this->GetIssuers(),
+                    'creditcards' => $this->GetCreditcards(),
                     'years' => $this->GetYears(),
                     'images' => $this->getImageURLs()
                 ],

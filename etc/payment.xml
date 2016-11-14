@@ -16,6 +16,9 @@
         <method name="ideal">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="creditcard">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name="dotpay">
             <allow_multiple_address>1</allow_multiple_address>
         </method>

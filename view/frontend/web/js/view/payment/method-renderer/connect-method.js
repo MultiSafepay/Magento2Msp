@@ -54,18 +54,22 @@ define(
           return Component.extend({
             defaults: {
               template: 'MultiSafepay_Connect/payment/connect',
-              issuerid: ''
+              issuerid: '',
+              creditcard:'',
             },
             initObservable: function () {
                     this._super()
                     .observe('issuerid');
+                    this._super()
+                    .observe('creditcard');
                     return this;
                 },
             getData: function () {
                     return {
                         "method": this.item.method,
                         "additional_data": {
-                            'issuerid': this.issuerid()
+                            'issuerid': this.issuerid(),
+                            'creditcard': this.creditcard()
 			}
                     };
                 },
@@ -108,6 +112,12 @@ define(
                     }else{
                         window.location.replace(url.build('multisafepay/connect/redirect/'));
                     }
+                    
+                 if(this.item.method == 'creditcard'){
+                        window.location.replace(url.build('multisafepay/connect/redirect/?creditcard='+$('[name="creditcard"]').val()));
+                    }else{
+                        window.location.replace(url.build('multisafepay/connect/redirect/'));
+                    }
               
             },
             getGatewayImage: function () {
@@ -120,8 +130,18 @@ define(
                         return false;
                     }
                 },
+                showCards: function(){
+                    if(this.item.method == 'creditcard'){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                },
             getIssuers: function () {
                 return configConnect.issuers;
+            },
+            getCreditcards: function () {
+                return configConnect.creditcards;
             }
           });
         }

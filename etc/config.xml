@@ -25,6 +25,18 @@
         <group>multisafepay_connect</group>
       </ideal>
       
+            <!-- Start Creditcard -->
+      <creditcard>
+        <active>0</active>
+        <title>Creditcard</title>
+        <instructions>Creditcard</instructions>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Creditcard</model>
+        <group>multisafepay_connect</group>
+      </creditcard>
+      
       <!-- Start Dotpay -->
       <dotpay>
         <active>0</active>
@@ -500,6 +512,18 @@
         <model>MultiSafepay\Connect\Model\Gateways\Ideal</model>
         <group>multisafepay_connect</group>
       </ideal>
+      
+      <!-- Start Creditcard -->
+      <creditcard>
+        <active>0</active>
+        <title>Creditcard</title>
+        <instructions>Creditcard</instructions>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Creditcard</model>
+        <group>multisafepay_connect</group>
+      </creditcard>
             
       <!-- Start Visa -->
       <visa>

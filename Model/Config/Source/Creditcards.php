@@ -29,58 +29,36 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Helper;
+namespace MultiSafepay\Connect\Model\Config\Source;
 
-class Data {
+/**
+ * Order Status source model
+ */
+class Creditcards {
 
-    public $giftcards = array(
-        'webshopgiftcard',
-        'babygiftcard',
-        'boekenbon',
-        'erotiekbon',
-        'parfumcadeaukaart',
-        'yourgift',
-        'wijncadeau',
-        'gezondheidsbon',
-        'fashioncheque',
-        'fashiongiftcard',
-        'podium',
-        'vvvbon',
-        'sportenfit',
-        'goodcard',
-        'nationaletuinbon',
-        'nationaleverwencadeaubon',
-        'beautyandwellness',
-        'fietsenbon',
-        'wellnessgiftcard',
-        'winkelcheque',
-    );
-    public $gateways = array(
-        'ideal',
-        'dotpay',
-        'betaalnaontvangst',
-        'einvoice',
-        'klarnainvoice',
-        'bancontact',
-        'visa',
-        'eps',
-        'ferbuy',
-        'mastercard',
-        'mspbanktransfer',
-        'maestro',
-        'paypalmsp',
-        'giropay',
-        'sofort',
-        'directdebit',
-        'americanexpress',
-        'creditcard'
-    );
 
-    public function getPaymentType($code) {
-        if (in_array($code, $this->gateways)) {
-            return 'gateways';
-        } elseif (in_array($code, $this->giftcards)) {
-            return 'giftcards';
-        }
+    /**
+     * @return array
+     */
+    public function toOptionArray() {
+        return array(
+            array(
+                "value" => 'VISA',
+                "label" => "VISA"
+            ),
+            array(
+                "value" => 'MASTERCARD',
+                "label" => "Mastercard"
+            ),
+            array(
+                "value" => 'AMEX',
+                "label" => "American Express"
+            ),
+            array(
+                "value" => 'MAESTRO',
+                "label" => "Maestro"
+            ),
+        );
     }
+
 }

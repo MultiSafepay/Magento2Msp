@@ -55,6 +55,19 @@
 		</select>
         <br /><br />
 		<!-- /ko -->
+        
+      <!-- ko if: showCards() -->
+        <select  name="creditcard" class="select creditcard"
+			data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
+			enable: true,
+			options: getCreditcards(),
+			optionsValue: 'value',
+			optionsText: 'label',
+			optionsCaption: $t('Kies uw creditcard...'),
+			value: creditcard">
+		</select>
+        <br /><br />
+		<!-- /ko -->
     
     <div class="payment-method-billing-address">
       <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->

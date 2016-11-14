@@ -25,6 +25,15 @@
                                     </item>
                                   </item>
                                 </item>
+                                <item name="creditcard" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/creditcard</item>
+                                  <item name="methods" xsi:type="array">
+                                                                        
+                                    <item name="creditcard" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
                                 <item name="dotpay" xsi:type="array">
                                   <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/dotpay</item>
                                   <item name="methods" xsi:type="array">

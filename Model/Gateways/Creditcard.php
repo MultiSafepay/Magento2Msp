@@ -29,58 +29,21 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Helper;
+namespace MultiSafepay\Connect\Model\Gateways;
 
-class Data {
+class Creditcard extends \MultiSafepay\Connect\Model\Connect {
 
-    public $giftcards = array(
-        'webshopgiftcard',
-        'babygiftcard',
-        'boekenbon',
-        'erotiekbon',
-        'parfumcadeaukaart',
-        'yourgift',
-        'wijncadeau',
-        'gezondheidsbon',
-        'fashioncheque',
-        'fashiongiftcard',
-        'podium',
-        'vvvbon',
-        'sportenfit',
-        'goodcard',
-        'nationaletuinbon',
-        'nationaleverwencadeaubon',
-        'beautyandwellness',
-        'fietsenbon',
-        'wellnessgiftcard',
-        'winkelcheque',
-    );
-    public $gateways = array(
-        'ideal',
-        'dotpay',
-        'betaalnaontvangst',
-        'einvoice',
-        'klarnainvoice',
-        'bancontact',
-        'visa',
-        'eps',
-        'ferbuy',
-        'mastercard',
-        'mspbanktransfer',
-        'maestro',
-        'paypalmsp',
-        'giropay',
-        'sofort',
-        'directdebit',
-        'americanexpress',
-        'creditcard'
-    );
-
-    public function getPaymentType($code) {
-        if (in_array($code, $this->gateways)) {
-            return 'gateways';
-        } elseif (in_array($code, $this->giftcards)) {
-            return 'giftcards';
+    protected $_code = 'creditcard';
+    protected $_gatewayCode = 'CREDITCARD';
+    
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+        if (!$data instanceof \Magento\Framework\DataObject) {
+            $data = new \Magento\Framework\DataObject($data);
         }
+		
+        $this->getInfoInstance()->setAdditionalInformation('creditcard', $data->getCreditcard());
+        return $this;
     }
+
 }
