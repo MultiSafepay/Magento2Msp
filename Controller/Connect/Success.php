@@ -32,26 +32,60 @@
 namespace MultiSafepay\Connect\Controller\Connect;
 
 /**
- * Responsible for loading the success page
+ * Responsible for loading page content.
+ *
+ * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
+ * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
 class Success extends \Magento\Framework\App\Action\Action {
 
+
+
+		/**
+     * Core registry
+     *
+     * @var \Magento\Framework\Registry
+     */
+    protected $_coreRegistry = null;
+
+    /**
+     * @var \Magento\Authorizenet\Helper\DataFactory
+     */
+    protected $dataFactory;
+    
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $_requestHttp;
+
+    public function __construct(
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory, \Magento\Framework\App\RequestInterface $requestHttp
+    ) {
+        $this->_coreRegistry = $coreRegistry;
+        $this->dataFactory = $dataFactory;
+        $this->_requestHttp = $requestHttp;
+        parent::__construct($context);
+    }
+
+
     public function execute() {
+	    $params = $this->_requestHttp->getParams();
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
+        
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
-        $order_information = $order->loadByIncrementId($_GET['transactionid']);
+        $order_information = $order->loadByIncrementId($params['transactionid']);
 
         $session->unsQuoteId();
         $session->getQuote()->setIsActive(false)->save();
 
         // set some vars for the success page
-        $session->setLastSuccessQuoteId($_GET['transactionid']);
-        $session->setLastQuoteId($_GET['transactionid']);
+        $session->setLastSuccessQuoteId($params['transactionid']);
+        $session->setLastQuoteId($params['transactionid']);
 
-        //Do a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
+        //To a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
-        //$updated = $paymentMethod->notification($order, true);
+        $updated = $paymentMethod->notification($order, true);
 
         $this->_redirect('checkout/onepage/success?utm_nooverride=1');
         return;

@@ -50,19 +50,27 @@ class Cancel extends \Magento\Framework\App\Action\Action {
      * @var \Magento\Authorizenet\Helper\DataFactory
      */
     protected $dataFactory;
+    
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory, \Magento\Framework\App\RequestInterface $requestHttp
     ) {
         $this->_coreRegistry = $coreRegistry;
         $this->dataFactory = $dataFactory;
+        $this->_requestHttp = $requestHttp;
         parent::__construct($context);
     }
 
     public function execute() {
-        if (isset($_GET['transactionid'])) {
-            $incrementId = $_GET['transactionid'];
+		$params = $this->_requestHttp->getParams();
+        if (isset($params['transactionid'])) {
+            $incrementId = $params['transactionid'];
         }
+
 
         if ($incrementId) {
             /* @var $order \Magento\Sales\Model\Order */
@@ -70,20 +78,26 @@ class Cancel extends \Magento\Framework\App\Action\Action {
 
             if ($order->getId()) {
                 try {
+
                     /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */
                     $quoteRepository = $this->_objectManager->create('Magento\Quote\Api\CartRepositoryInterface');
                     /** @var \Magento\Quote\Model\Quote $quote */
                     $quote = $quoteRepository->get($order->getQuoteId());
+
                     $quote->setIsActive(1)->setReservedOrderId(null);
                     $quoteRepository->save($quote);
                 } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
                     
                 }
-                //Cancel the order so a new one can be created
+                //Cancel the order so a new one can created
                 $order->registerCancellation('Order cancelled by customer')->save();
             }
         }
+
+
+
         $this->_redirect('checkout/cart');
         return;
     }
+
 }
