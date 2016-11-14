@@ -231,6 +231,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         $billing = $order->getBillingAddress();
         $shipping = $order->getShippingAddress();
         $this->_gatewayCode = $order->getPayment()->getMethodInstance()->_gatewayCode;
+        
+        if (isset($params['creditcard'])) {
+            $this->_gatewayCode = $params['creditcard'];
+        }
+        
         $environment = $this->getMainConfigData('msp_env');
 
         /* With Magento update 2.1 the line below no longer works */
