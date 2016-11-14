@@ -263,7 +263,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
             $daysActive = '30';
         }
 
-        if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA') {
+        if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA'|| $this->_gatewayCode == 'EINVOICE')  {
             $checkoutData = $this->getCheckoutData($order, $productRepo);
             $shoppingCart = $checkoutData["shopping_cart"];
             $checkoutData = $checkoutData["checkout_options"];
