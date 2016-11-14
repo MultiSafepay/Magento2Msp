@@ -38,12 +38,37 @@ namespace MultiSafepay\Connect\Controller\Connect;
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
 class Notification extends \Magento\Framework\App\Action\Action {
+	/**
+     * Core registry
+     *
+     * @var \Magento\Framework\Registry
+     */
+    protected $_coreRegistry = null;
 
+    /**
+     * @var \Magento\Authorizenet\Helper\DataFactory
+     */
+    protected $dataFactory;
+    
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $_requestHttp;
+
+    public function __construct(
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory, \Magento\Framework\App\RequestInterface $requestHttp
+    ) {
+        $this->_coreRegistry = $coreRegistry;
+        $this->dataFactory = $dataFactory;
+        $this->_requestHttp = $requestHttp;
+        parent::__construct($context);
+    }
 
     public function execute() {
 	    $params = $this->_requestHttp->getParams();
         if(!isset($params['timestamp'])){
-            echo 'No timestamp is set so we are stopping the callback';exit;
+             $this->getResponse()->setContent('No timestamp is set so we are stopping the callback');
+             return false;
         }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
@@ -57,12 +82,12 @@ class Notification extends \Magento\Framework\App\Action\Action {
         $updated = $paymentMethod->notification($order);
         if ($updated) {
             if (isset($params['type']) && $params['type'] == 'initial') {
-                echo '<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>';
+                $this->getResponse()->setContent('<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>');
             } else {
-                echo "ok";
+                 $this->getResponse()->setContent('ok');
             }
         } else {
-            echo 'Error updating order!';
+             $this->getResponse()->setContent('There was an error updating the order');
         }
     }
 

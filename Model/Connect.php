@@ -177,6 +177,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
     public $_stockInterface;
     public $banktransurl;
     protected $logger;
+
     
 
     /**
@@ -203,7 +204,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         parent::__construct(
                 $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger
         );
-
         $this->_checkoutSession = $checkoutSession;
         $this->_storeManager = $storeManager;
         $this->_urlBuilder = $urlBuilder;
@@ -379,8 +379,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
 
         try {
             $issuers = $this->_client->issuers->get();
-        } catch (\Exception $e) {
-            echo "Error " . htmlspecialchars($e->getMessage());
+           
+            
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+	        throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
         }
         return $issuers;
     }
@@ -607,6 +609,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
     }
 
     public function notification($order, $success = false) {
+
 	    $params = $this->_requestHttp->getParams();
         $environment = $this->getMainConfigData('msp_env');
 
@@ -813,8 +816,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
                                 array(
                             "invoice_id" => $invoice->getIncrementId(),
                                 ), $endpoint);
-                    } catch (\Exception $e) {
-                        echo "Error " . htmlspecialchars($e->getMessage());
+                                
+                           if (!empty($this->_client->orders->result->error_code)) {
+	              throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
+             }     
+                    } catch (\Magento\Framework\Exception\LocalizedException $e) {
+	                    throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
                     }
                 }
                 $emailInvoice = $this->getMainConfigData('email_invoice');
@@ -904,11 +911,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
                 "description" => "Refund: " . $order->getIncrementId(),
                     ), $endpoint);
                     
-            $this->logger->info(print_r($order, true));
-        } catch (\Exception $e) {
-            echo "Error " . htmlspecialchars($e->getMessage());
+            $this->logger->info(print_r($this->_client->orders, true));
+            
+             if (!empty($this->_client->orders->result->error_code)) {
+	              throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
+             }
+            
+            
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+	      throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
         }
-
         return $this;
     }
 
