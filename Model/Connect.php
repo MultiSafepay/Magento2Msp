@@ -296,7 +296,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
             "type" => $type,
             "order_id" => $order->getIncrementId(),
             "currency" => $order->getBaseCurrencyCode(),
-            "amount" => $order->getBaseGrandTotal() * 100,
+            "amount" => $this->getAmountInCents($order),
             "description" => $order->getIncrementId(),
             "var1" => "",
             "var2" => "",
@@ -348,6 +348,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         }
 
         return $this->_client->orders;
+    }
+
+    private function getAmountInCents($order)
+    {
+        return  round($order->getBaseGrandTotal() * 100);
     }
 
     function getIssuers() {
