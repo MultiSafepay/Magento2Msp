@@ -712,7 +712,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
             case "completed":
                 $order_email = $this->getMainConfigData('send_order_email');
 
-                if ($order_email = "after_transaction_paid" && !$order->getEmailSent()) {
+                if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
                     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                     $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
                 }
