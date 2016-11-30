@@ -179,7 +179,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
     protected $logger;
     public $_manualGateway = null;
     public $_isAdmin = false;
-    
+
     /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
@@ -214,7 +214,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         $this->_maxAmount = $this->getConfigData('max_order_total');
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->_invoiceSender = $objectManager->get('\Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
-        
+
 
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
         $this->logger = new \Zend\Log\Logger();
@@ -321,7 +321,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
             "type" => $type,
             "order_id" => $order->getIncrementId(),
             "currency" => $order->getBaseCurrencyCode(),
-            "amount" => $order->getBaseGrandTotal() * 100,
+            "amount" => $this->getAmountInCents($order),
             "description" => $order->getIncrementId(),
             "var1" => "",
             "var2" => "",
@@ -373,6 +373,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         }
 
         return $this->_client->orders;
+    }
+
+    private function getAmountInCents($order) {
+        return round($order->getBaseGrandTotal() * 100);
     }
 
     function getIssuers() {
@@ -623,7 +627,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         return $checkoutData;
     }
 
-    public function notification($order, $success = false , $fetch = false) {
+    public function notification($order, $success = false, $fetch = false) {
         $params = $this->_requestHttp->getParams();
         $environment = $this->getMainConfigData('msp_env');
 
@@ -635,15 +639,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
-		if(isset($params['transactionid'])){
-        	$transactionid = $params['transactionid'];
+        if (isset($params['transactionid'])) {
+            $transactionid = $params['transactionid'];
         }
-        
-        if(empty($transactionid)){
-	       	$transactionid = $order->getIncrementId();
+
+        if (empty($transactionid)) {
+            $transactionid = $order->getIncrementId();
         }
-        
-        
+
+
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
 
         $this->logger->info(print_r($msporder, true));
@@ -720,23 +724,23 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
                     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                     $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
                 }
-                
+
                 $this->_registerPaymentCapture(true, $transactionid, $order, $msporder);
-                
-                if($fetch){
-	                return true;
+
+                if ($fetch) {
+                    return true;
                 }
-                
+
                 break;
             case "uncleared":
-            	if($fetch){
-	                return false;
+                if ($fetch) {
+                    return false;
                 }
                 $this->_registerPaymentPending($transactionid, $order, $msporder);
                 break;
             case "void":
-           	 	if($fetch){
-	                return false;
+                if ($fetch) {
+                    return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
                 if ($cancelled != "pending") {
@@ -746,8 +750,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
                 }
                 break;
             case "declined":
-            	if($fetch){
-	                return false;
+                if ($fetch) {
+                    return false;
                 }
                 $declined = $this->getMainConfigData('declined_order_status');
                 if ($declined != "pending") {
@@ -757,8 +761,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
                 }
                 break;
             case "expired":
-            	if($fetch){
-	                return false;
+                if ($fetch) {
+                    return false;
                 }
                 $expired = $this->getMainConfigData('expired_order_status');
                 if ($expired != "pending") {
@@ -769,8 +773,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
                 $order->registerCancellation('<b>Transaction expired</b><br />')->save();
                 break;
             case "cancelled":
-            	if($fetch){
-	                return false;
+                if ($fetch) {
+                    return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
                 if ($cancelled != "pending") {
@@ -780,8 +784,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
                 }
                 break;
             case "chargeback":
-           	 	if($fetch){
-	                return false;
+                if ($fetch) {
+                    return false;
                 }
                 $chargeback = $this->getMainConfigData('chargeback_order_status');
                 $order->setStatus($chargeback)->save();
@@ -795,10 +799,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
             default:
                 return false;
         }
-		
-		if(!$fetch){
-			return true;
-		}
+
+        if (!$fetch) {
+            return true;
+        }
     }
 
     /**
@@ -1011,10 +1015,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
             return true;
         }
     }
-    
-    
-    
-     /**
+
+    /**
      * Fetch transaction details info
      *
      * Update transaction info if there is one placing transaction only
@@ -1023,21 +1025,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * @param string $transactionId
      * @return boolean
      */
-    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId)
-    {            
+    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId) {
         $order = $payment->getOrder();
-	    if($this->notification($order, false, true)){
-		    $payment->setIsTransactionApproved(true);
+        if ($this->notification($order, false, true)) {
+            $payment->setIsTransactionApproved(true);
             return true;
-	    }else{
-		    return false;
-	    } 
+        } else {
+            return false;
+        }
     }
-    
-    
-    
-    
-    
 
     /**
      * Retrieve information from gateway/giftcard configuration
