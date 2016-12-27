@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Parfumcadeaukaart extends \MultiSafepay\Connect\Model\Connect {
+class Parfumcadeaukaart extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'parfumcadeaukaart';
     protected $_gatewayCode = 'PARFUMCADEAUKAART';

@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Fashiongiftcard extends \MultiSafepay\Connect\Model\Connect {
+class Fashiongiftcard extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'fashiongiftcard';
     protected $_gatewayCode = 'FASHIONGIFTCARD';

@@ -33,7 +33,8 @@ namespace MultiSafepay\Connect\Model\Config\Source;
 
 use Magento\Customer\Api\GroupManagementInterface;
 
-class Group implements \Magento\Framework\Option\ArrayInterface {
+class Group implements \Magento\Framework\Option\ArrayInterface
+{
 
     /**
      * @var array
@@ -56,7 +57,8 @@ class Group implements \Magento\Framework\Option\ArrayInterface {
      */
     public function __construct(
     GroupManagementInterface $groupManagement, \Magento\Framework\Convert\DataObject $converter
-    ) {
+    )
+    {
         $this->_groupManagement = $groupManagement;
         $this->_converter = $converter;
     }
@@ -64,7 +66,8 @@ class Group implements \Magento\Framework\Option\ArrayInterface {
     /**
      * @return array
      */
-    public function toOptionArray() {
+    public function toOptionArray()
+    {
         if (!$this->_options) {
             $groups = $this->_groupManagement->getLoggedInGroups();
             $this->_options = $this->_converter->toOptionArray($groups, 'id', 'code');

@@ -2,31 +2,36 @@
 
 namespace MultiSafepay\Connect\Model;
 
-class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface {
+class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
+{
 
     protected $_assetRepo;
 
     public function __construct(
     \Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Framework\View\Asset\Repository $assetRepo
-    ) {
+    )
+    {
         $this->_objectManager = $objectManager;
         $this->_scopeConfig = $scopeConfig;
         $this->_assetRepo = $assetRepo;
     }
 
-    public function GetIssuers() {
+    public function GetIssuers()
+    {
         $connect = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $issuers = $connect->getIssuers();
         return $issuers;
     }
 
-    public function GetCreditcards() {
+    public function GetCreditcards()
+    {
         $cards = $this->_objectManager->create('MultiSafepay\Connect\Model\Config\Source\Creditcards');
         $creditcards = $cards->toOptionArray();
         return $creditcards;
     }
 
-    public function getImageURLs() {
+    public function getImageURLs()
+    {
         $images = array();
         //gateways
         $images['ideal'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/ideal.png");
@@ -72,7 +77,8 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         return $images;
     }
 
-    public function GetYears() {
+    public function GetYears()
+    {
         $years = [];
         for ($i = date("Y") - 17; $i > date("Y") - 125; $i--) {
             $years[] = [
@@ -83,7 +89,8 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         return $years;
     }
 
-    public function getConfig() {
+    public function getConfig()
+    {
         $config = array();
 
         $config = array_merge_recursive($config, [

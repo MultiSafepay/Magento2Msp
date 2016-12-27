@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Bancontact extends \MultiSafepay\Connect\Model\Connect {
+class Bancontact extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'bancontact';
     protected $_gatewayCode = 'MISTERCASH';

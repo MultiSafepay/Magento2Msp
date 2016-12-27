@@ -34,7 +34,8 @@ namespace MultiSafepay\Connect\Model\Config\Source;
 /**
  * Order Status source model
  */
-class Environment {
+class Environment
+{
 
     const TEST_MODE = true;
     const LIVE_MODE = false;
@@ -42,7 +43,8 @@ class Environment {
     /**
      * @return array
      */
-    public function toOptionArray() {
+    public function toOptionArray()
+    {
         return array(
             array(
                 "value" => self::TEST_MODE,

@@ -37,7 +37,8 @@ namespace MultiSafepay\Connect\Controller\Connect;
  * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
-class Success extends \Magento\Framework\App\Action\Action {
+class Success extends \Magento\Framework\App\Action\Action
+{
 
     /**
      * Core registry
@@ -58,14 +59,16 @@ class Success extends \Magento\Framework\App\Action\Action {
 
     public function __construct(
     \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory, \Magento\Framework\App\RequestInterface $requestHttp
-    ) {
+    )
+    {
         $this->_coreRegistry = $coreRegistry;
         $this->dataFactory = $dataFactory;
         $this->_requestHttp = $requestHttp;
         parent::__construct($context);
     }
 
-    public function execute() {
+    public function execute()
+    {
         $params = $this->_requestHttp->getParams();
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
 

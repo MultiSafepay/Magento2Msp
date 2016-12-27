@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Vvvbon extends \MultiSafepay\Connect\Model\Connect {
+class Vvvbon extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'vvvbon';
     protected $_gatewayCode = 'VVVBON';

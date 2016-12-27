@@ -33,7 +33,8 @@ namespace MultiSafepay\Connect\Model\Observers;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class Shipment implements ObserverInterface {
+class Shipment implements ObserverInterface
+{
 
     /**
      * @var \Magento\Framework\ObjectManagerInterface
@@ -48,12 +49,14 @@ class Shipment implements ObserverInterface {
     /**
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      */
-    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\Message\ManagerInterface $messageManager) {
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\Message\ManagerInterface $messageManager)
+    {
         $this->_objectManager = $objectManager;
         $this->_messageManager = $messageManager;
     }
 
-    public function execute(\Magento\Framework\Event\Observer $observer) {
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $event = $observer->getEvent();
         $shipment = $event->getShipment();

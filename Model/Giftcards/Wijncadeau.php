@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Wijncadeau extends \MultiSafepay\Connect\Model\Connect {
+class Wijncadeau extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'wijncadeau';
     protected $_gatewayCode = 'WIJNCADEAU';

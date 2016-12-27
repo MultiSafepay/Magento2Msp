@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Americanexpress extends \MultiSafepay\Connect\Model\Connect {
+class Americanexpress extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'americanexpress';
     protected $_gatewayCode = 'AMEX';

@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Nationaleverwencadeaubon extends \MultiSafepay\Connect\Model\Connect {
+class Nationaleverwencadeaubon extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'nationaleverwencadeaubon';
     protected $_gatewayCode = 'NATIONALEVERWENCADEAUBON';

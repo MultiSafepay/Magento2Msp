@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Mastercard extends \MultiSafepay\Connect\Model\Connect {
+class Mastercard extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'mastercard';
     protected $_gatewayCode = 'MASTERCARD';

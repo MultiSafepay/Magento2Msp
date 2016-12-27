@@ -31,30 +31,36 @@
 
 namespace MultiSafepay\Connect\Model\Api\Objects;
 
-class Core {
+class Core
+{
 
     protected $mspapi;
     public $result;
 
-    public function __construct(\MultiSafepay\Connect\Model\Api\MspClient $mspapi) {
+    public function __construct(\MultiSafepay\Connect\Model\Api\MspClient $mspapi)
+    {
         $this->mspapi = $mspapi;
     }
 
-    public function post($body, $endpoint = 'orders') {
+    public function post($body, $endpoint = 'orders')
+    {
         $this->result = $this->processRequest('POST', $endpoint, $body);
         return $this->result;
     }
 
-    public function patch($body, $endpoint = '') {
+    public function patch($body, $endpoint = '')
+    {
         $this->result = $this->processRequest('PATCH', $endpoint, $body);
         return $this->result;
     }
 
-    public function getResult() {
+    public function getResult()
+    {
         return $this->result;
     }
 
-    public function get($endpoint, $id, $body = array(), $query_string = false) {
+    public function get($endpoint, $id, $body = array(), $query_string = false)
+    {
         if (!$query_string) {
             $url = "{$endpoint}/{$id}";
         } else {
@@ -66,7 +72,8 @@ class Core {
         return $this->result;
     }
 
-    protected function processRequest($http_method, $api_method, $http_body = NULL) {
+    protected function processRequest($http_method, $api_method, $http_body = NULL)
+    {
         $body = $this->mspapi->processAPIRequest($http_method, $api_method, $http_body);
         if (!($object = @json_decode($body))) {
             throw new \Exception("'{$body}'.");

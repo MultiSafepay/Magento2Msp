@@ -33,7 +33,8 @@ namespace MultiSafepay\Connect\Model\Config\Source\Order\Status;
 
 use Magento\Sales\Model\Order;
 
-class Expired implements \Magento\Framework\Option\ArrayInterface {
+class Expired implements \Magento\Framework\Option\ArrayInterface
+{
 
     const UNDEFINED_OPTION_LABEL = '-- Please Select --';
 
@@ -58,14 +59,16 @@ class Expired implements \Magento\Framework\Option\ArrayInterface {
     /**
      * @param \Magento\Sales\Model\Order\Config $orderConfig
      */
-    public function __construct(\Magento\Sales\Model\Order\Config $orderConfig) {
+    public function __construct(\Magento\Sales\Model\Order\Config $orderConfig)
+    {
         $this->_orderConfig = $orderConfig;
     }
 
     /**
      * @return array
      */
-    public function toOptionArray() {
+    public function toOptionArray()
+    {
         $statuses = $this->_stateStatuses ? $this->_orderConfig->getStateStatuses($this->_stateStatuses) : $this->_orderConfig->getStatuses();
 
         //$statuses = $this->_orderConfig->getStatuses();

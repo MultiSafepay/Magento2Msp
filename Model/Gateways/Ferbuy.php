@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Ferbuy extends \MultiSafepay\Connect\Model\Connect {
+class Ferbuy extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'ferbuy';
     protected $_gatewayCode = 'Ferbuy';

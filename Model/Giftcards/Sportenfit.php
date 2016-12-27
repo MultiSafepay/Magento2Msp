@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Sportenfit extends \MultiSafepay\Connect\Model\Connect {
+class Sportenfit extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'sportenfit';
     protected $_gatewayCode = 'SPORTENFIT';

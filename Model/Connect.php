@@ -38,7 +38,8 @@ use MultiSafepay\Connect\Helper\Data;
 use Magento\Framework\AppInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 
-class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
+class Connect extends \Magento\Payment\Model\Method\AbstractMethod
+{
 
     protected $_isInitializeNeeded = true;
     protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
@@ -200,7 +201,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      */
     public function __construct(
     \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Module\ModuleListInterface $moduleList, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder, \Magento\Framework\App\RequestInterface $requestHttp, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = []
-    ) {
+    )
+    {
         parent::__construct(
                 $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger
         );
@@ -221,7 +223,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         $this->logger->addWriter($writer);
     }
 
-    public function transactionRequest($order, $productRepo = null) {
+    public function transactionRequest($order, $productRepo = null)
+    {
         $params = $this->_requestHttp->getParams();
 
         if (isset($params['issuer'])) {
@@ -375,11 +378,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         return $this->_client->orders;
     }
 
-    private function getAmountInCents($order) {
+    private function getAmountInCents($order)
+    {
         return round($order->getBaseGrandTotal() * 100);
     }
 
-    function getIssuers() {
+    function getIssuers()
+    {
         $environment = $this->getMainConfigData('msp_env');
 
         $api_key = null;
@@ -406,7 +411,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         return $issuers;
     }
 
-    public function shipOrder($order) {
+    public function shipOrder($order)
+    {
         $shipped = array();
         $shipped['success'] = false;
         $shipped['error'] = false;
@@ -455,7 +461,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         }
     }
 
-    public function getCheckoutData($order, $productRepo) {
+    public function getCheckoutData($order, $productRepo)
+    {
         $alternateTaxRates = array();
         $shoppingCart = array();
         $items = $order->getAllItems();
@@ -627,7 +634,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         return $checkoutData;
     }
 
-    public function notification($order, $success = false, $fetch = false) {
+    public function notification($order, $success = false, $fetch = false)
+    {
         $params = $this->_requestHttp->getParams();
         $environment = $this->getMainConfigData('msp_env');
 
@@ -705,11 +713,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
             $order->save();
         }
 
+        $payment = $order->getPayment();
+
         $order_email = $this->getMainConfigData('send_order_email');
-        if ($order_email == "after_transaction" && $status != "initialized" && !$order->getEmailSent()) {
+        if (($order_email == "after_transaction" && $status != "initialized" && $status != "expired" && !$order->getEmailSent()) ||
+                ($payment->getMethodInstance()->_code == 'mspbanktransfer' && !$order->getEmailSent()) ||
+                ($status == "expired" && isset($this->_client->orders->data->transaction_id))
+        ) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
         }
+
         /**
          *    ENDING UNDO CANCEL CODE
          */
@@ -811,7 +825,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * @return void
      * @throws Exception
      */
-    public function _registerPaymentPending($transactionid, $order, $msporder) {
+    public function _registerPaymentPending($transactionid, $order, $msporder)
+    {
         $order->getPayment()->setPreparedMessage('<b>Uncleared Transaction you can accept the transaction manually within MultiSafepay Control</b><br />')->setTransactionId($transactionid)
                 ->setIsTransactionClosed(
                         0
@@ -825,7 +840,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * @param bool $skipFraudDetection
      * @return void
      */
-    protected function _registerPaymentCapture($skipFraudDetection = false, $transactionid, $order, $msporder) {
+    protected function _registerPaymentCapture($skipFraudDetection = false, $transactionid, $order, $msporder)
+    {
         if ($order->canInvoice() || ($order->getStatus() == "pending_payment" && $msporder->status == "completed")) {
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
@@ -890,7 +906,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * @param \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote|null $quote
      * @return bool
      */
-    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null) {
+    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
+    {
         if ($quote == null) {
             $quote = $this->_checkoutSession->getQuote();
         }
@@ -936,7 +953,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * @return $this
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount) {
+    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
 
         $order = $payment->getOrder();
 
@@ -977,7 +995,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * @param \Magento\Framework\Object $stateObject
      * @return void
      */
-    public function initialize($paymentAction, $stateObject) {
+    public function initialize($paymentAction, $stateObject)
+    {
         /*
          * Should the order confirmation email be submitted after placing the order?
          */
@@ -995,7 +1014,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
     }
 
     //Instructions will be visible within the order/e-mails
-    public function getInstructions() {
+    public function getInstructions()
+    {
         return trim($this->getConfigData('instructions'));
     }
 
@@ -1005,7 +1025,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * @param string $shippingMethod
      * @return bool
      */
-    public function isCarrierAllowed($shippingMethod) {
+    public function isCarrierAllowed($shippingMethod)
+    {
         if ($this->getConfigData('allowed_carrier_active') == true) {
             if (empty($shippingMethod)) {
                 return true;
@@ -1025,7 +1046,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * @param string $transactionId
      * @return boolean
      */
-    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId) {
+    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId)
+    {
         $order = $payment->getOrder();
         if ($this->notification($order, false, true)) {
             $payment->setIsTransactionApproved(true);
@@ -1043,7 +1065,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      *
      * @return mixed
      */
-    public function getConfigData($field, $storeId = null, $code = null) {
+    public function getConfigData($field, $storeId = null, $code = null)
+    {
         if ('order_place_redirect_url' === $field) {
             return $this->getOrderPlaceRedirectUrl();
         }
@@ -1080,7 +1103,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      *
      * @return mixed
      */
-    public function getMainConfigData($field, $storeId = null) {
+    public function getMainConfigData($field, $storeId = null)
+    {
         if ('order_place_redirect_url' === $field) {
             return $this->getOrderPlaceRedirectUrl();
         }
@@ -1093,7 +1117,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    public function getGlobalConfig($path, $storeId = null) {
+    public function getGlobalConfig($path, $storeId = null)
+    {
 
         if (null === $storeId) {
             $storeId = $this->getStore();
@@ -1101,7 +1126,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    function parseCustomerAddress($street_address) {
+    function parseCustomerAddress($street_address)
+    {
         list($address, $apartment) = $this->parseAddress($street_address);
         $customer['address'] = $address;
         $customer['housenumber'] = $apartment;
@@ -1112,7 +1138,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
      * Parses and splits up an address in street and housenumber
      */
 
-    function parseAddress($street_address) {
+    function parseAddress($street_address)
+    {
         $address = $street_address;
         $apartment = "";
 
@@ -1139,7 +1166,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod {
     }
 
     // From http://www.php.net/manual/en/function.strrpos.php#78556
-    function rstrpos($haystack, $needle, $offset = null) {
+    function rstrpos($haystack, $needle, $offset = null)
+    {
         $size = strlen($haystack);
 
         if (is_null($offset)) {
