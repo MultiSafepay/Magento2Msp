@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Webshopgiftcard extends \MultiSafepay\Connect\Model\Connect {
+class Webshopgiftcard extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'webshopgiftcard';
     protected $_gatewayCode = 'WEBSHOPGIFTCARD';

@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Einvoice extends \MultiSafepay\Connect\Model\Connect {
+class Einvoice extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'einvoice';
     protected $_gatewayCode = 'EINVOICE';

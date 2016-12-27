@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Sofort extends \MultiSafepay\Connect\Model\Connect {
+class Sofort extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'sofort';
     protected $_gatewayCode = 'DIRECTBANK';

@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Giropay extends \MultiSafepay\Connect\Model\Connect {
+class Giropay extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'giropay';
     protected $_gatewayCode = 'GIROPAY';

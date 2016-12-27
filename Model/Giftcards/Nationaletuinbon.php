@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Nationaletuinbon extends \MultiSafepay\Connect\Model\Connect {
+class Nationaletuinbon extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'nationaletuinbon';
     protected $_gatewayCode = 'NATIONALETUINBON';

@@ -35,7 +35,8 @@ use MultiSafepay\Connect\Model\Api\Objects\Orders;
 use MultiSafepay\Connect\Model\Api\Objects\Gateways;
 use MultiSafepay\Connect\Model\Api\Objects\Issuers;
 
-class MspClient {
+class MspClient
+{
 
     public $orders;
     public $issuers;
@@ -48,37 +49,45 @@ class MspClient {
     public $response;
     public $debug;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->orders = new Orders($this);
         $this->issuers = new Issuers($this);
         //$this->gateways = new Gateways($this);
     }
 
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 
-    public function getResponse() {
+    public function getResponse()
+    {
         return $this->response;
     }
 
-    public function setApiUrl($url) {
+    public function setApiUrl($url)
+    {
         $this->api_url = trim($url);
     }
 
-    public function setDebug($debug) {
+    public function setDebug($debug)
+    {
         $this->debug = trim($debug);
     }
 
-    public function setApiKey($api_key) {
+    public function setApiKey($api_key)
+    {
         $this->api_key = trim($api_key);
     }
 
-    public function getApiKey() {
+    public function getApiKey()
+    {
         return $this->api_key;
     }
 
-    public function processAPIRequest($http_method, $api_method, $http_body = NULL) {
+    public function processAPIRequest($http_method, $api_method, $http_body = NULL)
+    {
         if (empty($this->api_key)) {
             throw new \Magento\Framework\Validator\Exception(__('Please configure your MultiSafepay API Key.'));
         }

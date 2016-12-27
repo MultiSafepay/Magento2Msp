@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Maestro extends \MultiSafepay\Connect\Model\Connect {
+class Maestro extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'maestro';
     protected $_gatewayCode = 'MAESTRO';

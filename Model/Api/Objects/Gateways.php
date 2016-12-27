@@ -28,14 +28,17 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace MultiSafepay\Connect\Model\Api\Objects; 
 
-class Gateways extends \MultiSafepay\Connect\Model\Api\Objects\Core {
+namespace MultiSafepay\Connect\Model\Api\Objects;
+
+class Gateways extends \MultiSafepay\Connect\Model\Api\Objects\Core
+{
 
     public $success;
     public $data;
 
-    public function get($endpoint = 'gateways', $type = '', $body = array(), $query_string = false) {
+    public function get($endpoint = 'gateways', $type = '', $body = array(), $query_string = false)
+    {
         $result = parent::get($endpoint, $type, json_encode($body), $query_string);
         $this->success = $result->success;
         $this->data = $result->data;

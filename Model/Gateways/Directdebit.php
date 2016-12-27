@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Directdebit extends \MultiSafepay\Connect\Model\Connect {
+class Directdebit extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'directdebit';
     protected $_gatewayCode = 'DIRDEB';

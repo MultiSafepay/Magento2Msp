@@ -31,26 +31,30 @@
 
 namespace MultiSafepay\Connect\Model\Api\Objects;
 
-class Orders extends Core {
+class Orders extends Core
+{
 
     public $success;
     public $data;
 
-    public function patch($body, $endpoint = '') {
+    public function patch($body, $endpoint = '')
+    {
         $result = parent::patch(json_encode($body), $endpoint);
         $this->success = $result->success;
         $this->data = $result->data;
         return $result;
     }
 
-    public function get($type = 'orders', $id, $body = array(), $query_string = false) {
+    public function get($type = 'orders', $id, $body = array(), $query_string = false)
+    {
         $result = parent::get($type, $id, $body, $query_string);
         $this->success = $result->success;
         $this->data = $result->data;
         return $this->data;
     }
 
-    public function post($body, $endpoint = 'orders') {
+    public function post($body, $endpoint = 'orders')
+    {
         $result = parent::post(json_encode($body), $endpoint);
 
         if (!empty($result->error_code)) {
@@ -63,7 +67,8 @@ class Orders extends Core {
         return $this->data;
     }
 
-    public function getPaymentLink() {
+    public function getPaymentLink()
+    {
         return $this->data->payment_url;
     }
 
