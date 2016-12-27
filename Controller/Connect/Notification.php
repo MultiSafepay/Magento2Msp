@@ -37,28 +37,61 @@ namespace MultiSafepay\Connect\Controller\Connect;
  * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
-class Notification extends \Magento\Framework\App\Action\Action {
+class Notification extends \Magento\Framework\App\Action\Action
+{
 
-    public function execute() {
+    /**
+     * Core registry
+     *
+     * @var \Magento\Framework\Registry
+     */
+    protected $_coreRegistry = null;
+
+    /**
+     * @var \Magento\Authorizenet\Helper\DataFactory
+     */
+    protected $dataFactory;
+
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $_requestHttp;
+
+    public function __construct(
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory, \Magento\Framework\App\RequestInterface $requestHttp
+    )
+    {
+        $this->_coreRegistry = $coreRegistry;
+        $this->dataFactory = $dataFactory;
+        $this->_requestHttp = $requestHttp;
+        parent::__construct($context);
+    }
+
+    public function execute()
+    {
+        $params = $this->_requestHttp->getParams();
+        if (!isset($params['timestamp'])) {
+            $this->getResponse()->setContent('No timestamp is set so we are stopping the callback');
+            return false;
+        }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
-        //$order = $this->_objectManager->create('Magento\Sales\Model\Order')->load($_GET['transactionid']);
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
-        $order_information = $order->loadByIncrementId($_GET['transactionid']);
-        
+        $order_information = $order->loadByIncrementId($params['transactionid']);
+
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         $storeManager = $this->_objectManager->create('\Magento\Store\Model\StoreManagerInterface');
         $paymentMethod->_stockInterface = $this->_objectManager->create('\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface');
-        
+
         $updated = $paymentMethod->notification($order);
         if ($updated) {
-            if (isset($_GET['type']) && $_GET['type'] == 'initial') {
-                echo '<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $_GET['transactionid'] . '"> Return back to the webshop</a>';
+            if (isset($params['type']) && $params['type'] == 'initial') {
+                $this->getResponse()->setContent('<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>');
             } else {
-                echo "ok";
+                $this->getResponse()->setContent('ok');
             }
         } else {
-            echo 'Error updating order!';
+            $this->getResponse()->setContent('There was an error updating the order');
         }
     }
 

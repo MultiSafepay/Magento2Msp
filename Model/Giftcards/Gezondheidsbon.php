@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Gezondheidsbon extends \MultiSafepay\Connect\Model\Connect {
+class Gezondheidsbon extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'gezondheidsbon';
     protected $_gatewayCode = 'GEZONDHEIDSBON';

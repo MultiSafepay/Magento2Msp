@@ -31,17 +31,18 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Ideal extends \MultiSafepay\Connect\Model\Connect {
+class Ideal extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'ideal';
     protected $_gatewayCode = 'IDEAL';
-    
+
     public function assignData(\Magento\Framework\DataObject $data)
     {
         if (!$data instanceof \Magento\Framework\DataObject) {
             $data = new \Magento\Framework\DataObject($data);
         }
-		
+
         $this->getInfoInstance()->setAdditionalInformation('issuerid', $data->getIssuerid());
         return $this;
     }

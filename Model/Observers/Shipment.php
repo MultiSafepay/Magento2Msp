@@ -33,7 +33,8 @@ namespace MultiSafepay\Connect\Model\Observers;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class Shipment implements ObserverInterface {
+class Shipment implements ObserverInterface
+{
 
     /**
      * @var \Magento\Framework\ObjectManagerInterface
@@ -48,24 +49,27 @@ class Shipment implements ObserverInterface {
     /**
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      */
-    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\Message\ManagerInterface $messageManager) {
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\Message\ManagerInterface $messageManager)
+    {
         $this->_objectManager = $objectManager;
         $this->_messageManager = $messageManager;
     }
 
-    public function execute(\Magento\Framework\Event\Observer $observer) {
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $event = $observer->getEvent();
         $shipment = $event->getShipment();
         $order = $shipment->getOrder();
         $payment = $order->getPayment()->getMethodInstance();
-        
+
         $shipped = $paymentMethod->shipOrder($order);
         if ($shipped['success']) {
             $this->_messageManager->addSuccess(__('Your shipment has been processed. Your transaction has also been updated at MultiSafepay'));
-        } elseif($shipped['error']) {
+        } elseif ($shipped['error']) {
             $this->_messageManager->addError(__('Your shipment has been processed, but the transaction could not be updated at MultiSafepay. If needed you need to update your transaction manually using MultiSafepay Control'));
         }
         return $this;
     }
+
 }

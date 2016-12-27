@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Visa extends \MultiSafepay\Connect\Model\Connect {
+class Visa extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'visa';
     protected $_gatewayCode = 'VISA';

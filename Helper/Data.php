@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Helper;
 
-class Data {
+class Data
+{
 
     public $giftcards = array(
         'webshopgiftcard',
@@ -73,9 +74,11 @@ class Data {
         'sofort',
         'directdebit',
         'americanexpress',
+        'creditcard'
     );
 
-    public function getPaymentType($code) {
+    public function getPaymentType($code)
+    {
         if (in_array($code, $this->gateways)) {
             return 'gateways';
         } elseif (in_array($code, $this->giftcards)) {

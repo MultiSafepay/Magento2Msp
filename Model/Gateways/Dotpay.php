@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Dotpay extends \MultiSafepay\Connect\Model\Connect {
+class Dotpay extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'dotpay';
     protected $_gatewayCode = 'DOTPAY';

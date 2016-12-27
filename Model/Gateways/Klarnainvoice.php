@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Klarnainvoice extends \MultiSafepay\Connect\Model\Connect {
+class Klarnainvoice extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'klarnainvoice';
     protected $_gatewayCode = 'KLARNA';

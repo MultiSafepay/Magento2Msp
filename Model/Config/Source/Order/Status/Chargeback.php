@@ -33,7 +33,8 @@ namespace MultiSafepay\Connect\Model\Config\Source\Order\Status;
 
 use Magento\Sales\Model\Order;
 
-class Chargeback implements \Magento\Framework\Option\ArrayInterface {
+class Chargeback implements \Magento\Framework\Option\ArrayInterface
+{
 
     const UNDEFINED_OPTION_LABEL = '-- Please Select --';
 
@@ -43,8 +44,8 @@ class Chargeback implements \Magento\Framework\Option\ArrayInterface {
     protected $_stateStatuses = [
         Order::STATE_NEW,
         Order::STATE_PENDING_PAYMENT,
-            // \Magento\Sales\Model\Order::STATE_PROCESSING,
-            //\Magento\Sales\Model\Order::STATE_COMPLETE,
+        // \Magento\Sales\Model\Order::STATE_PROCESSING,
+        //\Magento\Sales\Model\Order::STATE_COMPLETE,
         Order::STATE_CLOSED,
         Order::STATE_CANCELED,
         Order::STATE_HOLDED,
@@ -58,14 +59,16 @@ class Chargeback implements \Magento\Framework\Option\ArrayInterface {
     /**
      * @param \Magento\Sales\Model\Order\Config $orderConfig
      */
-    public function __construct(\Magento\Sales\Model\Order\Config $orderConfig) {
+    public function __construct(\Magento\Sales\Model\Order\Config $orderConfig)
+    {
         $this->_orderConfig = $orderConfig;
     }
 
     /**
      * @return array
      */
-    public function toOptionArray() {
+    public function toOptionArray()
+    {
         $statuses = $this->_stateStatuses ? $this->_orderConfig->getStateStatuses($this->_stateStatuses) : $this->_orderConfig->getStatuses();
 
         //$statuses = $this->_orderConfig->getStatuses();

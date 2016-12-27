@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Betaalnaontvangst extends \MultiSafepay\Connect\Model\Connect {
+class Betaalnaontvangst extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'betaalnaontvangst';
     protected $_gatewayCode = 'PAYAFTER';

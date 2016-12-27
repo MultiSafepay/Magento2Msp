@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Podium extends \MultiSafepay\Connect\Model\Connect {
+class Podium extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'podium';
     protected $_gatewayCode = 'PODIUM';

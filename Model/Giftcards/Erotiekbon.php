@@ -31,7 +31,8 @@
 
 namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Erotiekbon extends \MultiSafepay\Connect\Model\Connect {
+class Erotiekbon extends \MultiSafepay\Connect\Model\Connect
+{
 
     protected $_code = 'erotiekbon';
     protected $_gatewayCode = 'EROTIEKBON';
