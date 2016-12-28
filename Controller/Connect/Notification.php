@@ -58,12 +58,12 @@ class Notification extends \Magento\Framework\App\Action\Action
     protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory, \Magento\Framework\App\RequestInterface $requestHttp
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory
     )
     {
         $this->_coreRegistry = $coreRegistry;
         $this->dataFactory = $dataFactory;
-        $this->_requestHttp = $requestHttp;
+        $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
     }
 
