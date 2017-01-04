@@ -289,6 +289,20 @@
         <group>multisafepay_connect</group>
       </podium>
             
+                  
+        <!-- Start givacard-->
+      <givacard>
+        <active>0</active>
+        <title>Givacard</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Giftcards\Givacard</model>
+        <group>multisafepay_connect</group>
+      </givacard>
+            
       <!-- Start VVV Bon-->
       <vvvbon>
         <active>0</active>
@@ -761,6 +775,20 @@
         <model>MultiSafepay\Connect\Model\Giftcards\Podium</model>
         <group>multisafepay_connect</group>
       </podium>
+      
+      
+        <!-- Start givacard-->
+      <givacard>
+        <active>0</active>
+        <title>Givacard</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Giftcards\Givacard</model>
+        <group>multisafepay_connect</group>
+      </givacard>
             
       <!-- Start VVV Bon-->
       <vvvbon>
