@@ -717,7 +717,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $order_email = $this->getMainConfigData('send_order_email');
         if (($order_email == "after_transaction" && $status != "initialized" && $status != "expired" && !$order->getEmailSent()) ||
-                ($payment->getMethodInstance()->_code == 'mspbanktransfer' && !$order->getEmailSent()) ||
+                ($payment->getMethodInstance()->_code == 'mspbanktransfer' && !$order->getEmailSent()) &&
                 ($status == "expired" && isset($this->_client->orders->data->transaction_id))
         ) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
