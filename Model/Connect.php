@@ -1008,7 +1008,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $state = $this->getMainConfigData('order_status');
-        $stateObject->setState($state);
+        $stateObject->setState(\Magento\Sales\Model\Order::STATE_NEW);
         $stateObject->setStatus($state);
         $stateObject->setIsNotified(false);
     }
