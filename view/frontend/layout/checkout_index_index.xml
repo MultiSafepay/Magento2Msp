@@ -220,6 +220,16 @@
                                     </item>
                                   </item>
                                 </item>
+                                
+                                <item name="givacard" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/giftcards/givacard</item>
+                                  <item name="methods" xsi:type="array">
+                                                                        
+                                    <item name="givacard" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
                                                                 
                                 <item name="vvvbon" xsi:type="array">
                                   <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/giftcards/vvvbon</item>

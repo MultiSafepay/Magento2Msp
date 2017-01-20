@@ -64,6 +64,7 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         $images['fashioncheque'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/fashioncheque.png");
         $images['fashiongiftcard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/fashiongiftcard.png");
         $images['podium'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/podium.png");
+        $images['givacard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/givacard.png");
         $images['vvvbon'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/vvvbon.png");
         $images['sportenfit'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/sportenfit.png");
         $images['goodcard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/goodcard.png");

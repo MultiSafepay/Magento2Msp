@@ -1,5 +1,3 @@
-<?php
-
 /**
  *
  * NOTICE OF LICENSE
@@ -28,63 +26,25 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-namespace MultiSafepay\Connect\Helper;
-
-class Data
-{
-
-    public $giftcards = array(
-        'webshopgiftcard',
-        'babygiftcard',
-        'boekenbon',
-        'erotiekbon',
-        'parfumcadeaukaart',
-        'yourgift',
-        'wijncadeau',
-        'gezondheidsbon',
-        'fashioncheque',
-        'fashiongiftcard',
-        'podium',
-        'vvvbon',
-        'sportenfit',
-        'goodcard',
-        'nationaletuinbon',
-        'nationaleverwencadeaubon',
-        'beautyandwellness',
-        'fietsenbon',
-        'wellnessgiftcard',
-        'winkelcheque',
-        'givacard'
-    );
-    public $gateways = array(
-        'ideal',
-        'dotpay',
-        'betaalnaontvangst',
-        'einvoice',
-        'klarnainvoice',
-        'bancontact',
-        'visa',
-        'eps',
-        'ferbuy',
-        'mastercard',
-        'mspbanktransfer',
-        'maestro',
-        'paypalmsp',
-        'giropay',
-        'sofort',
-        'directdebit',
-        'americanexpress',
-        'creditcard'
-    );
-
-    public function getPaymentType($code)
-    {
-        if (in_array($code, $this->gateways)) {
-            return 'gateways';
-        } elseif (in_array($code, $this->giftcards)) {
-            return 'giftcards';
+/*browser:true*/
+/*global define*/
+define(
+        [
+          'uiComponent',
+          'Magento_Checkout/js/model/payment/renderer-list'
+        ],
+        function (
+                Component,
+                rendererList
+                ) {
+          'use strict';
+          rendererList.push(
+                  {
+                    type: 'givacard',
+                    component: 'MultiSafepay_Connect/js/view/payment/method-renderer/connect-method'
+                  }
+          );
+          /** Add view logic here if needed */
+          return Component.extend({});
         }
-    }
-
-}
+);
