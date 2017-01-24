@@ -109,6 +109,9 @@
     <method name="parfumcadeaukaart">
       <allow_multiple_address>1</allow_multiple_address>
     </method>
+    <method name="givacard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
     <method name="webshopgiftcard">
       <allow_multiple_address>1</allow_multiple_address>
     </method>

@@ -358,7 +358,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.2.0',
+                "plugin_version" => ' - Plugin 1.3.0',
                 "partner" => "MultiSafepay",
             ),
             "gateway_info" => array(
@@ -1008,7 +1008,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $state = $this->getMainConfigData('order_status');
-        $stateObject->setState($state);
+        $stateObject->setState(\Magento\Sales\Model\Order::STATE_NEW);
         $stateObject->setStatus($state);
         $stateObject->setIsNotified(false);
     }

@@ -29,62 +29,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Helper;
+namespace MultiSafepay\Connect\Model\Giftcards;
 
-class Data
+class Givacard extends \MultiSafepay\Connect\Model\Connect
 {
 
-    public $giftcards = array(
-        'webshopgiftcard',
-        'babygiftcard',
-        'boekenbon',
-        'erotiekbon',
-        'parfumcadeaukaart',
-        'yourgift',
-        'wijncadeau',
-        'gezondheidsbon',
-        'fashioncheque',
-        'fashiongiftcard',
-        'podium',
-        'vvvbon',
-        'sportenfit',
-        'goodcard',
-        'nationaletuinbon',
-        'nationaleverwencadeaubon',
-        'beautyandwellness',
-        'fietsenbon',
-        'wellnessgiftcard',
-        'winkelcheque',
-        'givacard'
-    );
-    public $gateways = array(
-        'ideal',
-        'dotpay',
-        'betaalnaontvangst',
-        'einvoice',
-        'klarnainvoice',
-        'bancontact',
-        'visa',
-        'eps',
-        'ferbuy',
-        'mastercard',
-        'mspbanktransfer',
-        'maestro',
-        'paypalmsp',
-        'giropay',
-        'sofort',
-        'directdebit',
-        'americanexpress',
-        'creditcard'
-    );
-
-    public function getPaymentType($code)
-    {
-        if (in_array($code, $this->gateways)) {
-            return 'gateways';
-        } elseif (in_array($code, $this->giftcards)) {
-            return 'giftcards';
-        }
-    }
+    protected $_code = 'givacard';
+    protected $_gatewayCode = 'GIVACARD';
 
 }
