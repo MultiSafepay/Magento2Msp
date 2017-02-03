@@ -109,11 +109,7 @@ define(
             afterPlaceOrder: function () {
               if (this.item.method == 'ideal') {
                 window.location.replace(url.build('multisafepay/connect/redirect/?issuer=' + $('[name="issuerid"]').val()));
-              } else {
-                window.location.replace(url.build('multisafepay/connect/redirect/'));
-              }
-
-              if (this.item.method == 'creditcard') {
+              } else if (this.item.method == 'creditcard') {
                 window.location.replace(url.build('multisafepay/connect/redirect/?creditcard=' + $('[name="creditcard"]').val()));
               } else {
                 window.location.replace(url.build('multisafepay/connect/redirect/'));
