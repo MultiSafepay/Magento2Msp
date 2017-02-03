@@ -342,7 +342,7 @@
                                   </item>
                                 </item>
                                                                 
-                                <item name="parfumcadeuakaart" xsi:type="array">
+                                <item name="parfumcadeaukaart" xsi:type="array">
                                   <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/giftcards/parfumcadeaukaart</item>
                                   <item name="methods" xsi:type="array">
                                                                         
