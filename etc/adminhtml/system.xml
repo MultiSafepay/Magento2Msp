@@ -170,6 +170,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -233,6 +237,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -288,6 +296,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -345,6 +357,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -400,6 +416,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -457,6 +477,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -512,6 +536,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -569,6 +597,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -624,6 +656,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -681,6 +717,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -736,6 +776,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -793,6 +837,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <!-- Disaled. We are now always updating status to shipped once completed in Magento
         <field id="set_to_shipped" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -856,6 +904,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <!-- Disaled. We are now always updating status to shipped once completed in Magento
         <field id="set_to_shipped" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Set Multisafepay status to shipped</label>
@@ -917,6 +969,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <!-- Disaled. We are now always updating status to shipped once completed in Magento
         <field id="set_to_shipped" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -981,6 +1037,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1037,6 +1097,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -1095,6 +1159,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -1157,6 +1225,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -1225,6 +1297,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1286,6 +1362,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -1349,6 +1429,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1411,6 +1495,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1472,6 +1560,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -1536,6 +1628,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1597,6 +1693,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -1660,6 +1760,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1721,6 +1825,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -1784,6 +1892,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1845,6 +1957,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -1908,6 +2024,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1969,6 +2089,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -2032,6 +2156,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -2094,6 +2222,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -2152,6 +2284,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -2215,6 +2351,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -2276,6 +2416,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
@@ -2340,6 +2484,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -2402,6 +2550,10 @@
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
         </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -2463,6 +2615,10 @@
         </field>
         <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
         </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
