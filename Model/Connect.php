@@ -731,7 +731,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
         }
-
+        
         /**
          *    ENDING UNDO CANCEL CODE
          */
@@ -840,6 +840,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         0
                 )->update(false);
         $order->save();
+        $order->setStatus('payment_review')->setState('payment_review')->save(); 
     }
 
     /**
@@ -850,7 +851,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     protected function _registerPaymentCapture($skipFraudDetection = false, $transactionid, $order, $msporder)
     {
-        if ($order->canInvoice() || ($order->getStatus() == "pending_payment" && $msporder->status == "completed")) {
+        if (($order->canInvoice() || ($order->getStatus() == "pending_payment" && $msporder->status == "completed")) || ($order->getStatus() == "payment_review" && $msporder->status == "completed")) {
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
             $payment->setCurrencyCode($msporder->currency);
