@@ -326,6 +326,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1);
             $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId();
         }
+        
+        $ip_address = $this->validateIP($order->getRemoteIp());
+        $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
         $msporder = $this->_client->orders->post(array(
             "type" => $type,
@@ -349,8 +352,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             ),
             "customer" => array(
                 "locale" => $resolver->getLocale(),
-                "ip_address" => $order->getRemoteIp(),
-                "forwarded_ip" => $order->getXForwardedFor(),
+                "ip_address" => $ip_address,
+                "forwarded_ip" => $forwarded_ip,
                 "first_name" => $billing->getFirstName(),
                 "last_name" => $billing->getLastName(),
                 "address1" => $street,
@@ -384,6 +387,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         return $this->_client->orders;
+    }
+    
+    public function validateIP($ip)
+    {
+        $isValid = filter_var($ip, FILTER_VALIDATE_IP);
+        if ($isValid) {
+            return $isValid;
+        } else {
+            return NULL;
+        }
     }
 
     private function getAmountInCents($order)
