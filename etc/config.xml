@@ -48,6 +48,18 @@
         <model>MultiSafepay\Connect\Model\Gateways\Dotpay</model>
         <group>multisafepay_connect</group>
       </dotpay>
+      
+      <!-- Start Paysafecard -->
+      <paysafecard>
+        <active>0</active>
+        <title>Paysafecard</title>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Paysafecard</model>
+        <group>multisafepay_connect</group>
+      </paysafecard>
             
       <!-- Start Visa -->
       <visa>
@@ -1023,7 +1035,17 @@
         <model>MultiSafepay\Connect\Model\Gateways\Dotpay</model>
         <group>multisafepay_connect</group>
       </dotpay>
-      
+      <!-- Start Paysafecard -->
+      <paysafecard>
+        <active>0</active>
+        <title>Paysafecard</title>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Paysafecard</model>
+        <group>multisafepay_connect</group>
+      </paysafecard>
     </payment>
   </default>
 </config>
