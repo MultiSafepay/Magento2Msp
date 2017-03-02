@@ -2691,7 +2691,7 @@
       </group>
     </section>
     <!--FASTCHECKOUT -->
-    <section id="FASTCHECKOUT" translate="label" type="text" sortOrder="404" showInDefault="1" showInWebsite="1" showInStore="1">
+    <section id="fastcheckout" translate="label" type="text" sortOrder="404" showInDefault="1" showInWebsite="1" showInStore="1">
         <class>separator-top</class>
         <label>Fastcheckout</label>
         <tab>multisafepay</tab>

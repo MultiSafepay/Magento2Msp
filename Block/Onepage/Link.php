@@ -53,7 +53,7 @@ class Link extends \Magento\Framework\View\Element\Template
      */
     public function isDisabled()
     {
-        return !$this->_checkoutSession->getQuote()->validateMinimumAmount();
+        return ($this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE))?false:true;
     }
 
     /**
