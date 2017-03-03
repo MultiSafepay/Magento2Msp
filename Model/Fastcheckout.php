@@ -179,8 +179,16 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
     protected $logger;
     public $_manualGateway =null;
     public $_isAdmin = false;
-
-    
+    public $customerFactory;
+    public $cartManagementInterface;
+    public $cartRepositoryInterface;    
+    public $customerRepository;
+    public $_productFactory;
+    public $shippingRate;
+    public $_objectManager;
+    public $quote;
+    public $quoteManagement;
+    public $orderService;
 
     /**
      * @param \Magento\Framework\Model\Context $context
@@ -201,7 +209,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-    \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Module\ModuleListInterface $moduleList, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder, \Magento\Framework\App\RequestInterface $requestHttp, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = []
+    \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Module\ModuleListInterface $moduleList, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder, \Magento\Framework\App\RequestInterface $requestHttp, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,  array $data = []
     ) {
         parent::__construct(
                 $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger
@@ -212,8 +220,8 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         $this->_client = new MspClient();
         $this->_requestHttp = $requestHttp;
         $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
-        $this->_minAmount = $this->getConfigData('min_order_total');
-        $this->_maxAmount = $this->getConfigData('max_order_total');
+        $this->_minAmount = $this->getMainConfigData('min_order_total');
+        $this->_maxAmount = $this->getMainConfigData('max_order_total');
         
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
 		$this->logger = new \Zend\Log\Logger();
@@ -225,16 +233,16 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 		$quote = $session->getQuote();
 		$quoteId = $quote->getId();
 		
-        $environment = $this->getMainConfigData('msp_env');
+        $environment = $this->getMainConfigData('fastcheckout_env');
   
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $magentoInfo = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
         if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, null));
+            $this->_client->setApiKey($this->getMainConfigData('fastcheckout_test_api_key', null, null));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, null));
+            $this->_client->setApiKey($this->getMainConfigData('fastcheckout_live_api_key', null, null));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -287,6 +295,42 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         $alternateTaxRates = array();
         $shoppingCart = array();
         $items = $order->getAllItems();
+        
+        /*
+	    * Get tax rates for shippingmethod, this will be used to set a default Tax Rate
+	    */
+        $store= $this->getStore();
+        $shipping_tax_id = $this->getGlobalConfig('tax/classes/shipping_tax_class');
+        
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $_taxModelConfig = $objectManager->get('Magento\Tax\Model\Calculation\Rate');
+        $taxRates = $_taxModelConfig->getCollection()->getData();
+        $taxArray = array();
+        foreach ($taxRates as $tax) {
+	        if($tax['tax_calculation_rate_id'] == $shipping_tax_id){
+		        
+	       
+	        
+            $taxRateId = $tax['tax_calculation_rate_id'];
+            $taxCode = $tax["code"];
+            $taxRate = $tax["rate"];
+            $taxName = $taxCode.'('.$taxRate.'%)';
+   
+            $alternateTaxRates['tax_tables']['default'][] = array(
+                "shpping_taxed" => "true",
+                "name" => $taxName,
+                "rules" => array(
+                    array("rate" => $taxRate/100)
+                ),
+            );
+            
+            
+            }
+        }
+
+        
+       
+        
 
         foreach ($items as $item) {
             $product_id = $item->getProductId();
@@ -301,12 +345,14 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
             if ($item->getParentItem()) {
                 continue;
             }
+            
             $taxClass = ($item->getTaxPercent() == 0 ? 'none' : $item->getTaxPercent());
             $rate = $item->getTaxPercent() / 100;
 
             if ($taxClass == 'none') {
                 $rate = '0.00';
             }
+
 
             $alternateTaxRates['tax_tables']['alternate'][] = array(
                 "standalone" => "true",
@@ -370,7 +416,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
                     "description" => $item->getDescription(),
                     "unit_price" => $price,
                     "quantity" => $quantity,
-                    "merchant_item_id" => $item->getSku(),
+                    "merchant_item_id" => $item->getProductId(),
                     "tax_table_selector" => $taxClass,
                     "weight" => array(
                         "unit" => "KG",
@@ -416,56 +462,45 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
     
 
     public function notification($params) {
-
-
-		$orderData=array(
-'currency_id'  => 'EUR',
-'email'        => 'ruud@multisafepay.com', //buyer email id
-'shipping_address' =>array(
-    'firstname'    => 'jhon', //address Details
-    'lastname'     => 'Deo',
-    'street' => 'xxxxx',
-    'city' => 'xxxxx',
-    'country_id' => 'IN',
-    'region' => 'xxx',
-    'postcode' => '43244',
-    'telephone' => '52332',
-    'fax' => '32423',
-    'save_in_address_book' => 1
-));
 	    
-	    
-	    $order_id =$this->_mspHelper->createOrder($orderData);
-	    echo $order_id;
-	    exit;
-
-
-
-
-
-	    $params = $this->_requestHttp->getParams();
-        $environment = $this->getMainConfigData('msp_env');
+	  	 $environment = $this->getMainConfigData('fastcheckout_env');
+  
 
         if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getMainConfigData('fastcheckout_test_api_key', null, null));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getMainConfigData('fastcheckout_live_api_key', null, null));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
+        if (isset($params['transactionid'])) {
+            $transactionid = $params['transactionid'];
+        }
 
-        $transactionid = $params['transactionid'];
+        
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
 
-		$this->logger->info(print_r($msporder, true));
+	    
+	    $cart = $msporder->shopping_cart->items;
+	    
+	    
+        $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $this->customerFactory = $this->_objectManager->get('Magento\Customer\Model\CustomerFactory');
+        $this->cartManagementInterface = $this->_objectManager->get('Magento\Quote\Api\CartManagementInterface');
+        $this->cartRepositoryInterface = $this->_objectManager->get('Magento\Quote\Api\CartRepositoryInterface');
+        $this->customerRepository = $this->_objectManager->get('Magento\Customer\Api\CustomerRepositoryInterface');
+        $this->_productFactory = $this->_objectManager->get('Magento\Catalog\Model\ProductFactory');
+        $this->shippingRate = $this->_objectManager->get('Magento\Quote\Model\Quote\Address\Rate');
+		$this->quote = $this->_objectManager->get('Magento\Quote\Model\QuoteFactory');
+		$this->quoteManagement = $this->_objectManager->get('Magento\Quote\Model\QuoteManagement');
+		$this->orderService = $this->_objectManager->get('Magento\Sales\Model\Service\OrderService');
+ 
 
-        //Avoid errors shown to consumer when there was an error on requesting the transaction status
-        if ($success && !$this->_client->orders->success) {
-            return true;
-        } elseif (!$this->_client->orders->success) {
-            return false;
-        }
+	    
+	    $order_id =$this->createOrder($msporder);
+	    echo 'OK';
+	    exit;
 
         $status = $msporder->status;
 
@@ -535,6 +570,238 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
         return true;
     }
+    
+    
+    
+    
+    /**
+     * Create Order On Your Store
+     *
+     * @param array $orderData
+     * @return int $orderId
+     *
+     */
+    public function createOrder($orderData) {
+	    
+	    /*
+		    $orderData=array(
+'currency_id'  => 'EUR',
+'email'        => 'ruud@multisafepay.com', //buyer email id
+'items'=>$cart,
+'shipping_address' =>array(
+    'firstname'    => 'jhon', //address Details
+    'lastname'     => 'Deo',
+    'street' => 'xxxxx',
+    'city' => 'xxxxx',
+    'country_id' => 'NL',
+    'region' => 'xxx',
+    'postcode' => '43244',
+    'telephone' => '52332',
+    'fax' => '32423',
+    'save_in_address_book' => 1
+));
+*/
+
+
+
+		$billing_address = array(
+			'firstname'    => $orderData->customer->first_name, //address Details
+		    'lastname'     => $orderData->customer->last_name,
+		    'street' => $orderData->customer->address1.' '.$orderData->customer->house_number,
+		    'city' => $orderData->customer->city,
+		    'country_id' => $orderData->customer->country,
+		    'region' => '',
+		    'postcode' => $orderData->customer->zip_code,
+		    'telephone' => ($orderData->customer->phone1)?$orderData->customer->phone1:'0000000000',
+		    'email' => $orderData->customer->email,
+		    'fax' => '',
+		    'save_in_address_book' => 1
+		);
+		
+		
+		$shipping_address = array(
+			'firstname'    => $orderData->delivery->first_name, //address Details
+		    'lastname'     => $orderData->delivery->last_name,
+		    'street' => $orderData->delivery->address1.' '.$orderData->delivery->house_number,
+		    'city' => $orderData->delivery->city,
+		    'country_id' => $orderData->delivery->country,
+		    'region' => '',
+		    'postcode' => $orderData->delivery->zip_code,
+		    'telephone' => ($orderData->delivery->phone1)?$orderData->delivery->phone1:'0000000000',
+		    'fax' => '',
+		    'email' => $orderData->customer->email,
+		    'save_in_address_book' => 1
+		);
+		
+
+	    $quote_id = $orderData->order_id;
+	
+	    /** A QUOTE HAS ALREADY BEEN CREADED WHEN USING FASTCHECKOUT, SO THIS CODE SHOULD NOT BE USED. IT CAN BE USED FOR QWINDO
+		    
+		    
+        //init the store id and website id @todo pass from array
+        $store = $this->_storeManager->getStore();
+        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
+        //init the customer
+        $customer=$this->customerFactory->create();
+        $customer->setWebsiteId($websiteId);
+        $customer->loadByEmail($orderData->customer->email);// load customer by email address
+        $passwordLength = 10;
+        //check the customer
+        if(!$customer->getEntityId()){
+            //If not avilable then create this customer
+            $customer->setWebsiteId($websiteId)
+                ->setStore($store)
+                ->setFirstname($orderData->customer->first_name)
+                ->setLastname($orderData->customer->last_name)
+                ->setEmail($orderData->customer->email)
+                ->setPassword($this->randomPassword($passwordLength));
+            $customer->save();
+			$customer->sendNewAccountEmail();
+            
+        }
+        //init the quote
+        $cart_id = $this->cartManagementInterface->createEmptyCart(); //We can do this for Qwindo, for FCO a quote already exists so we don't need to create a new empty one.
+        $cart = $this->cartRepositoryInterface->get($cart_id);
+        $cart->setStore($store);
+        // if you have already buyer id then you can load customer directly
+        $customer= $this->customerRepository->getById($customer->getEntityId());
+        $cart->setCurrency();
+        $cart->assignCustomer($customer); //Assign quote to customer
+        //add items in quote
+        foreach($orderData->shopping_cart->items as $item){
+	 
+            $product = $this->_productFactory->create()->load($item->merchant_item_id);
+            $cart->addProduct(
+                $product,
+                intval($item->quantity)
+            );
+        }
+        //Set Address to quote @todo add section in order data for seperate billing and handle it
+        $cart->getBillingAddress()->addData($billing_address);
+        $cart->getShippingAddress()->addData($shipping_address);
+        // Collect Rates and Set Shipping & Payment Method
+        $this->shippingRate
+            ->setCode('freeshipping_freeshipping')
+            ->getPrice(1);
+        $shippingAddress = $cart->getShippingAddress();
+        //@todo set in order data
+        $shippingAddress->setCollectShippingRates(true)
+            ->collectShippingRates()
+            ->setShippingMethod('flatrate_flatrate'); //shipping method
+        $cart->getShippingAddress()->addShippingRate($this->shippingRate);
+        $cart->setPaymentMethod(strtolower($orderData->payment_details->type)); //payment method
+        //@todo insert a variable to affect the invetory
+        $cart->setInventoryProcessed(false);
+        // Set sales order payment
+        $cart->getPayment()->importData(['method' => strtolower($orderData->payment_details->type)]);
+        // Collect total and saeve
+        $cart->collectTotals();
+        // Submit the quote and create the order
+        $cart->save();
+        $cart = $this->cartRepositoryInterface->get($cart->getId());
+        $order_id = $this->cartManagementInterface->placeOrder($cart->getId());
+        
+        $order = $this->_objectManager->create('Magento\Sales\Model\Order')->load($order_id);
+        
+        $this->_objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
+        return $order_id;
+        
+        **/
+        
+        
+        
+        $store=$this->_storeManager->getStore();
+        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
+        $customer=$this->customerFactory->create();
+        $customer->setWebsiteId($websiteId);
+        $customer->loadByEmail($orderData->customer->email);// load customet by email address
+        $passwordLength = 10;
+        if(!$customer->getEntityId()){
+            //If not avilable then create this customer 
+            $customer->setWebsiteId($websiteId)
+                ->setStore($store)
+                ->setFirstname($orderData->customer->first_name)
+                ->setLastname($orderData->customer->last_name)
+                ->setEmail($orderData->customer->email)
+                ->setPassword($this->randomPassword($passwordLength));
+            $customer->save();
+            $customer->sendNewAccountEmail();
+        }
+        
+        //$quote= $this->quote->create(); //Create object of quote
+        $quote= $this->quote->create()->load($quote_id);
+        $quote->setStore($store); //set store for which you create quote
+        // if you have allready buyer id then you can load customer directly 
+        $customer= $this->customerRepository->getById($customer->getEntityId());
+        //$quote->setCurrency();
+        $quote->assignCustomer($customer); //Assign quote to customer
+ 
+        //add items in quote
+        foreach($orderData->shopping_cart->items as $item){
+	 
+            $product = $this->_productFactory->create()->load($item->merchant_item_id);
+            //$quote->addProduct($product,intval($item->quantity));
+        }
+ 
+        //Set Address to quote
+        $quote->getBillingAddress()->addData($billing_address);
+        $quote->getShippingAddress()->addData($shipping_address);
+ 
+        // Collect Rates and Set Shipping & Payment Method
+ 
+        $shippingAddress=$quote->getShippingAddress();
+        $shippingAddress->setCollectShippingRates(true)
+                        ->collectShippingRates()
+                        ->setShippingMethod('flatrate_flatrate'); //shipping method
+                               
+                        
+                        
+        $quote->setPaymentMethod(strtolower($orderData->payment_details->type)); //payment method
+        //$quote->setInventoryProcessed(false); //not effetc inventory
+        $quote->save(); //Now Save quote and your quote is ready
+ 
+        // Set Sales Order Payment
+        $quote->getPayment()->importData(['method' => strtolower($orderData->payment_details->type)]);
+ 
+        // Collect Totals & Save Quote
+        $quote->collectTotals()->save();
+ 
+ 
+		//Here we need to detect if the order has already been created, if so then we can don't need to do anything and return.
+		// check if an order is already created        
+		$ordercollection = $this->_objectManager->create('Magento\Sales\Model\ResourceModel\Order\CollectionFactory');
+		$collection = $ordercollection->create()->addAttributeToFilter('quote_id', $quote_id);
+		if (count($collection)) {
+            return;
+        }
+ 
+        // Create Order From Quote
+        $order = $this->quoteManagement->submit($quote);
+        $order->setEmailSent(0);
+        $order_model = $this->_objectManager->create('Magento\Sales\Model\Order')->load($order->getId());
+        
+        $this->_objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order_model);
+        $order->save();
+        return ;
+ 
+    }
+
+
+	/*
+	* This function generates a password as the generatePassword function from Magento is no longer availble for the customer object
+	*
+	*/
+	function randomPassword( $length = 8 ) 
+	{ 
+	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?"; 
+	$length = rand(10, 16); 
+	$password = substr( str_shuffle(sha1(rand() . time()) . $chars ), 0, $length );
+	 return $password;
+	}
+
+
+
 
     /**
      * Process payment pending notification
@@ -578,10 +845,10 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
             $environment = $this->getMainConfigData('msp_env');
             if ($environment == true) {
-                $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+                $this->_client->setApiKey($this->getMainConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
                 $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
             } else {
-                $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+                $this->_client->setApiKey($this->getMainConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
                 $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
             }
 
@@ -630,10 +897,10 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
         $environment = $this->getMainConfigData('msp_env');
         if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getMainConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getMainConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -662,47 +929,11 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
    
     //Instructions will be visible within the order/e-mails
     public function getInstructions() {
-        return trim($this->getConfigData('instructions'));
+        return trim($this->getMainConfigData('instructions'));
     }
 
 
-    /**
-     * Retrieve information from gateway/giftcard configuration
-     *
-     * @param string $field
-     * @param int|string|null|\Magento\Store\Model\Store $storeId
-     *
-     * @return mixed
-     */
-    public function getConfigData($field, $storeId = null, $code = null) {
-        if ('order_place_redirect_url' === $field) {
-            return $this->getOrderPlaceRedirectUrl();
-        }
-
-        if (null === $storeId) {
-            $storeId = $this->getStore();
-        }
-
-        if (null === $code) {
-            $code = $this->_code;
-        }
-
-        $mspType = $this->_mspHelper->getPaymentType($code);
-        $path = $mspType . '/' . $code . '/' . $field;
-
-
-        if ($mspType != 'giftcards' && ($field == "test_api_key" || $field == "live_api_key")) {
-            return $this->getMainConfigData($field, $storeId);
-        } elseif ($mspType == 'giftcards' && ($field == "test_api_key" || $field == "live_api_key")) {
-            if (!empty($this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId))) {
-                return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
-            } else {
-                return $this->getMainConfigData($field, $storeId);
-            }
-        }
-        return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
-    }
-
+    
     /**
      * Retrieve information from multisafepay configuration
      *
@@ -720,7 +951,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
             $storeId = $this->getStore();
         }
 
-        $path = 'multisafepay/connect/' . $field;
+        $path = 'fastcheckout/fastcheckout/' . $field;
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
