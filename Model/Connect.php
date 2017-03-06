@@ -447,7 +447,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         // check payment method is Klarna or PAD or E-invoice
         if ($payment->_code != 'klarnainvoice' && $payment->_code != 'betaalnaontvangst' && $payment->_code != 'einvoice') {
-            return false;
+            //return false; We now will updated to shipped for all transaction as this is also used for Qwindo
         }
 
         $environment = $this->getMainConfigData('msp_env');
@@ -753,6 +753,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 //We don't process this callback as the status would be the same as the new order status configured.
                 break;
             case "completed":
+            
                 $order_email = $this->getMainConfigData('send_order_email');
 
                 if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
@@ -894,7 +895,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             foreach ($order->getInvoiceCollection() as $invoice) {
                 if ($invoice->getOrderId() == $order->getEntityId()) {
-                    $endpoint = 'orders/' . $order->getIncrementId();
+                    $endpoint = 'orders/' . $transactionid;
 
                     try {
                         $neworder = $this->_client->orders->patch(

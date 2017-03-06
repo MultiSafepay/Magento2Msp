@@ -84,18 +84,16 @@ class Notification extends \Magento\Framework\App\Action\Action {
 			exit;
         }
         
-	    $updated = $paymentMethod->notification($params);
-	    
-	    
-	    
-        /*$params = $this->_requestHttp->getParams();
-     
+	    $order_id = $paymentMethod->notification($params);
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         $storeManager = $this->_objectManager->create('\Magento\Store\Model\StoreManagerInterface');
         $paymentMethod->_stockInterface = $this->_objectManager->create('\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface');
+        
+        $order = $this->_objectManager->get('Magento\Sales\Model\Order');
+        $order_information = $order->load($order_id);
 
-        $updated = $paymentMethod->notification($order);
+        $updated = $paymentMethod->notification($order_information);
         if ($updated) {
             if (isset($params['type']) && $params['type'] == 'initial') {
                 $this->getResponse()->setContent('<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>');
@@ -104,7 +102,7 @@ class Notification extends \Magento\Framework\App\Action\Action {
             }
         } else {
             $this->getResponse()->setContent('There was an error updating the order');
-        }*/
+        }
     }
 
 }

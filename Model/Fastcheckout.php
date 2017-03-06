@@ -325,13 +325,8 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
                 ),
             );
             
-            
             }
         }
-
-        
-       
-        
 
         foreach ($items as $item) {
             $product_id = $item->getProductId();
@@ -499,77 +494,9 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
  
 
 	    
-	    $order_id =$this->createOrder($msporder);
-	    echo 'OK';
-	    exit;
+	    $created= $this->createOrder($msporder);
 
-        $status = $msporder->status;
-
-        switch ($status) {
-            case "initialized":
-                //We don't process this callback as the status would be the same as the new order status configured.
-                break;
-            case "completed":
-                $order_email = $this->getMainConfigData('send_order_email');
-
-                if ($order_email = "after_transaction_paid" && !$order->getEmailSent()) {
-                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                    $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
-                }
-
-                $this->_registerPaymentCapture(true, $transactionid, $order, $msporder);
-                break;
-            case "uncleared":
-                $this->_registerPaymentPending($transactionid, $order, $msporder);
-                break;
-            case "void":
-            	$cancelled = $this->getMainConfigData('cancelled_order_status');
-            	if($cancelled != "pending"){
-                	$order->registerCancellation('<b>Transaction voided</b><br />')->save();
-                }else{
-	                $order->setStatus($cancelled)->save();
-                }
-                break;
-            case "declined":
-            	$declined = $this->getMainConfigData('declined_order_status');
-            	if($declined != "pending"){
-                	$order->registerCancellation('<b>Transaction declined</b><br />')->save();
-                }else{
-	                $order->setStatus($declined)->save();
-                }
-                break;
-            case "expired":
-            	$expired = $this->getMainConfigData('expired_order_status');
-            	if($expired != "pending"){
-                	$order->registerCancellation('<b>Transaction voided</b><br />')->save();
-                }else{
-	                $order->setStatus($expired)->save();
-                }
-                $order->registerCancellation('<b>Transaction expired</b><br />')->save();
-                break;
-            case "cancelled":
-                $cancelled = $this->getMainConfigData('cancelled_order_status');
-            	if($cancelled != "pending"){
-                	$order->registerCancellation('<b>Transaction voided</b><br />')->save();
-                }else{
-	                $order->setStatus($cancelled)->save();
-                }
-                break;
-            case "chargeback":
-            	$chargeback = $this->getMainConfigData('chargeback_order_status');
-	            $order->setStatus($chargeback)->save();
-            	break;
-            case "refunded":
-                //We don't process this callback as refunds are done using the Magento Backoffice now
-                break;
-            case "partial_refunded":
-                //We don't process this callback as refunds are done using the Magento Backoffice now
-                break;
-            default:
-                return false;
-        }
-
-        return true;
+        return $created;
     }
     
     
@@ -583,28 +510,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
      *
      */
     public function createOrder($orderData) {
-	    
-	    /*
-		    $orderData=array(
-'currency_id'  => 'EUR',
-'email'        => 'ruud@multisafepay.com', //buyer email id
-'items'=>$cart,
-'shipping_address' =>array(
-    'firstname'    => 'jhon', //address Details
-    'lastname'     => 'Deo',
-    'street' => 'xxxxx',
-    'city' => 'xxxxx',
-    'country_id' => 'NL',
-    'region' => 'xxx',
-    'postcode' => '43244',
-    'telephone' => '52332',
-    'fax' => '32423',
-    'save_in_address_book' => 1
-));
-*/
-
-
-
 		$billing_address = array(
 			'firstname'    => $orderData->customer->first_name, //address Details
 		    'lastname'     => $orderData->customer->last_name,
@@ -774,7 +679,10 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 		$ordercollection = $this->_objectManager->create('Magento\Sales\Model\ResourceModel\Order\CollectionFactory');
 		$collection = $ordercollection->create()->addAttributeToFilter('quote_id', $quote_id);
 		if (count($collection)) {
-            return;
+            foreach($collection as $order){
+	            return $order->getId();
+            }
+            
         }
  
         // Create Order From Quote
@@ -784,7 +692,8 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         
         $this->_objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order_model);
         $order->save();
-        return ;
+
+        return $order->getId();
  
     }
 
