@@ -450,7 +450,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $class = get_class($payment);
         if ($class != 'MultiSafepay\Connect\Model\Connect') {
-           // return true;
+            //return true; TODO CHANGE TO HELPER AND CHECK IF PAYMENT METHOD IS IN THE ONE OF THE ARRAYS
         }
 
 
@@ -479,8 +479,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if (!empty($this->_client->orders->success)) {
             $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getIncrementId(), $body = array(), $query_string = false);
-            $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
-            $order->save();
+            
+            if($payment->_code == 'klarnainvoice'){
+            	$order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
+				$order->save();
+			}
             $shipped['success'] = true;
             return $shipped;
         } else {
@@ -495,8 +498,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 
 		     if (!empty($this->_client->orders->success)) {
 	            $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getQuoteId(), $body = array(), $query_string = false);
-	            $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
-	            $order->save();
+	            if($payment->_code == 'klarnainvoice'){
+            		$order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
+					$order->save();
+				}
 	            $shipped['success'] = true;
 	            return $shipped;
             }else{
