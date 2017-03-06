@@ -38,6 +38,7 @@ use MultiSafepay\Connect\Helper\Data;
 use Magento\Framework\AppInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 
+
 class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
     protected $_isInitializeNeeded = true;
@@ -233,16 +234,16 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 		$quote = $session->getQuote();
 		$quoteId = $quote->getId();
 		
-        $environment = $this->getMainConfigData('fastcheckout_env');
+        $environment = $this->getConnectConfigData('msp_env');
   
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $magentoInfo = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
         if ($environment == true) {
-            $this->_client->setApiKey($this->getMainConfigData('fastcheckout_test_api_key', null, null));
+            $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, null));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getMainConfigData('fastcheckout_live_api_key', null, null));
+            $this->_client->setApiKey($this->getConnectConfigData('ive_api_key', null, null));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -463,14 +464,14 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
     public function notification($params) {
 	    
-	  	 $environment = $this->getMainConfigData('fastcheckout_env');
+	  	 $environment = $this->getConnectConfigData('msp_env');
   
 
         if ($environment == true) {
-            $this->_client->setApiKey($this->getMainConfigData('fastcheckout_test_api_key', null, null));
+            $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, null));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getMainConfigData('fastcheckout_live_api_key', null, null));
+            $this->_client->setApiKey($this->getConnectConfigData('live_api_key', null, null));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -753,7 +754,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         $shippingAddress=$quote->getShippingAddress();
         $shippingAddress->setCollectShippingRates(true)
                         ->collectShippingRates()
-                        ->setShippingMethod('flatrate_flatrate'); //shipping method
+                        ->setShippingMethod('flatrate_flatrate'); //shipping method TODO load based on transaction data
                                
                         
                         
@@ -843,12 +844,12 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
             $order->save();
 
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
-            $environment = $this->getMainConfigData('msp_env');
+            $environment = $this->getConnectConfigData('msp_env');
             if ($environment == true) {
-                $this->_client->setApiKey($this->getMainConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+                $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
                 $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
             } else {
-                $this->_client->setApiKey($this->getMainConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+                $this->_client->setApiKey($this->getConnectConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
                 $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
             }
 
@@ -895,12 +896,12 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
         $order = $payment->getOrder();
 
-        $environment = $this->getMainConfigData('msp_env');
+        $environment = $this->getConnectConfigData('msp_env');
         if ($environment == true) {
-            $this->_client->setApiKey($this->getMainConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getMainConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConnectConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -954,6 +955,29 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         $path = 'fastcheckout/fastcheckout/' . $field;
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
+    
+    /**
+     * Retrieve information from multisafepay configuration
+     *
+     * @param string $field
+     * @param int|string|null|\Magento\Store\Model\Store $storeId
+     *
+     * @return mixed
+     */
+    public function getConnectConfigData($field, $storeId = null) {
+        if ('order_place_redirect_url' === $field) {
+            return $this->getOrderPlaceRedirectUrl();
+        }
+
+        if (null === $storeId) {
+            $storeId = $this->getStore();
+        }
+
+        $path = 'multisafepay/connect/' . $field;
+        return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+    
+    
 
     public function getGlobalConfig($path, $storeId = null) {
 

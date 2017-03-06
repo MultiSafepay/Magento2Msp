@@ -2702,16 +2702,6 @@
                 <label>Enable Fastcheckout</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="fastcheckout_env" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Test or Live</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Environment</source_model>
-            </field>
-            <field id="fastcheckout_live_api_key" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Live Api Key</label>
-            </field>
-            <field id="fastcheckout_test_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Test Api Key</label>
-            </field>
             <field id="fastcheckout_send_order_email" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>When send the order confirmation e-mail</label>
                 <source_model>MultiSafepay\Connect\Model\Config\Source\Email</source_model>
