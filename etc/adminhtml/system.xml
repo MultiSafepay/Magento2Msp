@@ -6,11 +6,11 @@
     </tab>
     <section id="multisafepay" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
-      <label>Connect Settings</label>
+      <label>MultiSafepay Settings</label>
       <tab>multisafepay</tab>
       <resource>MultiSafepay_Connect::connect</resource>
       <group id="connect" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>MultiSafepay Connect Settings</label>
+        <label>MultiSafepay Settings</label>
         <field id="msp_env" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Test or Live</label>
           <source_model>MultiSafepay\Connect\Model\Config\Source\Environment</source_model>
@@ -2702,18 +2702,6 @@
                 <label>Enable Fastcheckout</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="fastcheckout_send_order_email" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>When send the order confirmation e-mail</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Email</source_model>
-            </field>
-            <field id="fastcheckout_email_invoice" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>E-mail invoice to customer</label>
-                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            </field>
-            <!--<field id="order_update_email" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-             <label>Send order update e-mail to customer</label>
-             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-             </field>-->
             <field id="fastcheckout_disable_checkout" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Disable normal checkout</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2724,35 +2712,10 @@
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <comment>Send the new accoutn email when a customer account is created after using Fastcheckout</comment>
             </field>
-            <field id="fastcheckout_creditmemo" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Allow online refund</label>
-                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <comment>Let you do an online refund when creating a creditmemo</comment>
-            </field>
             <field id="fastcheckout_sent_invoice_id" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Send invoice ID to MultiSafepay</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
              </field>
-            <field id="fastcheckout_order_status" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>New Order Status</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-            </field>
-            <field id="fastcheckout_declined_order_status" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Declined Order Status</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Declined</source_model>
-            </field>
-            <field id="fastcheckout_cancelled_order_status" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Cancelled Order Status</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Cancelled</source_model>
-            </field>
-            <field id="fastcheckout_expired_order_status" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Expired Order Status</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Expired</source_model>
-            </field>
-            <field id="fastcheckout_chargeback_order_status" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Chargeback Order Status</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Chargeback</source_model>
-            </field>
         </group>
     </section>
   </system>
