@@ -277,14 +277,22 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $secondsActive="";
         }
 
-        if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA' || $this->_gatewayCode == 'EINVOICE') {
+        /**
+	     * Qwindo using Fastcheckout and fastcheckout using cart data so from now we also need to add cart 
+	     * data to normal transactions to avoid problems with online refunds. Also this will show a more detailed payment page at MultiSafepay
+	     **/
+        /*if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA' || $this->_gatewayCode == 'EINVOICE') {
             $checkoutData = $this->getCheckoutData($order, $productRepo);
             $shoppingCart = $checkoutData["shopping_cart"];
             $checkoutData = $checkoutData["checkout_options"];
         } else {
             $shoppingCart = '';
             $checkoutData = '';
-        }
+        }*/
+        
+        $checkoutData = $this->getCheckoutData($order, $productRepo);
+        $shoppingCart = $checkoutData["shopping_cart"];
+        $checkoutData = $checkoutData["checkout_options"];
 
         $addressData = $this->parseCustomerAddress($billing->getStreetLine(1));
 
