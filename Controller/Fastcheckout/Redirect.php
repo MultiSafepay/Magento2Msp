@@ -48,10 +48,7 @@ class Redirect extends \Magento\Framework\App\Action\Action {
      */
     protected $_coreRegistry = null;
 
-    /**
-     * @var \Magento\Authorizenet\Helper\DataFactory
-     */
-    protected $dataFactory;
+   
     
     /**
      * @var \Magento\Framework\App\RequestInterface
@@ -59,10 +56,9 @@ class Redirect extends \Magento\Framework\App\Action\Action {
     protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory, \Magento\Framework\App\RequestInterface $requestHttp
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Framework\App\RequestInterface $requestHttp
     ) {
         $this->_coreRegistry = $coreRegistry;
-        $this->dataFactory = $dataFactory;
         $this->_requestHttp = $requestHttp;
         parent::__construct($context);
     }

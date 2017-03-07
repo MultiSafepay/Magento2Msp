@@ -687,10 +687,11 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
  
         // Create Order From Quote
         $order = $this->quoteManagement->submit($quote);
-        $order->setEmailSent(0);
+        
         $order_model = $this->_objectManager->create('Magento\Sales\Model\Order')->load($order->getId());
         
         $this->_objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order_model);
+        $order->setEmailSent(1);
         $order->save();
 
         return $order->getId();

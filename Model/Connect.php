@@ -448,15 +448,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $shipped['error'] = false;
         $payment = $order->getPayment()->getMethodInstance();
 
-        $class = get_class($payment);
-        if ($class != 'MultiSafepay\Connect\Model\Connect') {
-            //return true; TODO CHANGE TO HELPER AND CHECK IF PAYMENT METHOD IS IN THE ONE OF THE ARRAYS
-        }
-
-
-        // check payment method is Klarna or PAD or E-invoice
-        if ($payment->_code != 'klarnainvoice' && $payment->_code != 'betaalnaontvangst' && $payment->_code != 'einvoice') {
-            //return false; We now will updated to shipped for all transaction as this is also used for Qwindo
+		if(!in_array($payment->_code, $this->_mspHelper->gateways) && !in_array($payment->_code, $this->_mspHelper->giftcards)){
+            return false; 
         }
 
         $environment = $this->getMainConfigData('msp_env');
