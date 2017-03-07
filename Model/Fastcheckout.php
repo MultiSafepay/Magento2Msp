@@ -190,6 +190,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
     public $quote;
     public $quoteManagement;
     public $orderService;
+    public $scopeConfig;
 
     /**
      * @param \Magento\Framework\Model\Context $context
@@ -223,6 +224,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
         $this->_minAmount = $this->getMainConfigData('min_order_total');
         $this->_maxAmount = $this->getMainConfigData('max_order_total');
+        $this->scopeConfig= $scopeConfig;
         
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
 		$this->logger = new \Zend\Log\Logger();
@@ -790,27 +792,112 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
     
     
     public function getShippingRates($params){
-	    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $quote = $objectManager->create('\Magento\Quote\Model\Quote')->loadByIdWithoutStore($params['transactionid']);
-        
-  
-        $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->setCountryId($params['countrycode']);
-        $shippingAddress->setPostcode($params['zipcode']);
-        $shippingAddress->setCollectShippingRates(true);
+	    $carriers = $this->scopeConfig->getValue('carriers', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+	    foreach ($carriers as $carrierCode => $carrierConfig) {
 
-        $rates = $shippingAddress->collectShippingRates()->getGroupedAllShippingRates();
+	   	    if ($carrierConfig['active']) {
+                    if (isset($carrierConfig['price'])) {
+	                    
+                        $method = new \stdclass();
+                        $method->id = $carrierCode;
+                        $method->type = $carrierCode;
+                        $method->provider = $carrierCode;
+                        $method->name = $carrierConfig['name'];
+                        $price = 0;
+                        if ($carrierConfig['model'] == 'Magento\OfflineShipping\Model\Carrier\Flatrate') {
+                            if ($carrierConfig['type'] == 'I') {
+                                $price = $params['items_count'] * $carrierConfig['price'];
+                            } else {
+                                $price = $carrierConfig['price'];
+                            }
+                        } else {
+                            $price = $carrierConfig['price'];
+                        }
 
-        foreach ($rates as $carrier) {
-            foreach ($carrier as $rate) {
-                $shipping = array();
-                $shipping['id'] = $rate->getCode();
-                $shipping['name'] = $rate->getCarrierTitle() . ' - ' . $rate->getMethodTitle();
-                $shipping['cost'] = number_format($rate->getPrice(), 2, '.', '');
-                $shipping['currency'] = 'EUR';
+                        $method->price = $price;
 
-                $output[] = $shipping;
+                        if (!empty($carrierConfig['specificcountry'])) {
+                            $areas = explode(',', $carrierConfig['specificcountry']);
+                            foreach ($areas as $area) {
+                                if ($area == 'NL') {//todo change me
+                                    $shippingMethods[] = $method;
+                                }
+                            }
+                        } else {
+                            $shippingMethods[] = $method;
+                        }
+                    } elseif ('Magento\OfflineShipping\Model\Carrier\Freeshipping' == $carrierConfig['model']) {
+                        $amount = $params['amount'] / 100;
+          
+                        if ($amount >= $carrierConfig['free_shipping_subtotal']) {
+                            $method = new \stdclass();
+                            $method->id = $carrierCode;
+                            $method->type = $carrierCode;
+                            $method->provider = $carrierCode;
+                            $method->name = $carrierConfig['name'];
+                            $method->price = 0;
+                            ;
+                            if (!empty($carrierConfig['specificcountry'])) {
+                                $areas = explode(',', $carrierConfig['specificcountry']);
+                                foreach ($areas as $area) {
+                                    if ($area == 'NL') { // Todo change me
+                                        $shippingMethods[] = $method;
+                                    }
+                                }
+                            } else {
+                                $shippingMethods[] = $method;
+                            }
+                        }
+                    }elseif ('Magento\OfflineShipping\Model\Carrier\Tablerate' == $carrierConfig['model']) {
+                      //Table rate based
+                      	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+					  	$tablerateColl = $objectManager->get('Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Collection');
+			            foreach ($tablerateColl as $tablerate) {
+			                $table_data = $tablerate->getData();
+			                if ($table_data['condition_name'] == 'package_qty') {
+			                    $items_count = $params['items_count'];
+			                    if ($items_count >= $table_data['condition_value']) {
+			                        $rate_price = $table_data['price'];
+			                    }
+			                } elseif ($table_data['condition_name'] == 'package_weight') {
+			                    $item_weight = $params['weight'];
+			                    if ($item_weight >= $table_data['condition_value']) {
+			                        $rate_price = $table_data['price'];
+			                    }
+			                }
+			            }
+			    
+
+			            $method = new \stdclass();
+			            $method->id = 'tablerate';
+			            $method->type = 'tablerate';
+			            $method->provider = 'tablerate';
+			            $method->name = $carrierConfig['title'];
+			            $method->price = $rate_price;
+			            $ratecountries = $carrierConfig['specificcountry'];
+			            $ratecountcheck = explode(',', $ratecountries);
+			
+			            if (!empty($ratecountries)) {
+			                foreach ($ratecountcheck as $area) {
+			                    if ($area == 'NL') {//todo change me
+			                        $shippingMethods[] = $method;
+			                    }
+			                }
+			            } else {
+			                $shippingMethods[] = $method;
+			            }                       
+                    }
+                }
             }
+
+        foreach ($shippingMethods as $shipmethod) {
+	            $shipping = array();
+                $shipping['id'] = $shipmethod->id;
+                $shipping['name'] = $shipmethod->name;
+                $shipping['cost'] = $shipmethod->price;
+                $shipping['currency'] = 'EUR';
+                $output[] = $shipping;
+            
         }
         
         $outxml = '<?xml version="1.0" encoding="UTF-8"?>';
