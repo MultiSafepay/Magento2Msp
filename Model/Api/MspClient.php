@@ -48,6 +48,7 @@ class MspClient
     public $request;
     public $response;
     public $debug;
+    public $logger;
 
     public function __construct()
     {
@@ -106,6 +107,8 @@ class MspClient
             curl_setopt($ch, CURLOPT_POSTFIELDS, $http_body);
         }
 
+		$this->logger->info($http_method.' - '.$api_method);
+		$this->logger->info(print_r($http_body, true));
 
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -118,6 +121,8 @@ class MspClient
         curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
 
         $body = curl_exec($ch);
+		$this->logger->info(print_r($body, true));
+
 
         if ($this->debug) {
             $this->request = $http_body;

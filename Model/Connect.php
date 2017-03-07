@@ -221,6 +221,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
         $this->logger = new \Zend\Log\Logger();
         $this->logger->addWriter($writer);
+        $this->_client->logger = $this->logger;
+        
+        
     }
 
     public function transactionRequest($order, $productRepo = null)
@@ -387,7 +390,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             "checkout_options" => $checkoutData,
         ));
 
-        $this->logger->info(print_r($msporder, true));
+        //$this->logger->info(print_r($msporder, true));
         $order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . $this->_client->orders->getPaymentLink(), false);
         $order->save();
         if ($this->_gatewayCode == "BANKTRANS") {
@@ -701,7 +704,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
 
-        $this->logger->info(print_r($msporder, true));
+        //$this->logger->info(print_r($msporder, true));
 
         //Avoid errors shown to consumer when there was an error on requesting the transaction status
         if ($success && !$this->_client->orders->success) {
@@ -1021,7 +1024,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "description" => "Refund: " . $order->getIncrementId(),
                     ), $endpoint);
 
-            $this->logger->info(print_r($this->_client->orders, true));
+            //$this->logger->info(print_r($this->_client->orders, true));
 
             if (!empty($this->_client->orders->result->error_code)) {
                 throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
