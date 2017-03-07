@@ -477,6 +477,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
         
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
+        print_r($msporder);exit;
 	    $cart = $msporder->shopping_cart->items;
 	    
         $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -797,7 +798,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
 	   	    if ($carrierConfig['active']) {
                     if (isset($carrierConfig['price'])) {
-	                    
+	                   
                         $method = new \stdclass();
                         $method->id = $carrierCode;
                         $method->type = $carrierCode;
@@ -814,7 +815,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
                             $price = $carrierConfig['price'];
                         }
 
-                        $method->price = $price;
+                        $method->price = $price+$carrierConfig['handling_fee'];
 
                         if (!empty($carrierConfig['specificcountry'])) {
                             $areas = explode(',', $carrierConfig['specificcountry']);
@@ -873,7 +874,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 			            $method->type = 'tablerate';
 			            $method->provider = 'tablerate';
 			            $method->name = $carrierConfig['title'];
-			            $method->price = $rate_price;
+			            $method->price = $rate_price+$carrierConfig['handling_fee'];
 			            $ratecountries = $carrierConfig['specificcountry'];
 			            $ratecountcheck = explode(',', $ratecountries);
 			
