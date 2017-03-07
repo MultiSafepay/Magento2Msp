@@ -20,7 +20,7 @@ require(['jquery', 'fastcheckout'],function($, fastcheckout){
             data-mage-init='{"Magento_Checkout/js/proceed-to-checkout":{"checkoutUrl":"<?php /* @escapeNotVerified */ echo $block->getCheckoutUrl(); ?>"}}'
             class="fastcheckout-button<?php echo($block->isDisabled()) ? ' disabled' : ''; ?>"
             <?php if ($block->isDisabled()):?>disabled="disabled"<?php endif; ?>>
-        <img src="https://www.multisafepay.com/downloads/betaalbutton/fco/koop-met-fastcheckout-oranje-large.png"/>
+        <img src="<?php echo $block->getCheckoutImageUrl(); ?>"/>
     </button>
     <?php } ?>
 <?php }?>

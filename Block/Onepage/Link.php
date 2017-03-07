@@ -16,6 +16,7 @@ class Link extends \Magento\Framework\View\Element\Template
      * @var \Magento\Checkout\Model\Session
      */
     protected $_checkoutSession;
+    protected $_assetRepo;
 
     /**
      * @var \Magento\Checkout\Helper\Data
@@ -32,10 +33,12 @@ class Link extends \Magento\Framework\View\Element\Template
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Checkout\Helper\Data $checkoutHelper,
+        \Magento\Framework\View\Asset\Repository $assetRepo,
         array $data = []
     ) {
         $this->_checkoutHelper = $checkoutHelper;
         $this->_checkoutSession = $checkoutSession;
+        $this->_assetRepo = $assetRepo;
         parent::__construct($context, $data);
         $this->_isScopePrivate = true;
     }
@@ -63,4 +66,9 @@ class Link extends \Magento\Framework\View\Element\Template
     {
         return $this->_checkoutHelper->canOnepageCheckout();
     }
+    
+    public function getCheckoutImageUrl(){
+	    return $this->_assetRepo->getUrl("MultiSafepay_Connect::images/fastcheckout.png");
+    }
+    
 }
