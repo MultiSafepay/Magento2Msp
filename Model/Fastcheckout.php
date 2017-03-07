@@ -460,9 +460,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
     public function notification($params) {
 	    
-	  	 $environment = $this->getConnectConfigData('msp_env');
-  
-
+	  	$environment = $this->getConnectConfigData('msp_env');
         if ($environment == true) {
             $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, null));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
@@ -477,10 +475,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
         
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
-
-	    
 	    $cart = $msporder->shopping_cart->items;
-	    
 	    
         $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->customerFactory = $this->_objectManager->get('Magento\Customer\Model\CustomerFactory');
@@ -493,8 +488,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 		$this->quoteManagement = $this->_objectManager->get('Magento\Quote\Model\QuoteManagement');
 		$this->orderService = $this->_objectManager->get('Magento\Sales\Model\Service\OrderService');
  
-
-	    
 	    $created= $this->createOrder($msporder);
 
         return $created;
@@ -729,117 +722,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         $order->save();
     }
 
-    /**
-     * Process completed payment (either full or partial)
-     *
-     * @param bool $skipFraudDetection
-     * @return void
-     */
-    protected function _registerPaymentCapture($skipFraudDetection = false, $transactionid, $order, $msporder) {
-        if ($order->canInvoice() ||($order->getStatus() == "pending_payment" && $msporder->status == "completed")) {
-            $payment = $order->getPayment();
-            $payment->setTransactionId($msporder->transaction_id);
-            $payment->setCurrencyCode($msporder->currency);
-            $payment->setPreparedMessage('<b>MultiSafepay status: ' . $msporder->status . '</b><br />');
-            $payment->setParentTransactionId($msporder->transaction_id);
-            $payment->setShouldCloseParentTransaction(false);
-            $payment->setIsTransactionClosed(0);
-            $payment->registerCaptureNotification(($msporder->amount / 100), $skipFraudDetection && $msporder->transaction_id);
-            $payment->setIsTransactionApproved(true);
-            $payment->save();
-
-            if ($payment->getMethodInstance()->_code == 'klarnainvoice') {
-                $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
-            }
-
-            $order->save();
-
-            //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
-            $environment = $this->getConnectConfigData('msp_env');
-            if ($environment == true) {
-                $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-                $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-            } else {
-                $this->_client->setApiKey($this->getConnectConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-                $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-            }
-
-            foreach ($order->getInvoiceCollection() as $invoice) {
-                if ($invoice->getOrderId() == $order->getEntityId()) {
-                    $endpoint = 'orders/' . $order->getIncrementId();
-
-                    try {
-                        $neworder = $this->_client->orders->patch(
-                                array(
-                            "invoice_id" => $invoice->getIncrementId(),
-                                ), $endpoint);
-                                
-                           if (!empty($this->_client->orders->result->error_code)) {
-	              throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
-             }     
-                    } catch (\Magento\Framework\Exception\LocalizedException $e) {
-	                    throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
-                    }
-                }
-                $emailInvoice = $this->getMainConfigData('email_invoice');
-                $gateway = $payment->getMethodInstance()->_gatewayCode;
-
-
-                if ($emailInvoice && $gateway != 'PAYAFTER' && $gateway != 'KLARNA') {
-                    $this->_invoiceSender->send($invoice, true);
-                }/* elseif (($gateway == 'PAYAFTER' || $gateway == 'KLARNA') && $send_bno_invoice && $emailInvoice) {
-                  $this->_invoiceSender->send($invoice, true);
-                  } */
-            }
-        }
-    }
-
-   
-    /**
-     * Refund
-     *
-     * @param \Magento\Framework\DataObject|\Magento\Payment\Model\InfoInterface|Payment $payment
-     * @param float $amount
-     * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount) {
-
-        $order = $payment->getOrder();
-
-        $environment = $this->getConnectConfigData('msp_env');
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConnectConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
-
-        $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
-        try {
-            $order = $this->_client->orders->post(array(
-                "type" => "refund",
-                "amount" => $amount * 100,
-                "currency" => $order->getBaseCurrencyCode(),
-                "description" => "Refund: " . $order->getIncrementId(),
-                    ), $endpoint);
-                    
-            //$this->logger->info(print_r($this->_client->orders, true));
-            
-             if (!empty($this->_client->orders->result->error_code)) {
-	              throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
-             }
-            
-            
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
-	      throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
-        }
-        return $this;
-    }
-
-   
-    //Instructions will be visible within the order/e-mails
+     //Instructions will be visible within the order/e-mails
     public function getInstructions() {
         return trim($this->getMainConfigData('instructions'));
     }
