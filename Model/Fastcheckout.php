@@ -227,6 +227,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
 		$this->logger = new \Zend\Log\Logger();
 		$this->logger->addWriter($writer);
+		 $this->_client->logger = $this->logger;
         
     }
 
@@ -286,7 +287,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
             "checkout_options" => $checkoutData,
         ));
 		
-		$this->logger->info(print_r($msporder, true));
+		//$this->logger->info(print_r($msporder, true));
        
         return $this->_client->orders;
     }
@@ -824,7 +825,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
                 "description" => "Refund: " . $order->getIncrementId(),
                     ), $endpoint);
                     
-            $this->logger->info(print_r($this->_client->orders, true));
+            //$this->logger->info(print_r($this->_client->orders, true));
             
              if (!empty($this->_client->orders->result->error_code)) {
 	              throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));

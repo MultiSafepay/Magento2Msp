@@ -62,13 +62,19 @@ class Success extends \Magento\Framework\App\Action\Action {
 
     public function execute() {
         $params = $this->_requestHttp->getParams();
+	    $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
+	    
+	    $order_id = $paymentMethod->notification($params);
+	    
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
 
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
-        $order_information = $order->loadByIncrementId($params['transactionid']);
+        $order_information = $order->load($order_id);
 
         $session->unsQuoteId();
         $session->getQuote()->setIsActive(false)->save();
+        $session->setLastOrderId($order_id);
+        $session->setLastRealOrderId($order_information->getIncrementId());
 
         // set some vars for the success page
         $session->setLastSuccessQuoteId($params['transactionid']);
