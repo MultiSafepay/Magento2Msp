@@ -222,8 +222,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->logger = new \Zend\Log\Logger();
         $this->logger->addWriter($writer);
         $this->_client->logger = $this->logger;
-        
-        
+        $this->_client->debug = ($this->getMainConfigData('msp_debug'))?true:false;
     }
 
     public function transactionRequest($order, $productRepo = null)

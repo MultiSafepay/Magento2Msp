@@ -113,7 +113,11 @@
             <label>MultiSafepay Status: Cancelled</label>
             <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
         </field>-->
-                
+        <field id="msp_debug" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enable debug mode</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <comment>All API request will be stored within var/log/multisafepay.log</comment>
+        </field>
       </group>
     </section>
     <section id="gateways" translate="label" type="text" sortOrder="402" showInDefault="1" showInWebsite="1" showInStore="1">
