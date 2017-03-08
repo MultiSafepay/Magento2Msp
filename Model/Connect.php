@@ -222,7 +222,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->logger = new \Zend\Log\Logger();
         $this->logger->addWriter($writer);
         $this->_client->logger = $this->logger;
-        $this->_client->debug = ($this->getMainConfigData('msp_debug'))?true:false;
+        $this->_client->debug = ($this->getMainConfigData('msp_debug')) ? true : false;
     }
 
     public function transactionRequest($order, $productRepo = null)
@@ -271,27 +271,27 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             $daysActive = '30';
         }
-        
+
         $secondsCheck = $this->getConfigData('seconds_active', null, $order->getPayment()->getMethodInstance()->_code);
         if (isset($secondsCheck)) {
             $secondsActive = $secondsCheck;
-        }else{
-            $secondsActive="";
+        } else {
+            $secondsActive = "";
         }
 
         /**
-	     * Qwindo using Fastcheckout and fastcheckout using cart data so from now we also need to add cart 
-	     * data to normal transactions to avoid problems with online refunds. Also this will show a more detailed payment page at MultiSafepay
-	     **/
-        /*if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA' || $this->_gatewayCode == 'EINVOICE') {
-            $checkoutData = $this->getCheckoutData($order, $productRepo);
-            $shoppingCart = $checkoutData["shopping_cart"];
-            $checkoutData = $checkoutData["checkout_options"];
-        } else {
-            $shoppingCart = '';
-            $checkoutData = '';
-        }*/
-        
+         * Qwindo using Fastcheckout and fastcheckout using cart data so from now we also need to add cart 
+         * data to normal transactions to avoid problems with online refunds. Also this will show a more detailed payment page at MultiSafepay
+         * */
+        /* if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA' || $this->_gatewayCode == 'EINVOICE') {
+          $checkoutData = $this->getCheckoutData($order, $productRepo);
+          $shoppingCart = $checkoutData["shopping_cart"];
+          $checkoutData = $checkoutData["checkout_options"];
+          } else {
+          $shoppingCart = '';
+          $checkoutData = '';
+          } */
+
         $checkoutData = $this->getCheckoutData($order, $productRepo);
         $shoppingCart = $checkoutData["shopping_cart"];
         $checkoutData = $checkoutData["checkout_options"];
@@ -336,7 +336,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1);
             $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId();
         }
-        
+
         $ip_address = $this->validateIP($order->getRemoteIp());
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
@@ -353,7 +353,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             "manual" => "false",
             "gateway" => $this->_gatewayCode,
             "days_active" => $daysActive,
-            "seconds_active"=>$secondsActive,
+            "seconds_active" => $secondsActive,
             "payment_options" => array(
                 "notification_url" => $notification,
                 "redirect_url" => $redirecturl,
@@ -398,7 +398,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         return $this->_client->orders;
     }
-    
+
     public function validateIP($ip)
     {
         $isValid = filter_var($ip, FILTER_VALIDATE_IP);
@@ -444,14 +444,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function shipOrder($order)
     {
-	    
+
         $shipped = array();
         $shipped['success'] = false;
         $shipped['error'] = false;
         $payment = $order->getPayment()->getMethodInstance();
 
-		if(!in_array($payment->_code, $this->_mspHelper->gateways) && !in_array($payment->_code, $this->_mspHelper->giftcards)){
-            return false; 
+        if (!in_array($payment->_code, $this->_mspHelper->gateways) && !in_array($payment->_code, $this->_mspHelper->giftcards)) {
+            return false;
         }
 
         $environment = $this->getMainConfigData('msp_env');
@@ -474,35 +474,35 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if (!empty($this->_client->orders->success)) {
             $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getIncrementId(), $body = array(), $query_string = false);
-            
-            if($payment->_code == 'klarnainvoice'){
-            	$order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
-				$order->save();
-			}
+
+            if ($payment->_code == 'klarnainvoice') {
+                $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
+                $order->save();
+            }
             $shipped['success'] = true;
             return $shipped;
         } else {
-	        $endpoint = 'orders/' . $order->getQuoteId();
-			$msporder = $this->_client->orders->patch(
-                array(
-            "tracktrace_code" => '',
-            "carrier" => $order->getShippingDescription(),
-            "ship_date" => date('Y-m-d H:i:s'),
-            "reason" => 'Shipped'
-                ), $endpoint);
-                
-		     if (!empty($this->_client->orders->success)) {
-	            $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getQuoteId(), $body = array(), $query_string = false);
-	            if($payment->_code == 'klarnainvoice'){
-            		$order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
-					$order->save();
-				}
-	            $shipped['success'] = true;
-	            return $shipped;
-            }else{
-	            $shipped['error'] = true;
-	            return $shipped;
-	       	}
+            $endpoint = 'orders/' . $order->getQuoteId();
+            $msporder = $this->_client->orders->patch(
+                    array(
+                "tracktrace_code" => '',
+                "carrier" => $order->getShippingDescription(),
+                "ship_date" => date('Y-m-d H:i:s'),
+                "reason" => 'Shipped'
+                    ), $endpoint);
+
+            if (!empty($this->_client->orders->success)) {
+                $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getQuoteId(), $body = array(), $query_string = false);
+                if ($payment->_code == 'klarnainvoice') {
+                    $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
+                    $order->save();
+                }
+                $shipped['success'] = true;
+                return $shipped;
+            } else {
+                $shipped['error'] = true;
+                return $shipped;
+            }
         }
     }
 
@@ -704,7 +704,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
 
         //$this->logger->info(print_r($msporder, true));
-
         //Avoid errors shown to consumer when there was an error on requesting the transaction status
         if ($success && !$this->_client->orders->success) {
             return true;
@@ -768,7 +767,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
         }
-        
+
         /**
          *    ENDING UNDO CANCEL CODE
          */
@@ -777,7 +776,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 //We don't process this callback as the status would be the same as the new order status configured.
                 break;
             case "completed":
-            
+
                 $order_email = $this->getMainConfigData('send_order_email');
 
                 if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
@@ -878,7 +877,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         0
                 )->update(false);
         $order->save();
-        $order->setStatus('payment_review')->setState('payment_review')->save(); 
+        $order->setStatus('payment_review')->setState('payment_review')->save();
     }
 
     /**

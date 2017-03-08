@@ -37,7 +37,8 @@ namespace MultiSafepay\Connect\Controller\Fastcheckout;
  * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
-class Cancel extends \Magento\Framework\App\Action\Action {
+class Cancel extends \Magento\Framework\App\Action\Action
+{
 
     /**
      * Core registry
@@ -46,8 +47,6 @@ class Cancel extends \Magento\Framework\App\Action\Action {
      */
     protected $_coreRegistry = null;
 
-   
-
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
@@ -55,13 +54,15 @@ class Cancel extends \Magento\Framework\App\Action\Action {
 
     public function __construct(
     \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Framework\App\RequestInterface $requestHttp
-    ) {
+    )
+    {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $requestHttp;
         parent::__construct($context);
     }
 
-    public function execute() {
+    public function execute()
+    {
         $params = $this->_requestHttp->getParams();
         if (isset($params['transactionid'])) {
             $incrementId = $params['transactionid'];

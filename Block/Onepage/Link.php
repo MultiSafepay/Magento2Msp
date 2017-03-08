@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace MultiSafepay\Connect\Block\Onepage;
 
 /**
@@ -12,6 +14,7 @@ namespace MultiSafepay\Connect\Block\Onepage;
  */
 class Link extends \Magento\Framework\View\Element\Template
 {
+
     /**
      * @var \Magento\Checkout\Model\Session
      */
@@ -30,12 +33,9 @@ class Link extends \Magento\Framework\View\Element\Template
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Checkout\Helper\Data $checkoutHelper,
-        \Magento\Framework\View\Asset\Repository $assetRepo,
-        array $data = []
-    ) {
+    \Magento\Framework\View\Element\Template\Context $context, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Checkout\Helper\Data $checkoutHelper, \Magento\Framework\View\Asset\Repository $assetRepo, array $data = []
+    )
+    {
         $this->_checkoutHelper = $checkoutHelper;
         $this->_checkoutSession = $checkoutSession;
         $this->_assetRepo = $assetRepo;
@@ -56,21 +56,21 @@ class Link extends \Magento\Framework\View\Element\Template
      */
     public function isDisabled()
     {
-	    $quote = $this->_checkoutSession->getQuote();
-	    $allowed_currency = $this->_scopeConfig->getValue('fastcheckout/fastcheckout/allowed_currency', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-	    $fco_active = $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-	    
-	    //Check currency rescrictions
+        $quote = $this->_checkoutSession->getQuote();
+        $allowed_currency = $this->_scopeConfig->getValue('fastcheckout/fastcheckout/allowed_currency', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $fco_active = $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+
+        //Check currency rescrictions
         $allowedCurrencies = explode(',', $allowed_currency);
         if (!in_array($quote->getQuoteCurrencyCode(), $allowedCurrencies)) {
             return true;
         }
-        
-        if(!$fco_active){
-	        return true;
+
+        if (!$fco_active) {
+            return true;
         }
-		
-		return false;
+
+        return false;
     }
 
     /**
@@ -80,9 +80,10 @@ class Link extends \Magento\Framework\View\Element\Template
     {
         return $this->_checkoutHelper->canOnepageCheckout();
     }
-    
-    public function getCheckoutImageUrl(){
-	    return $this->_assetRepo->getUrl("MultiSafepay_Connect::images/fastcheckout.png");
+
+    public function getCheckoutImageUrl()
+    {
+        return $this->_assetRepo->getUrl("MultiSafepay_Connect::images/fastcheckout.png");
     }
-    
+
 }

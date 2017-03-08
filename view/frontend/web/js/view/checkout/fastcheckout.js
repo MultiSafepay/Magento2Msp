@@ -50,9 +50,9 @@ define(
                 url) {
           var configConnect = window.checkoutConfig.payment.connect;
           'use strict';
-		  
-		   if(configConnect.hide_normal_checkout == true){
-		  	$('.checkout').filter('[data-role="proceed-to-checkout"]').hide();
-		  }
+
+          if (configConnect.hide_normal_checkout == true) {
+            $('.checkout').filter('[data-role="proceed-to-checkout"]').hide();
+          }
         }
 );

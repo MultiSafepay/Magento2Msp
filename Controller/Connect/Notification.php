@@ -47,8 +47,6 @@ class Notification extends \Magento\Framework\App\Action\Action
      */
     protected $_coreRegistry = null;
 
-   
-
     /**
      * @var \Magento\Framework\App\RequestInterface
      */

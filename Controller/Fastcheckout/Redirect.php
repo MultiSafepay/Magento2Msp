@@ -37,19 +37,16 @@ namespace MultiSafepay\Connect\Controller\Fastcheckout;
  * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
-class Redirect extends \Magento\Framework\App\Action\Action {
+class Redirect extends \Magento\Framework\App\Action\Action
+{
 
-
-
-		/**
+    /**
      * Core registry
      *
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry = null;
 
-   
-    
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
@@ -57,14 +54,15 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 
     public function __construct(
     \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Framework\App\RequestInterface $requestHttp
-    ) {
+    )
+    {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $requestHttp;
         parent::__construct($context);
     }
 
-
-    public function execute() {
+    public function execute()
+    {
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
         $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
@@ -76,7 +74,6 @@ class Redirect extends \Magento\Framework\App\Action\Action {
             $this->_redirect('checkout/cart');
         } else {
             $this->getResponse()->setRedirect($transactionObject->result->data->payment_url);
-            
         }
     }
 

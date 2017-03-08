@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>
-        <referenceBlock name="checkout.cart.methods">
+  <body>
+    <referenceBlock name="checkout.cart.methods">
             
-            <block class="MultiSafepay\Connect\Block\Onepage\Link" name="checkout.cart.methods.onepage.bottom.multisafepay" template="MultiSafepay_Connect::onepage/link.phtml" after="checkout.cart.methods.onepage.bottom"/>
-        </referenceBlock>
-    </body>
+      <block class="MultiSafepay\Connect\Block\Onepage\Link" name="checkout.cart.methods.onepage.bottom.multisafepay" template="MultiSafepay_Connect::onepage/link.phtml" after="checkout.cart.methods.onepage.bottom"/>
+    </referenceBlock>
+  </body>
 </page>
 
