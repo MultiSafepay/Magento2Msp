@@ -16,6 +16,17 @@ class FastcheckoutConfigProvider implements \Magento\Checkout\Model\ConfigProvid
         $this->_assetRepo = $assetRepo;
     }
 
+	public function disableCheckout(){
+		$fco_active = $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+		$disable_checkout= $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_disable_checkout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+		
+		if($fco_active && $disable_checkout){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
    
 
     
@@ -25,7 +36,7 @@ class FastcheckoutConfigProvider implements \Magento\Checkout\Model\ConfigProvid
         $config = array_merge_recursive($config, [
             'payment' => [
                 'connect' => [
-                    'hide_normal_checkout' => $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_disable_checkout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                    'hide_normal_checkout' => $this->disableCheckout()
                 ],
             ],
         ]);
