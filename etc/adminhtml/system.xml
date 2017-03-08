@@ -2706,20 +2706,25 @@
                 <label>Enable Fastcheckout</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="fastcheckout_disable_checkout" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="fastcheckout_disable_checkout" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Disable normal checkout</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <comment>Will disable the normal Magento checkout, only checkout will be Fastcheckout</comment>
             </field>
-            <field id="fastcheckout_send_account_email" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="fastcheckout_send_account_email" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Send account e-mail</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <comment>Send the new accoutn email when a customer account is created after using Fastcheckout</comment>
             </field>
-            <field id="fastcheckout_sent_invoice_id" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="fastcheckout_sent_invoice_id" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Send invoice ID to MultiSafepay</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
              </field>
+            <field id="allowed_currency" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Allowed Currencies</label>
+                <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
+                <can_be_empty>1</can_be_empty>
+            </field>
         </group>
     </section>
   </system>

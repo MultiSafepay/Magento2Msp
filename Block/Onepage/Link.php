@@ -56,7 +56,21 @@ class Link extends \Magento\Framework\View\Element\Template
      */
     public function isDisabled()
     {
-        return ($this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE))?false:true;
+	    $quote = $this->_checkoutSession->getQuote();
+	    $allowed_currency = $this->_scopeConfig->getValue('fastcheckout/fastcheckout/allowed_currency', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+	    $fco_active = $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+	    
+	    //Check currency rescrictions
+        $allowedCurrencies = explode(',', $allowed_currency);
+        if (!in_array($quote->getQuoteCurrencyCode(), $allowedCurrencies)) {
+            return true;
+        }
+        
+        if(!$fco_active){
+	        return true;
+        }
+		
+		return false;
     }
 
     /**
