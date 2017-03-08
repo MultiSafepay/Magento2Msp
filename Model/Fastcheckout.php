@@ -191,6 +191,12 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
     public $quoteManagement;
     public $orderService;
     public $scopeConfig;
+    public $shippingmethods = array(
+	  	"pickup"		=> "pickup_store",
+	  	"flatrate"		=> "flatrate_flatrate",
+	  	"freeshipping"	=> "freeshipping_freeshipping",
+	  	"bestway"		=> "tablerate_bestway"  
+    );
 
     /**
      * @param \Magento\Framework\Model\Context $context
@@ -477,7 +483,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
 
         
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
-        print_r($msporder);exit;
+
 	    $cart = $msporder->shopping_cart->items;
 	    
         $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -652,16 +658,27 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
         $quote->getShippingAddress()->addData($shipping_address);
  
         // Collect Rates and Set Shipping & Payment Method
- 
-        $shippingAddress=$quote->getShippingAddress();
-        $shippingAddress->setCollectShippingRates(true)
-                        ->collectShippingRates()
-                        ->setShippingMethod('flatrate_flatrate'); //shipping method TODO load based on transaction data
-                               
-                        
-                        
+        $shipping_name = $orderData->order_adjustment->shipping->flat_rate_shipping->name;
+        $carriers = $this->scopeConfig->getValue('carriers', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        
+
+	    foreach ($carriers as $carrierCode => $carrierConfig) {
+		    if(isset($carrierConfig['name'])){
+		   		if($shipping_name == $carrierConfig['title']){
+			   		$shipmethod = $this->_objectManager->get($carrierConfig['model']);
+			   		$allowed_methods = $shipmethod->getAllowedMethods();
+			   		foreach($allowed_methods as $id => $name){
+				   		//TODO we need to add support for third party shipping extensions
+				   		$shippingAddress=$quote->getShippingAddress();
+				   		$shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod($this->shippingmethods[$id]); 
+			   		}
+			    }
+		    }
+	     }
+    
+         
         $quote->setPaymentMethod(strtolower($orderData->payment_details->type)); //payment method
-        //$quote->setInventoryProcessed(false); //not effetc inventory
+        //$quote->setInventoryProcessed(false); //not effect inventory
         $quote->save(); //Now Save quote and your quote is ready
  
         // Set Sales Order Payment
@@ -793,6 +810,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
     
     
     public function getShippingRates($params){
+	    //TODO we need to add support for third party shipping extensions
 	    $carriers = $this->scopeConfig->getValue('carriers', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 	    foreach ($carriers as $carrierCode => $carrierConfig) {
 
@@ -803,7 +821,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
                         $method->id = $carrierCode;
                         $method->type = $carrierCode;
                         $method->provider = $carrierCode;
-                        $method->name = $carrierConfig['name'];
+                        $method->name = $carrierConfig['title'];
                         $price = 0;
                         if ($carrierConfig['model'] == 'Magento\OfflineShipping\Model\Carrier\Flatrate') {
                             if ($carrierConfig['type'] == 'I') {
@@ -828,14 +846,14 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod {
                             $shippingMethods[] = $method;
                         }
                     } elseif ('Magento\OfflineShipping\Model\Carrier\Freeshipping' == $carrierConfig['model']) {
-                        $amount = $params['amount'] / 100;
+                        $amount = $params['amount'];
           
                         if ($amount >= $carrierConfig['free_shipping_subtotal']) {
                             $method = new \stdclass();
                             $method->id = $carrierCode;
                             $method->type = $carrierCode;
                             $method->provider = $carrierCode;
-                            $method->name = $carrierConfig['name'];
+                            $method->name = $carrierConfig['title'];
                             $method->price = 0;
                             ;
                             if (!empty($carrierConfig['specificcountry'])) {
