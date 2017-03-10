@@ -821,8 +821,12 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     } else {
                         $price = $carrierConfig['price'];
                     }
-
-                    $method->price = $price + $carrierConfig['handling_fee'];
+					if(isset($carrierConfig['handling_fee'])){
+                    	$method->price = $price + $carrierConfig['handling_fee'];
+                   	}else{
+	                   	$method->price = $price ;
+                   	}
+                    
 
                     if (!empty($carrierConfig['specificcountry'])) {
                         $areas = explode(',', $carrierConfig['specificcountry']);
@@ -844,7 +848,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                         $method->provider = $carrierCode;
                         $method->name = $carrierConfig['title'];
                         $method->price = 0;
-                        ;
+
                         if (!empty($carrierConfig['specificcountry'])) {
                             $areas = explode(',', $carrierConfig['specificcountry']);
                             foreach ($areas as $area) {
@@ -875,13 +879,16 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                         }
                     }
 
-
                     $method = new \stdclass();
                     $method->id = 'tablerate';
                     $method->type = 'tablerate';
                     $method->provider = 'tablerate';
                     $method->name = $carrierConfig['title'];
-                    $method->price = $rate_price + $carrierConfig['handling_fee'];
+                    if(isset($carrierConfig['handling_fee'])){
+                    	$method->price = $rate_price + $carrierConfig['handling_fee'];
+                   	}else{
+	                   	$method->price = $rate_price ;
+                   	}
                     $ratecountries = $carrierConfig['specificcountry'];
                     $ratecountcheck = explode(',', $ratecountries);
 
