@@ -1019,7 +1019,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
         try {
-            $order = $this->_client->orders->post(array(
+            $msporder = $this->_client->orders->post(array(
                 "type" => "refund",
                 "amount" => $amount * 100,
                 "currency" => $order->getBaseCurrencyCode(),
@@ -1029,13 +1029,32 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             //$this->logger->info(print_r($this->_client->orders, true));
 
             if (!empty($this->_client->orders->result->error_code)) {
-                throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
+	            $endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
+	             try {
+					 $ordermsp = $this->_client->orders->post(array(
+	                "type" => "refund",
+	                "amount" => $amount * 100,
+	                "currency" => $order->getBaseCurrencyCode(),
+	                "description" => "Refund: " . $order->getIncrementId(),
+	                    ), $endpoint);
+	                
+	                 if (!empty($this->_client->orders->result->error_code)) {
+		                	throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
+		             }    
+	                    
+	             } catch (\Magento\Framework\Exception\LocalizedException $e) {
+				 		throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
+        		}
+	            
+               // throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
         }
         return $this;
     }
+    	    
+    
 
     /**
      * Set order state and status ofter placing order and before redirect to MultiSafepay
