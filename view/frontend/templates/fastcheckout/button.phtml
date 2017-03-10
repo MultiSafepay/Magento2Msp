@@ -1,26 +1,27 @@
 <?php
 /**
- * Copyright © 2016 Magento. All rights reserved.
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-// @codingStandardsIgnoreFile
+
+$id = $block->getContainerId() . mt_rand();
+
+
 ?>
 <script>
     require(['jquery', 'fastcheckout'], function ($, fastcheckout) {
 
     });
 </script>
-
-<?php if ($block->isPossibleOnepageCheckout()) { ?>
-    <?php if (!$block->isDisabled()) { ?>
-        <button type="button"
+<br />
+<div class="multisafepay checkout fastcheckout-logo multisafepay-fastcheckout-logo<?php
+     /* @noEscape */ echo $block->getContainerId(); ?>-container" style="align-content: center;">
+    <button type="button"
                 data-role="proceed-to-fastcheckout"
                 title="<?php /* @escapeNotVerified */ echo __('Proceed to FastCheckout') ?>"
                 data-mage-init='{"Magento_Checkout/js/proceed-to-checkout":{"checkoutUrl":"<?php /* @escapeNotVerified */ echo $block->getCheckoutUrl(); ?>"}}'
-                class="fastcheckout-button<?php echo($block->isDisabled()) ? ' disabled' : ''; ?>"
-                <?php if ($block->isDisabled()): ?>disabled="disabled"<?php endif; ?>>
+                class="fastcheckout-button<?php echo($block->isActive()) ? ' ' : ' disabled'; ?>"
+                <?php if (!$block->isActive()): ?>disabled="disabled"<?php endif; ?>>
           <img src="<?php echo $block->getCheckoutImageUrl(); ?>"/>
         </button>
-    <?php } ?>
-<?php } ?>
-
+</div>

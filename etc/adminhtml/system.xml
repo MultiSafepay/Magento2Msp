@@ -2706,11 +2706,11 @@
                 <label>Enable Fastcheckout</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <field id="fastcheckout_disable_checkout" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+            <!--<field id="fastcheckout_disable_checkout" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Disable normal checkout</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <comment>Will disable the normal Magento checkout, only checkout will be Fastcheckout</comment>
-            </field>
+            </field>-->
             <field id="fastcheckout_send_account_email" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Send account e-mail</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
