@@ -621,6 +621,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if ($shipping_percentage == 1 || $shipping_cost_orig == 0) {
             $shipping_percentage = "0.00";
         }
+        
+        if($shipping_percentage =='0'){
+	        $shipping_percentage = "0.00";
+        }
 
         $price = $shippin_exc_tac_calculated;
         $alternateTaxRates['tax_tables']['alternate'][] = array(
