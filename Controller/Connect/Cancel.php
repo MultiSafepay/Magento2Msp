@@ -30,6 +30,7 @@
  */
 
 namespace MultiSafepay\Connect\Controller\Connect;
+use MultiSafepay\Connect\Helper\Data;
 
 /**
  * Responsible for loading page content.
@@ -46,6 +47,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry = null;
+    protected $_mspHelper;
 
     /**
      * @var \Magento\Framework\App\RequestInterface
@@ -59,15 +61,17 @@ class Cancel extends \Magento\Framework\App\Action\Action
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
+        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
     }
 
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
+         
         if (isset($params['transactionid'])) {
+	        $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
             $incrementId = $params['transactionid'];
         }
-
 
         if ($incrementId) {
             /* @var $order \Magento\Sales\Model\Order */
@@ -92,7 +96,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
         }
 
 
-
+		$this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
         $this->_redirect('checkout/cart');
         return;
     }

@@ -30,6 +30,7 @@
  */
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
+use MultiSafepay\Connect\Helper\Data;
 
 /**
  * Responsible for loading page content.
@@ -46,6 +47,7 @@ class Success extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry = null;
+    protected $_mspHelper;
 
     /**
      * @var \Magento\Framework\App\RequestInterface
@@ -59,11 +61,16 @@ class Success extends \Magento\Framework\App\Action\Action
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $requestHttp;
         parent::__construct($context);
+        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
     }
 
     public function execute()
     {
+	    	
+	   	
+
         $params = $this->_requestHttp->getParams();
+        $this->_mspHelper->lockProcess('multisafepay-'.$params['transactionid']);
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
 
         $order_id = $paymentMethod->notification($params);
@@ -86,7 +93,7 @@ class Success extends \Magento\Framework\App\Action\Action
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         //$updated = $paymentMethod->notification($order, true);
-
+		$this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
         $this->_redirect('checkout/onepage/success?utm_nooverride=1');
         return;
     }

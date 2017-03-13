@@ -31,6 +31,8 @@
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
 
+use MultiSafepay\Connect\Helper\Data;
+
 /**
  * Responsible for loading page content.
  *
@@ -51,6 +53,7 @@ class Notification extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_requestHttp;
+    protected $_mspHelper;
 
     public function __construct(
     \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Framework\App\RequestInterface $requestHttp
@@ -59,12 +62,15 @@ class Notification extends \Magento\Framework\App\Action\Action
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $requestHttp;
         parent::__construct($context);
+        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
     }
 
     public function execute()
     {
-
-        $params = $this->_requestHttp->getParams();
+		      
+		
+		$params = $this->_requestHttp->getParams();
+		$this->_mspHelper->lockProcess('multisafepay-'.$params['transactionid']);  
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
 
         $isInitial = false;
@@ -78,6 +84,7 @@ class Notification extends \Magento\Framework\App\Action\Action
         // Is this notification about shipping rates?
         if ($isShipping) {
             print_r($paymentMethod->getShippingRates($params));
+            $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
             exit;
         }
 
@@ -91,6 +98,7 @@ class Notification extends \Magento\Framework\App\Action\Action
         $order_information = $order->load($order_id);
 
         $updated = $paymentMethod->notification($order_information);
+        $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
         if ($updated) {
             if (isset($params['type']) && $params['type'] == 'initial') {
                 $this->getResponse()->setContent('<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>');
