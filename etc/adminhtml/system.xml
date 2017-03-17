@@ -2714,7 +2714,7 @@
             <field id="fastcheckout_send_account_email" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Send account e-mail</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <comment>Send the new accoutn email when a customer account is created after using Fastcheckout</comment>
+                <comment>Send the new account email when a customer account is created after using Fastcheckout</comment>
             </field>
             <field id="fastcheckout_sent_invoice_id" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Send invoice ID to MultiSafepay</label>
