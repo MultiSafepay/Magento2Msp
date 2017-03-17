@@ -92,7 +92,7 @@ class Order implements ObserverInterface
         $transactionObject = $paymentMethod->transactionRequest($order, $productRepo);
 
         if (!empty($transactionObject->result->error_code)) {
-            $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
+            $this->_messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
         }
         return $this;
     }
