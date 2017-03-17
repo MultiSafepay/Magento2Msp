@@ -60,7 +60,8 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         $images['sofort'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/sofort.png");
         $images['directdebit'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/directdebit.png");
         $images['americanexpress'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/americanexpress.png");
-
+        $images['paysafecard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/paysafecard.png");
+        
         //giftcards
         $images['webshopgiftcard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/webshopgiftcard.png");
         $images['babygiftcard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/babygiftcard.png");
