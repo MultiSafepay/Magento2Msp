@@ -867,7 +867,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     $tablerateColl = $objectManager->get('Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Collection');
                     foreach ($tablerateColl as $tablerate) {
                         $table_data = $tablerate->getData();
-                        if ($table_data['condition_name'] == 'package_qty') {
+                        if ($table_data['condition_name'] == 'package_value') {
                             $items_count = $params['items_count'];
                             if ($items_count >= $table_data['condition_value']) {
                                 $rate_price = $table_data['price'];
