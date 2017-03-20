@@ -7,6 +7,9 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
 {
 
     protected $_assetRepo;
+    private $_scopeConfig;
+    private $localeResolver;
+    private $_objectManager;
 
     public function __construct(
     \Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Framework\View\Asset\Repository $assetRepo, ResolverInterface $localeResolver
@@ -17,13 +20,8 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         $this->_assetRepo = $assetRepo;
         $this->localeResolver = $localeResolver;
     }
-    
-     /**
-     * @var ResolverInterface
-     */
-    private $localeResolver;
-    
-    
+   
+   
 
     public function GetIssuers()
     {
@@ -61,7 +59,7 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         $images['directdebit'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/directdebit.png");
         $images['americanexpress'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/americanexpress.png");
         $images['paysafecard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/paysafecard.png");
-        
+
         //giftcards
         $images['webshopgiftcard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/webshopgiftcard.png");
         $images['babygiftcard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/babygiftcard.png");
@@ -87,6 +85,12 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
 
         return $images;
     }
+    
+    public function getActiveMethod(){
+	    $active_method = $this->_scopeConfig->getValue('multisafepay/connect/msp_preselect_method', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+	    return $active_method;
+    }
+    
 
     public function GetYears()
     {
@@ -110,6 +114,7 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
                     'issuers' => $this->GetIssuers(),
                     'creditcards' => $this->GetCreditcards(),
                     'years' => $this->GetYears(),
+                    'active_method'=> $this->getActiveMethod(),
                     'images' => $this->getImageURLs()
                 ],
             ],
