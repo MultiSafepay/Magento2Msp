@@ -35,6 +35,6 @@ class Goodcard extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'goodcard';
-    protected $_gatewayCode = 'GOODCARD';
+    public $_gatewayCode = 'GOODCARD';
 
 }

@@ -35,6 +35,6 @@ class Paysafecard extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'paysafecard';
-    protected $_gatewayCode = 'PSAFECARD';
+    public $_gatewayCode = 'PSAFECARD';
 
 }

@@ -35,6 +35,6 @@ class Yourgift extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'yourgift';
-    protected $_gatewayCode = 'YOURGIFT';
+    public $_gatewayCode = 'YOURGIFT';
 
 }

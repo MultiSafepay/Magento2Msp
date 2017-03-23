@@ -35,7 +35,7 @@ class Klarnainvoice extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'klarnainvoice';
-    protected $_gatewayCode = 'KLARNA';
+    public $_gatewayCode = 'KLARNA';
     protected $_canRefundInvoicePartial = false;
     protected $_canRefund = false;
 

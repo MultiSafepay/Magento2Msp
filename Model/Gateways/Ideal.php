@@ -35,7 +35,7 @@ class Ideal extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'ideal';
-    protected $_gatewayCode = 'IDEAL';
+    public $_gatewayCode = 'IDEAL';
 
     public function assignData(\Magento\Framework\DataObject $data)
     {

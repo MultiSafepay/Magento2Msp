@@ -35,6 +35,6 @@ class Babygiftcard extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'babygiftcard';
-    protected $_gatewayCode = 'BABYGIFTCARD';
+    public $_gatewayCode = 'BABYGIFTCARD';
 
 }

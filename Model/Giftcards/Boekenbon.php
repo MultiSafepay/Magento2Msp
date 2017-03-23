@@ -35,6 +35,6 @@ class Boekenbon extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'boekenbon';
-    protected $_gatewayCode = 'BOEKENBON';
+    public $_gatewayCode = 'BOEKENBON';
 
 }

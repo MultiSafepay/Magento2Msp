@@ -35,6 +35,6 @@ class Winkelcheque extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'winkelcheque';
-    protected $_gatewayCode = 'WINKELCHEQUE';
+    public $_gatewayCode = 'WINKELCHEQUE';
 
 }
