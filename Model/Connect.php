@@ -875,6 +875,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $payment->registerCaptureNotification(($msporder->amount / 100), $skipFraudDetection && $msporder->transaction_id);
             $payment->setIsTransactionApproved(true);
             $payment->save();
+            
+            $paid_amount = ($msporder->amount / 100);
+            
+            if($order->getTotalPaid() != $paid_amount){
+            	$order->setTotalPaid($paid_amount);  
+            }
 
             if ($payment->getMethodInstance()->_code == 'klarnainvoice') {
                 $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
