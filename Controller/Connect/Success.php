@@ -83,7 +83,7 @@ class Success extends \Magento\Framework\App\Action\Action
         //To a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
-        $updated = $paymentMethod->notification($order, true);
+        $updated = $paymentMethod->notification($order_information, true);
 
 		$this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
         $this->_redirect('checkout/onepage/success?utm_nooverride=1');

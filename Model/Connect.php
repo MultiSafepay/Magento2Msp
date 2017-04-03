@@ -390,9 +390,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         ));
 
         //$this->logger->info(print_r($msporder, true));
-        $order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . $this->_client->orders->getPaymentLink(), false);
-        $order->save();
-        if ($this->_gatewayCode == "BANKTRANS") {
+        if ($this->_gatewayCode != "BANKTRANS") {
+        	$order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . $this->_client->orders->getPaymentLink(), false);
+			$order->save();
+		}
+        else{
             $this->banktransurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId();
         }
 
@@ -765,8 +767,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $order_email = $this->getMainConfigData('send_order_email');
         if (($order_email == "after_transaction" && $status != "initialized" && $status != "expired" && !$order->getEmailSent()) ||
-                ($payment->getMethodInstance()->_code == 'mspbanktransfer' && !$order->getEmailSent()) ||
-                ($status == "expired" && isset($this->_client->orders->data->transaction_id))
+                ($payment->getMethodInstance()->_code == 'mspbanktransfer' && !$order->getEmailSent())
+                /* || ($status == "expired" && isset($this->_client->orders->data->transaction_id))*///PLGMAGTWO-106.
         ) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
