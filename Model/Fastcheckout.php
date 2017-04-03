@@ -890,16 +890,21 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                    	}else{
 	                   	$method->price = $rate_price ;
                    	}
-                    $ratecountries = $carrierConfig['specificcountry'];
-                    $ratecountcheck = explode(',', $ratecountries);
+                   	
+                   	if(isset($carrierConfig['specificcountry'])){
+                    	$ratecountries = $carrierConfig['specificcountry'];
+						$ratecountcheck = explode(',', $ratecountries);
 
-                    if (!empty($ratecountries)) {
-                        foreach ($ratecountcheck as $area) {
-                            if ($area == 'NL') {//todo change me
-                                $shippingMethods[] = $method;
-                            }
-                        }
-                    } else {
+	                    if (!empty($ratecountries)) {
+	                        foreach ($ratecountcheck as $area) {
+	                            if ($area == 'NL') {//todo change me
+	                                $shippingMethods[] = $method;
+	                            }
+	                        }
+	                    } else {
+	                        $shippingMethods[] = $method;
+	                    }
+	                }else {
                         $shippingMethods[] = $method;
                     }
                 }
