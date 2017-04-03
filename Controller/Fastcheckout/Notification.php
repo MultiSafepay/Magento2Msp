@@ -67,8 +67,6 @@ class Notification extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-		      
-		
 		$params = $this->_requestHttp->getParams();
 		$this->_mspHelper->lockProcess('multisafepay-'.$params['transactionid']);  
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
