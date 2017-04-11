@@ -270,6 +270,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $daysActive = '30';
         }
 
+        $secondsCheck = $this->getConfigData('seconds_active', null, $order->getPayment()->getMethodInstance()->_code);
+        if (isset($secondsCheck)) {
+            $secondsActive = $secondsCheck;
+        }else{
+            $secondsActive = "";
+        }
+
         if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA' || $this->_gatewayCode == 'EINVOICE') {
             $checkoutData = $this->getCheckoutData($order, $productRepo);
             $shoppingCart = $checkoutData["shopping_cart"];
@@ -333,6 +340,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             "manual" => "false",
             "gateway" => $this->_gatewayCode,
             "days_active" => $daysActive,
+            "seconds_active" => $secondsActive,
             "payment_options" => array(
                 "notification_url" => $notification,
                 "redirect_url" => $redirecturl,
