@@ -73,6 +73,8 @@ class Cancel extends \Magento\Framework\App\Action\Action
         if (isset($params['transactionid'])) {
             $incrementId = $params['transactionid'];
         }
+        $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
+        $session->restoreQuote();
 
 
         if ($incrementId) {
