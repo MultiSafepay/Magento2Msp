@@ -96,7 +96,7 @@ class Data
     /**
      * Max execution (locking) time for process (in seconds)
      */
-    const MAX_LOCK_TIME = 5;
+    const MAX_LOCK_TIME = 20;
     /**
      * @var Filesystem
      */
