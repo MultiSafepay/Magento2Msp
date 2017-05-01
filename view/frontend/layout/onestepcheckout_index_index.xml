@@ -52,6 +52,15 @@
                                     </item>
                                   </item>
                                 </item>
+                                <item name="paysafecard" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/paysafecard</item>
+                                  <item name="methods" xsi:type="array">
+                                                                                                        
+                                    <item name="paysafecard" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
                                 <item name="visa" xsi:type="array">
                                   <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/visa</item>
                                   <item name="methods" xsi:type="array">

@@ -7,6 +7,9 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
 {
 
     protected $_assetRepo;
+    private $_scopeConfig;
+    private $localeResolver;
+    private $_objectManager;
      /**
      * @var ResolverInterface
      */
@@ -21,6 +24,8 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         $this->_assetRepo = $assetRepo;
         $this->localeResolver = $localeResolver;
     }
+   
+   
 
     public function GetIssuers()
     {
@@ -40,7 +45,7 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
     {
         $images = array();
         //gateways
-$images['ideal'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/ideal.png");
+        $images['ideal'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/ideal.png");
         $images['visa'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/visa.png");
         $images['dotpay'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/dotpay.png");
         $images['betaalnaontvangst'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/betaalnaontvangst.png");
@@ -57,6 +62,7 @@ $images['ideal'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".str
         $images['sofort'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/sofort.png");
         $images['directdebit'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/directdebit.png");
         $images['americanexpress'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/americanexpress.png");
+        $images['paysafecard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/paysafecard.png");
 
         //giftcards
         $images['webshopgiftcard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/webshopgiftcard.png");
@@ -83,6 +89,12 @@ $images['ideal'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".str
 
         return $images;
     }
+    
+    public function getActiveMethod(){
+	    $active_method = $this->_scopeConfig->getValue('multisafepay/connect/msp_preselect_method', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+	    return $active_method;
+    }
+    
 
     public function GetYears()
     {
@@ -106,6 +118,7 @@ $images['ideal'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".str
                     'issuers' => $this->GetIssuers(),
                     'creditcards' => $this->GetCreditcards(),
                     'years' => $this->GetYears(),
+                    'active_method'=> $this->getActiveMethod(),
                     'images' => $this->getImageURLs()
                 ],
             ],

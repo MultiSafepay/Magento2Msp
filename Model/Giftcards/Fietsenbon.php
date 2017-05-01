@@ -35,6 +35,6 @@ class Fietsenbon extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'fietsenbon';
-    protected $_gatewayCode = 'FIETSENBON';
+    public $_gatewayCode = 'FIETSENBON';
 
 }

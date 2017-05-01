@@ -9,6 +9,7 @@
               <resource id="MultiSafepay_Connect::connect" title="MultiSafepey Connect Settings" />
               <resource id="MultiSafepay_Connect::gateways" title="MultiSafepay Gateways" />
               <resource id="MultiSafepay_Connect::giftcards" title="MultiSafepay Giftcards" />
+              <resource id="MultiSafepay_Connect::fastcheckout" title="Fastcheckout" />
             </resource>
           </resource>
         </resource>

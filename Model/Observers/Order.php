@@ -85,7 +85,7 @@ class Order implements ObserverInterface
             return $this;
         }
 
-        $paymentMethod->_manualGateway = $payment->getCode();
+        $paymentMethod->_manualGateway = $payment->_gatewayCode;
 
         $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
 

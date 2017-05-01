@@ -35,7 +35,7 @@ class Creditcard extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'creditcard';
-    protected $_gatewayCode = 'CREDITCARD';
+    public $_gatewayCode = 'CREDITCARD';
 
     public function assignData(\Magento\Framework\DataObject $data)
     {

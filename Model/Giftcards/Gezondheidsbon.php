@@ -35,6 +35,6 @@ class Gezondheidsbon extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'gezondheidsbon';
-    protected $_gatewayCode = 'GEZONDHEIDSBON';
+    public $_gatewayCode = 'GEZONDHEIDSBON';
 
 }

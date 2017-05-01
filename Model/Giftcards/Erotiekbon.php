@@ -35,6 +35,6 @@ class Erotiekbon extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'erotiekbon';
-    protected $_gatewayCode = 'EROTIEKBON';
+    public $_gatewayCode = 'EROTIEKBON';
 
 }

@@ -35,6 +35,6 @@ class Fashioncheque extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'fashioncheque';
-    protected $_gatewayCode = 'FASHIONCHEQUE';
+    public $_gatewayCode = 'FASHIONCHEQUE';
 
 }

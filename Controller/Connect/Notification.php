@@ -30,6 +30,7 @@
  */
 
 namespace MultiSafepay\Connect\Controller\Connect;
+use MultiSafepay\Connect\Helper\Data;
 
 /**
  * Responsible for loading page content.
@@ -46,11 +47,7 @@ class Notification extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry = null;
-
-    /**
-     * @var \Magento\Authorizenet\Helper\DataFactory
-     */
-    protected $dataFactory;
+    protected $_mspHelper;
 
     /**
      * @var \Magento\Framework\App\RequestInterface
@@ -58,20 +55,22 @@ class Notification extends \Magento\Framework\App\Action\Action
     protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Authorizenet\Helper\DataFactory $dataFactory
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
     )
     {
         $this->_coreRegistry = $coreRegistry;
-        $this->dataFactory = $dataFactory;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
+        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
     }
 
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
+        $this->_mspHelper->lockProcess('multisafepay-'.$params['transactionid']);
         if (!isset($params['timestamp'])) {
             $this->getResponse()->setContent('No timestamp is set so we are stopping the callback');
+             $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
             return false;
         }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
@@ -84,6 +83,7 @@ class Notification extends \Magento\Framework\App\Action\Action
         $paymentMethod->_stockInterface = $this->_objectManager->create('\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface');
 
         $updated = $paymentMethod->notification($order);
+        $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
         if ($updated) {
             if (isset($params['type']) && $params['type'] == 'initial') {
                 $this->getResponse()->setContent('<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>');
