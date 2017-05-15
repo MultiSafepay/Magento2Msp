@@ -199,6 +199,56 @@
                                     </item>
                                   </item>
                                 </item>
+                                
+                                <item name="trustpay" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/trustpay</item>
+                                  <item name="methods" xsi:type="array">
+                                                                        
+                                    <item name="trustpay" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="kbc" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/kbc</item>
+                                  <item name="methods" xsi:type="array">
+                                                                        
+                                    <item name="kbc" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="alipay" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/alipay</item>
+                                  <item name="methods" xsi:type="array">
+                                                                        
+                                    <item name="alipay" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="belfius" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/belfius</item>
+                                  <item name="methods" xsi:type="array">
+                                                                        
+                                    <item name="belfius" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="ing" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/ing</item>
+                                  <item name="methods" xsi:type="array">
+                                                                        
+                                    <item name="ing" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
                                                                 
                                 <item name="wijncadeau" xsi:type="array">
                                   <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/giftcards/wijncadeau</item>

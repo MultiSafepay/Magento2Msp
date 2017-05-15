@@ -59,6 +59,11 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         $images['directdebit'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/directdebit.png");
         $images['americanexpress'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/americanexpress.png");
         $images['paysafecard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/paysafecard.png");
+        $images['trustpay'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/trustpay.png");
+        $images['kbc'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/kbc.png");
+        $images['alipay'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/alipay.png");
+        $images['belfius'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/belfius.png");
+        $images['ing'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/ing.png");
 
         //giftcards
         $images['webshopgiftcard'] = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/webshopgiftcard.png");

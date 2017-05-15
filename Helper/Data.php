@@ -85,7 +85,12 @@ class Data
         'directdebit',
         'americanexpress',
         'creditcard',
-        'paysafecard'
+        'paysafecard',
+        'trustpay',
+        'kbc',
+        'alipay',
+        'belfius',
+        'ing'
     );
     
     
