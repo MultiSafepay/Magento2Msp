@@ -9,4 +9,7 @@
     <event name="shortcut_buttons_container">
         <observer name="multisafepay_fastcheckout_shortcuts" instance="MultiSafepay\Connect\Model\Observers\AddFastcheckoutShortcuts"/>
     </event>
+    <event name="controller_action_predispatch_checkout_cart_index">
+    <observer name="msp_action_predispatch_checkout_cart_index" instance="MultiSafepay\Connect\Model\Observers\RestoreQuote" />
+  </event>
 </config>
