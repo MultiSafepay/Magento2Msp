@@ -30,15 +30,6 @@ Paymentmethods:
 * These Payment methods can be used when officially released by MultiSafepay.
 
 The following giftcards are supported:
-1. Multistore setup
-2. Magestore one-step-checkout
-3. Magelaza one-step-checkout
-4. Refunds from within Magento 
-5. Auto update transaction to shipped for Pay After Delivery, Klarna and E-invoice
-6. Cart is active on cancelled transaction
-7. iDEAL issuer selection within Magento
-
-Next to the above it has support for the following giftcards:
 1. Wijncadeau
 2. Babygiftcard
 3. Wellnessgiftcard
@@ -61,6 +52,16 @@ Next to the above it has support for the following giftcards:
 20. Podium
 21. Winkel Cheque
 
+Next to the above it has support for
+1. Multistore setup
+2. Magestore one-step-checkout
+3. Magelaza one-step-checkout
+4. Refunds from within Magento 
+5. Auto update transaction to shipped for Pay After Delivery, Klarna and E-invoice
+6. Cart is active on cancelled transaction
+7. iDEAL issuer selection within Magento
+8. Creditcard gateway, this one is optional and can be used to offer a grouped CreditCard payment method with a card dropdown.
+ 
 Your notifcation url can be set to the following: (within your MultiSafepay website profile)
 Set [yoursiteurl]/multisafepay/connect/notification as Notification URL in the MSP merchant center
 If the url is not configured then the notification_url added to the transaction request will be used to process the callback.
