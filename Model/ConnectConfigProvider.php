@@ -10,10 +10,6 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
     private $_scopeConfig;
     private $localeResolver;
     private $_objectManager;
-     /**
-     * @var ResolverInterface
-     */
-    private $localeResolver;
 
     public function __construct(
     \Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Framework\View\Asset\Repository $assetRepo, ResolverInterface $localeResolver
@@ -24,7 +20,6 @@ class ConnectConfigProvider implements \Magento\Checkout\Model\ConfigProviderInt
         $this->_assetRepo = $assetRepo;
         $this->localeResolver = $localeResolver;
     }
-   
    
 
     public function GetIssuers()
