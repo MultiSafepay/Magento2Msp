@@ -35,6 +35,6 @@ class Ferbuy extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'ferbuy';
-    protected $_gatewayCode = 'Ferbuy';
+    public $_gatewayCode = 'Ferbuy';
 
 }

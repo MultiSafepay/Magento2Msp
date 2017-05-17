@@ -35,6 +35,6 @@ class Sportenfit extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'sportenfit';
-    protected $_gatewayCode = 'SPORTENFIT';
+    public $_gatewayCode = 'SPORTENFIT';
 
 }

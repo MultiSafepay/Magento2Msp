@@ -31,6 +31,15 @@
 
 namespace MultiSafepay\Connect\Helper;
 
+
+
+use Magento\Framework\Filesystem;
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Filesystem\Directory\WriteInterface;
+use Magento\Framework\App\State;
+use Magento\Framework\App\ObjectManager;
+
 class Data
 {
 
@@ -75,8 +84,135 @@ class Data
         'sofort',
         'directdebit',
         'americanexpress',
-        'creditcard'
+        'creditcard',
+        'paysafecard',
+        'trustpay',
+        'kbc',
+        'alipay',
+        'belfius',
+        'ing'
     );
+    
+    
+     /**
+     * File extension lock
+     */
+    const LOCK_EXTENSION = '.lock';
+    /**
+     * Max execution (locking) time for process (in seconds)
+     */
+    const MAX_LOCK_TIME = 20;
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+    /**
+     * @var string
+     */
+    private $lockFilePath;
+    /**
+     * @var WriteInterface
+     */
+    private $tmpDirectory;
+    /**
+     * @var State
+     */
+    private $state;
+    /**
+     * Constructor
+     *
+     * @param Filesystem $filesystem
+     */
+    public function __construct()
+    {
+	    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+	    $filessystem =  $objectManager->create('Magento\Framework\Filesystem');
+        $this->filesystem = $filessystem;
+        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function lockProcess($lockName)
+    {
+        if ($this->getState()->getMode() == State::MODE_PRODUCTION) {
+            return;
+        }
+        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+        $this->lockFilePath = $this->getFilePath($lockName);
+        while ($this->isProcessLocked()) {
+            usleep(1000);
+        }
+        $this->tmpDirectory->writeFile($this->lockFilePath, time());
+    }
+    /**
+     * @inheritdoc
+     * @throws FileSystemException
+     */
+    public function unlockProcess()
+    {
+        if ($this->getState()->getMode() == State::MODE_PRODUCTION) {
+            return ;
+        }
+        $this->tmpDirectory->delete($this->lockFilePath);
+    }
+    /**
+     * Check whether generation process has already locked
+     *
+     * @return bool
+     */
+    private function isProcessLocked()
+    {
+        if ($this->tmpDirectory->isExist($this->lockFilePath)) {
+            try {
+                $lockTime = (int)$this->tmpDirectory->readFile($this->lockFilePath);
+                if ((time() - $lockTime) >= self::MAX_LOCK_TIME) {
+                    $this->tmpDirectory->delete($this->lockFilePath);
+                    return false;
+                }
+            } catch (FileSystemException $e) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Get name of lock file
+     *
+     * @param string $name
+     * @return string
+     */
+    private function getFilePath($name)
+    {
+        return DirectoryList::TMP . DIRECTORY_SEPARATOR . $name . self::LOCK_EXTENSION;
+    }
+    /**
+     * @return State
+     * @deprecated
+     */
+    private function getState()
+    {
+        if (null === $this->state) {
+            $this->state = ObjectManager::getInstance()->get(State::class);
+        }
+        return $this->state;
+    }
+    
+    
+    public function getAllMethods(){
+	    $methods = array_merge($this->gateways, $this->giftcards);
+	    
+	    $all_methods = array();
+	    
+	    foreach($methods as $key => $method){
+		    $all_methods[$method] = $method;
+	    }
+	    
+	    return $all_methods;
+    }
+    
 
     public function getPaymentType($code)
     {

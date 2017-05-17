@@ -35,6 +35,6 @@ class Maestro extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'maestro';
-    protected $_gatewayCode = 'MAESTRO';
+    public $_gatewayCode = 'MAESTRO';
 
 }

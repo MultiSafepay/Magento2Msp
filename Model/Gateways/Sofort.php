@@ -35,6 +35,6 @@ class Sofort extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'sofort';
-    protected $_gatewayCode = 'DIRECTBANK';
+    public $_gatewayCode = 'DIRECTBANK';
 
 }

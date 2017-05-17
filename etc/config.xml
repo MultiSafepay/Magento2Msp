@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
   <default>
     <multisafepay>
       <connect>
@@ -48,6 +48,18 @@
         <model>MultiSafepay\Connect\Model\Gateways\Dotpay</model>
         <group>multisafepay_connect</group>
       </dotpay>
+      
+      <!-- Start Paysafecard -->
+      <paysafecard>
+        <active>0</active>
+        <title>Paysafecard</title>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Paysafecard</model>
+        <group>multisafepay_connect</group>
+      </paysafecard>
             
       <!-- Start Visa -->
       <visa>
@@ -246,7 +258,72 @@
         <model>MultiSafepay\Connect\Model\Gateways\Paypal</model>
         <group>multisafepay_connect</group>
       </paypalmsp>
-
+      
+      <!-- Start Trustpay-->
+      <trustpay>
+        <active>0</active>
+        <title>TrustPay</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Trustpay</model>
+        <group>multisafepay_connect</group>
+      </trustpay>
+      
+      <!-- Start Kbc -->
+      <kbc>
+        <active>0</active>
+        <title>KBC</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Kbc</model>
+        <group>multisafepay_connect</group>
+      </kbc>
+      
+      <!-- Start Alipay-->
+      <alipay>
+        <active>0</active>
+        <title>AliPay</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Alipay</model>
+        <group>multisafepay_connect</group>
+      </alipay>
+      
+       <!-- Start Belfius -->
+      <belfius>
+        <active>0</active>
+        <title>Belfius</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Belfius</model>
+        <group>multisafepay_connect</group>
+      </belfius>
+      
+      
+       <!-- Start ing -->
+      <ing>
+        <active>0</active>
+        <title>ING Homepay</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
+        <group>multisafepay_connect</group>
+      </ing>
     </gateways>
         
     <giftcards>
@@ -290,7 +367,7 @@
       </podium>
             
                   
-        <!-- Start givacard-->
+      <!-- Start givacard-->
       <givacard>
         <active>0</active>
         <title>Givacard</title>
@@ -736,6 +813,73 @@
         <model>MultiSafepay\Connect\Model\Gateways\Paypal</model>
         <group>multisafepay_connect</group>
       </paypalmsp>
+      
+      
+            <!-- Start Trustpay-->
+      <trustpay>
+        <active>0</active>
+        <title>TrustPay</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Trustpay</model>
+        <group>multisafepay_connect</group>
+      </trustpay>
+      
+      <!-- Start Kbc -->
+      <kbc>
+        <active>0</active>
+        <title>KBC</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Kbc</model>
+        <group>multisafepay_connect</group>
+      </kbc>
+      
+      <!-- Start Alipay-->
+      <alipay>
+        <active>0</active>
+        <title>AliPay</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Alipay</model>
+        <group>multisafepay_connect</group>
+      </alipay>
+      
+       <!-- Start Belfius -->
+      <belfius>
+        <active>0</active>
+        <title>Belfius</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Belfius</model>
+        <group>multisafepay_connect</group>
+      </belfius>
+      
+      
+       <!-- Start ing -->
+      <ing>
+        <active>0</active>
+        <title>ING Homepay</title>
+        <instructions></instructions>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
+        <group>multisafepay_connect</group>
+      </ing>
             
       <!-- Start Wijncadeau-->
       <wijncadeau>
@@ -777,7 +921,7 @@
       </podium>
       
       
-        <!-- Start givacard-->
+      <!-- Start givacard-->
       <givacard>
         <active>0</active>
         <title>Givacard</title>
@@ -1023,7 +1167,17 @@
         <model>MultiSafepay\Connect\Model\Gateways\Dotpay</model>
         <group>multisafepay_connect</group>
       </dotpay>
-      
+      <!-- Start Paysafecard -->
+      <paysafecard>
+        <active>0</active>
+        <title>Paysafecard</title>
+        <payment_action>true</payment_action>
+        <allowed_currency>EUR</allowed_currency>
+        <allowed_groups>0,1,2,3</allowed_groups>
+        <payment_action>true</payment_action>
+        <model>MultiSafepay\Connect\Model\Gateways\Paysafecard</model>
+        <group>multisafepay_connect</group>
+      </paysafecard>
     </payment>
   </default>
 </config>

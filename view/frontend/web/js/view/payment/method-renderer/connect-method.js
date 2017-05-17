@@ -56,7 +56,15 @@ define(
               template: 'MultiSafepay_Connect/payment/connect',
               issuerid: '',
               creditcard: '',
+              active_method:'ideal',
             },
+            initialize: function () {
+            	this._super();
+            	if(configConnect.active_method == this.item.method){
+					this.selectPaymentMethod(configConnect.active_method)
+				}
+				return this;
+        	},
             initObservable: function () {
               this._super()
                       .observe('issuerid');
@@ -109,11 +117,7 @@ define(
             afterPlaceOrder: function () {
               if (this.item.method == 'ideal') {
                 window.location.replace(url.build('multisafepay/connect/redirect/?issuer=' + $('[name="issuerid"]').val()));
-              } else {
-                window.location.replace(url.build('multisafepay/connect/redirect/'));
-              }
-
-              if (this.item.method == 'creditcard') {
+              } else if (this.item.method == 'creditcard') {
                 window.location.replace(url.build('multisafepay/connect/redirect/?creditcard=' + $('[name="creditcard"]').val()));
               } else {
                 window.location.replace(url.build('multisafepay/connect/redirect/'));

@@ -35,6 +35,6 @@ class Dotpay extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'dotpay';
-    protected $_gatewayCode = 'DOTPAY';
+    public $_gatewayCode = 'DOTPAY';
 
 }

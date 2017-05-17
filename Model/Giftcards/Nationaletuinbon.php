@@ -35,6 +35,6 @@ class Nationaletuinbon extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'nationaletuinbon';
-    protected $_gatewayCode = 'NATIONALETUINBON';
+    public $_gatewayCode = 'NATIONALETUINBON';
 
 }

@@ -35,6 +35,6 @@ class Podium extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'podium';
-    protected $_gatewayCode = 'PODIUM';
+    public $_gatewayCode = 'PODIUM';
 
 }

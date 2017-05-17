@@ -35,6 +35,6 @@ class Eps extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'eps';
-    protected $_gatewayCode = 'EPS';
+    public $_gatewayCode = 'EPS';
 
 }

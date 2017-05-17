@@ -35,6 +35,6 @@ class Givacard extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'givacard';
-    protected $_gatewayCode = 'GIVACARD';
+    public $_gatewayCode = 'GIVACARD';
 
 }

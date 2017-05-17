@@ -35,6 +35,6 @@ class Banktransfer extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'mspbanktransfer';
-    protected $_gatewayCode = 'BANKTRANS';
+    public $_gatewayCode = 'BANKTRANS';
 
 }

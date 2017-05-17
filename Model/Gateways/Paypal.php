@@ -35,6 +35,6 @@ class Paypal extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'paypalmsp';
-    protected $_gatewayCode = 'PAYPAL';
+    public $_gatewayCode = 'PAYPAL';
 
 }

@@ -35,6 +35,6 @@ class Bancontact extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'bancontact';
-    protected $_gatewayCode = 'MISTERCASH';
+    public $_gatewayCode = 'MISTERCASH';
 
 }

@@ -5,7 +5,7 @@
  *
 **/
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
   <body>
     <!--Compatible with One Step Checkout by Mageplaza -->
     <referenceBlock name="secure-checkout-container">
@@ -48,6 +48,15 @@
                                   <item name="methods" xsi:type="array">
                                                                                                         
                                     <item name="dotpay" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                <item name="paysafecard" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/paysafecard</item>
+                                  <item name="methods" xsi:type="array">
+                                                                                                        
+                                    <item name="paysafecard" xsi:type="array">
                                       <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                     </item>
                                   </item>
@@ -195,6 +204,56 @@
                                   <item name="methods" xsi:type="array">
                                                                                                         
                                     <item name="paypalmsp" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="trustpay" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/trustpay</item>
+                                  <item name="methods" xsi:type="array">
+                                                                                                        
+                                    <item name="trustpay" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="kbc" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/kbc</item>
+                                  <item name="methods" xsi:type="array">
+                                                                                                        
+                                    <item name="kbc" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="alipay" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/alipay</item>
+                                  <item name="methods" xsi:type="array">
+                                                                                                        
+                                    <item name="alipay" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="belfius" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/belfius</item>
+                                  <item name="methods" xsi:type="array">
+                                                                                                        
+                                    <item name="belfius" xsi:type="array">
+                                      <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                    </item>
+                                  </item>
+                                </item>
+                                
+                                <item name="ing" xsi:type="array">
+                                  <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/ing</item>
+                                  <item name="methods" xsi:type="array">
+                                                                                                        
+                                    <item name="ing" xsi:type="array">
                                       <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                     </item>
                                   </item>
@@ -352,7 +411,7 @@
                                   </item>
                                 </item>
                                                                 
-                                <item name="parfumcadeuakaart" xsi:type="array">
+                                <item name="parfumcadeaukaart" xsi:type="array">
                                   <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/giftcards/parfumcadeaukaart</item>
                                   <item name="methods" xsi:type="array">
 
