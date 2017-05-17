@@ -53,11 +53,11 @@ class Redirect extends \Magento\Framework\App\Action\Action
     protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Framework\App\RequestInterface $requestHttp
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
     )
     {
         $this->_coreRegistry = $coreRegistry;
-        $this->_requestHttp = $requestHttp;
+        $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
     }
 

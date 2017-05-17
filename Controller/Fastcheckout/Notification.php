@@ -56,11 +56,11 @@ class Notification extends \Magento\Framework\App\Action\Action
     protected $_mspHelper;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry, \Magento\Framework\App\RequestInterface $requestHttp
+    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
     )
     {
         $this->_coreRegistry = $coreRegistry;
-        $this->_requestHttp = $requestHttp;
+        $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
         $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
     }
@@ -83,7 +83,7 @@ class Notification extends \Magento\Framework\App\Action\Action
         if ($isShipping) {
             print_r($paymentMethod->getShippingRates($params));
             $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
-            exit;
+            return;
         }
 
         $order_id = $paymentMethod->notification($params);
