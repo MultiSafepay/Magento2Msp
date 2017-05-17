@@ -47,14 +47,13 @@ class Button extends Template implements ShortcutInterface
     public function __construct(
         Context $context,
         ResolverInterface $localeResolver,
-        \Magento\Framework\View\Asset\Repository $assetRepo,
         Session $checkoutSession,
         array $data = []
     ) {
         parent::__construct($context, $data);
 
         $this->localeResolver = $localeResolver;
-        $this->_assetRepo = $assetRepo;
+        $this->_assetRepo = $context->getAssetRepository();
         $this->checkoutSession = $checkoutSession;
     }
 
