@@ -35,6 +35,6 @@ class Directdebit extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'directdebit';
-    protected $_gatewayCode = 'DIRDEB';
+    public $_gatewayCode = 'DIRDEB';
 
 }

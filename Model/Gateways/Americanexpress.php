@@ -35,6 +35,6 @@ class Americanexpress extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'americanexpress';
-    protected $_gatewayCode = 'AMEX';
+    public $_gatewayCode = 'AMEX';
 
 }

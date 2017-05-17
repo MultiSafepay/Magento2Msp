@@ -35,6 +35,6 @@ class Wellnessgiftcard extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'wellnessgiftcard';
-    protected $_gatewayCode = 'WELNESS-GIFTCARD';
+    public $_gatewayCode = 'WELNESS-GIFTCARD';
 
 }

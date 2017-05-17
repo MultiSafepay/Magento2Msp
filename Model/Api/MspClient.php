@@ -48,6 +48,7 @@ class MspClient
     public $request;
     public $response;
     public $debug;
+    public $logger;
 
     public function __construct()
     {
@@ -108,6 +109,7 @@ class MspClient
 
 
 
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
         curl_setopt($ch, CURLOPT_ENCODING, "");
@@ -120,11 +122,16 @@ class MspClient
         $body = curl_exec($ch);
 
         if ($this->debug) {
-            $this->request = $http_body;
-            $this->response = $body;
+            $this->logger->info($http_method . ' - ' . $api_method);
+            $this->logger->info(print_r($http_body, true));
+            $this->logger->info(print_r($body, true));
         }
 
         if (curl_errno($ch)) {
+            $this->logger->info($http_method . ' - ' . $api_method);
+            $this->logger->info(print_r($http_body, true));
+            $this->logger->info(print_r($body, true));
+            $this->logger->info("Unable to communicatie with the MultiSafepay payment server (" . curl_errno($ch) . "): " . curl_error($ch) . ".");
             throw new \Magento\Framework\Validator\Exception(__("Unable to communicatie with the MultiSafepay payment server (" . curl_errno($ch) . "): " . curl_error($ch) . "."));
         }
 

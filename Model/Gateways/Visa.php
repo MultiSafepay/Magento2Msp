@@ -35,6 +35,6 @@ class Visa extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'visa';
-    protected $_gatewayCode = 'VISA';
+    public $_gatewayCode = 'VISA';
 
 }

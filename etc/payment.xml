@@ -22,6 +22,9 @@
     <method name="dotpay">
       <allow_multiple_address>1</allow_multiple_address>
     </method>
+    <method name="paysafecard">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
     <method name="visa">
       <allow_multiple_address>1</allow_multiple_address>
     </method>
@@ -29,6 +32,21 @@
       <allow_multiple_address>1</allow_multiple_address>
     </method>
     <method name="ferbuy">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="trustpay">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="kbc">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="alipay">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="belfius">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="ing">
       <allow_multiple_address>1</allow_multiple_address>
     </method>
     <method name="mastercard">
@@ -107,6 +125,9 @@
       <allow_multiple_address>1</allow_multiple_address>
     </method>
     <method name="parfumcadeaukaart">
+      <allow_multiple_address>1</allow_multiple_address>
+    </method>
+    <method name="givacard">
       <allow_multiple_address>1</allow_multiple_address>
     </method>
     <method name="webshopgiftcard">

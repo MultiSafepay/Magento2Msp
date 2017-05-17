@@ -35,6 +35,6 @@ class Wijncadeau extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'wijncadeau';
-    protected $_gatewayCode = 'WIJNCADEAU';
+    public $_gatewayCode = 'WIJNCADEAU';
 
 }

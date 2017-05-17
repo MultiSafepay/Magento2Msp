@@ -35,6 +35,6 @@ class Giropay extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'giropay';
-    protected $_gatewayCode = 'GIROPAY';
+    public $_gatewayCode = 'GIROPAY';
 
 }
