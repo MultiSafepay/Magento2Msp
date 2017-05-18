@@ -3068,10 +3068,6 @@
                 <label>Phonenumber</label>
                 <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
             </field>
-            <field id="extra_phone" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Phonenumber</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-            </field>
             <field id="extra_chamberofcommerce" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Chamber of Commerce (CoC/KvK)</label>
                 <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
