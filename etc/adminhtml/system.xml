@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <tab id="multisafepay" translate="label" sortOrder="400">
-      <label>MultiSafepay (1.4.1)</label>
+      <label>MultiSafepay (1.4.2)</label>
     </tab>
     <section id="multisafepay" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
@@ -3065,10 +3065,6 @@
                 <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
             </field>
             <field id="extra_phone" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Phonenumber</label>
-                <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-            </field>
-            <field id="extra_phone" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Phonenumber</label>
                 <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
             </field>

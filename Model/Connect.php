@@ -379,7 +379,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.4.1',
+                "plugin_version" => ' - Plugin 1.4.2',
                 "partner" => "MultiSafepay",
             ),
             "gateway_info" => array(
@@ -452,9 +452,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $shipped['error'] = false;
         $payment = $order->getPayment()->getMethodInstance();
 
-        if (!in_array($payment->_code, $this->_mspHelper->gateways) && !in_array($payment->_code, $this->_mspHelper->giftcards)) {
-            return false;
-        }
+        //Check if the payment method is a MultiSafepay method. If its a MultiSafepay method then the payment object has a _gatewayCode property. So if it doesn't exist then return true to stop MultiSafepay shipment update but continue Magento shipment process.
+		if(!property_exists($payment ,'_gatewayCode') ){
+			return true;
+		}
 
         $environment = $this->getMainConfigData('msp_env');
         if ($environment == true) {
