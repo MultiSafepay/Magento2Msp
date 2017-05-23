@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Copyright © 2013-2017 Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace MultiSafepay\Connect\Block\Fastcheckout;
 
 use Magento\Checkout\Model\Session;
@@ -11,15 +13,13 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\View\Element\Template\Context;
 
-
-
 /**
  * Class Button
  */
 class Button extends Template implements ShortcutInterface
 {
-    const ALIAS_ELEMENT_INDEX = 'fco_alias';
 
+    const ALIAS_ELEMENT_INDEX = 'fco_alias';
     const BUTTON_ELEMENT_INDEX = 'fco_button_id';
 
     /**
@@ -32,9 +32,7 @@ class Button extends Template implements ShortcutInterface
      */
     private $checkoutSession;
     protected $_assetRepo;
-
-
-	
+    protected $_scopeConfig;
 
     /**
      * Constructor
@@ -45,16 +43,15 @@ class Button extends Template implements ShortcutInterface
      * @param array $data
      */
     public function __construct(
-        Context $context,
-        ResolverInterface $localeResolver,
-        Session $checkoutSession,
-        array $data = []
-    ) {
+    Context $context, ResolverInterface $localeResolver, \Magento\Framework\View\Asset\Repository $assetRepo, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, Session $checkoutSession, array $data = []
+    )
+    {
         parent::__construct($context, $data);
 
         $this->localeResolver = $localeResolver;
-        $this->_assetRepo = $context->getAssetRepository();
+        $this->_assetRepo = $assetRepo;
         $this->checkoutSession = $checkoutSession;
+        $this->_scopeConfig = $scopeConfig;
     }
 
     /**
@@ -68,7 +65,7 @@ class Button extends Template implements ShortcutInterface
 
         return '';
     }
-    
+
     /**
      * @return string
      */
@@ -76,13 +73,11 @@ class Button extends Template implements ShortcutInterface
     {
         return $this->getUrl('multisafepay/fastcheckout/redirect');
     }
-    
+
     public function getCheckoutImageUrl()
     {
-        return $this->_assetRepo->getUrl("MultiSafepay_Connect::images/".strtolower($this->localeResolver->getLocale())."/fastcheckout.png");
+        return $this->_assetRepo->getUrl("MultiSafepay_Connect::images/" . strtolower($this->localeResolver->getLocale()) . "/fastcheckout.png");
     }
-
-    
 
     /**
      * @inheritdoc
@@ -113,6 +108,7 @@ class Button extends Template implements ShortcutInterface
      */
     public function isActive()
     {
-        return true;
+        return $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
+
 }
