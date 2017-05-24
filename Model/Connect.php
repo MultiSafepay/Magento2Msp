@@ -37,6 +37,7 @@ use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Helper\Data;
 use Magento\Framework\AppInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
+use \Magento\CatalogInventory\Api\StockRegistryInterface;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -44,6 +45,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_isInitializeNeeded = true;
     protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
     public $issuer_id = null;
+    protected $stockRegistry;
 
     /**
      * @var string
@@ -175,7 +177,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_gatewayCode;
     protected $_product;
     public $_invoiceSender;
-    public $_stockInterface;
     public $banktransurl;
     protected $logger;
     public $_manualGateway = null;
@@ -200,7 +201,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-    \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Module\ModuleListInterface $moduleList, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder, \Magento\Framework\App\RequestInterface $requestHttp, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = []
+    \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Module\ModuleListInterface $moduleList, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder, \Magento\Framework\App\RequestInterface $requestHttp, StockRegistryInterface $stockRegistry, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = []
     )
     {
         parent::__construct(
@@ -216,7 +217,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_maxAmount = $this->getConfigData('max_order_total');
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->_invoiceSender = $objectManager->get('\Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
-
+        $this->stockRegistry = $stockRegistry;
 
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
         $this->logger = new \Zend\Log\Logger();
@@ -379,7 +380,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.4.2',
+                "plugin_version" => ' - Plugin 1.4.3',
                 "partner" => "MultiSafepay",
             ),
             "gateway_info" => array(
@@ -391,10 +392,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         //$this->logger->info(print_r($msporder, true));
         if ($this->_gatewayCode != "BANKTRANS") {
-        	$order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . $this->_client->orders->getPaymentLink(), false);
-			$order->save();
-		}
-        else{
+            $order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . $this->_client->orders->getPaymentLink(), false);
+            $order->save();
+        } else {
             $this->banktransurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId();
         }
 
@@ -453,9 +453,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $payment = $order->getPayment()->getMethodInstance();
 
         //Check if the payment method is a MultiSafepay method. If its a MultiSafepay method then the payment object has a _gatewayCode property. So if it doesn't exist then return true to stop MultiSafepay shipment update but continue Magento shipment process.
-		if(!property_exists($payment ,'_gatewayCode') ){
-			return true;
-		}
+        if (!property_exists($payment, '_gatewayCode')) {
+            return true;
+        }
 
         $environment = $this->getMainConfigData('msp_env');
         if ($environment == true) {
@@ -624,9 +624,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if ($shipping_percentage == 1 || $shipping_cost_orig == 0) {
             $shipping_percentage = "0.00";
         }
-        
-        if($shipping_percentage =='0'){
-	        $shipping_percentage = "0.00";
+
+        if ($shipping_percentage == '0') {
+            $shipping_percentage = "0.00";
         }
 
         $price = $shippin_exc_tac_calculated;
@@ -660,7 +660,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         //Add discount line item
         if ($discountAmountFinal != 0) {
             $shoppingCart['shopping_cart']['items'][] = array(
-                "name" => $title,
+                "name" => 'Discount',
                 "description" => 'Discount',
                 "unit_price" => $discountAmountFinal,
                 "quantity" => "1",
@@ -735,11 +735,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             if ($this->getGlobalConfig('cataloginventory/options/can_subtract')) {
                 $products = $order->getAllItems();
                 foreach ($products as $itemId => $product) {
-                    $stockItem = $this->_stockInterface->getStockItem($product->getProductId(), null);
-                    $stockData = $stockItem->getData();
-                    $new = $stockData['qty'] - $product->getQtyOrdered();
-                    $stockData['qty'] = $new;
-                    $stockItem->setData($stockData);
+                    $stockItem = $this->stockRegistry->getStockItem($product->getProductId());
+                    $new = $stockItem->getQty() - $product->getQtyOrdered();
+                    $stockItem->setQty($new);
                     $stockItem->save();
                 }
             }
@@ -769,7 +767,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $order_email = $this->getMainConfigData('send_order_email');
         if (($order_email == "after_transaction" && $status != "initialized" && $status != "expired" && !$order->getEmailSent()) ||
                 ($payment->getMethodInstance()->_code == 'mspbanktransfer' && !$order->getEmailSent())
-                /* || ($status == "expired" && isset($this->_client->orders->data->transaction_id))*///PLGMAGTWO-106.
+        /* || ($status == "expired" && isset($this->_client->orders->data->transaction_id)) *///PLGMAGTWO-106.
         ) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
@@ -901,11 +899,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $payment->registerCaptureNotification(($msporder->amount / 100), $skipFraudDetection && $msporder->transaction_id);
             $payment->setIsTransactionApproved(true);
             $payment->save();
-            
+
             $paid_amount = ($msporder->amount / 100);
-            
-            if($order->getTotalPaid() != $paid_amount){
-            	$order->setTotalPaid($paid_amount);  
+
+            if ($order->getTotalPaid() != $paid_amount) {
+                $order->setTotalPaid($paid_amount);
             }
 
             if ($payment->getMethodInstance()->_code == 'klarnainvoice') {
@@ -1033,32 +1031,29 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             //$this->logger->info(print_r($this->_client->orders, true));
 
             if (!empty($this->_client->orders->result->error_code)) {
-	            $endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
-	             try {
-					 $ordermsp = $this->_client->orders->post(array(
-	                "type" => "refund",
-	                "amount" => $amount * 100,
-	                "currency" => $order->getBaseCurrencyCode(),
-	                "description" => "Refund: " . $order->getIncrementId(),
-	                    ), $endpoint);
-	                
-	                 if (!empty($this->_client->orders->result->error_code)) {
-		                	throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
-		             }    
-	                    
-	             } catch (\Magento\Framework\Exception\LocalizedException $e) {
-				 		throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
-        		}
-	            
-               // throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
+                $endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
+                try {
+                    $ordermsp = $this->_client->orders->post(array(
+                        "type" => "refund",
+                        "amount" => $amount * 100,
+                        "currency" => $order->getBaseCurrencyCode(),
+                        "description" => "Refund: " . $order->getIncrementId(),
+                            ), $endpoint);
+
+                    if (!empty($this->_client->orders->result->error_code)) {
+                        throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
+                    }
+                } catch (\Magento\Framework\Exception\LocalizedException $e) {
+                    throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
+                }
+
+                // throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
         }
         return $this;
     }
-    	    
-    
 
     /**
      * Set order state and status ofter placing order and before redirect to MultiSafepay
