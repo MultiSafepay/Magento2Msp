@@ -94,6 +94,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
                 }
                 //Cancel the order so a new one can created
                 $order->registerCancellation('Order cancelled by customer')->save();
+                $this->messageManager->addError(__('The transaction was cancelled or declined and the order was closed, please try again.'));
             }
         }
 
