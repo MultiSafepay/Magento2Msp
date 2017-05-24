@@ -660,7 +660,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         //Add discount line item
         if ($discountAmountFinal != 0) {
             $shoppingCart['shopping_cart']['items'][] = array(
-                "name" => $title,
+                "name" => 'Discount',
                 "description" => 'Discount',
                 "unit_price" => $discountAmountFinal,
                 "quantity" => "1",
