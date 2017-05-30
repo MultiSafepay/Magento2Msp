@@ -69,7 +69,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
         $params = $this->_requestHttp->getParams();
          
         if (isset($params['transactionid'])) {
-	        $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
+	        $this->_mspHelper->lockProcess('multisafepay-'.$params['transactionid']);
             $incrementId = $params['transactionid'];
         }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
