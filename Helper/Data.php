@@ -136,6 +136,9 @@ class Data
      */
     public function lockProcess($lockName)
     {
+        if ($this->getState()->getMode() == State::MODE_PRODUCTION) {
+            return;
+        }
         $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
         $this->lockFilePath = $this->getFilePath($lockName);
         while ($this->isProcessLocked()) {
