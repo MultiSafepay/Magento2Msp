@@ -252,10 +252,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -266,14 +266,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
         $items .= "</ul>\n";
 
-        $dataCheck = $this->getConfigData('days_active', null, $order->getPayment()->getMethodInstance()->_code);
+        $dataCheck = $this->getConfigData('days_active', null, $order->getPayment()->getMethodInstance()->getCode());
         if (isset($dataCheck)) {
             $daysActive = $dataCheck;
         } else {
             $daysActive = '30';
         }
 
-        $secondsCheck = $this->getConfigData('seconds_active', null, $order->getPayment()->getMethodInstance()->_code);
+        $secondsCheck = $this->getConfigData('seconds_active', null, $order->getPayment()->getMethodInstance()->getCode());
         if (isset($secondsCheck)) {
             $secondsActive = $secondsCheck;
         } else {
@@ -460,10 +460,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $environment = $this->getMainConfigData('msp_env');
         if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -479,7 +479,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if (!empty($this->_client->orders->success)) {
             $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getIncrementId(), $body = array(), $query_string = false);
 
-            if ($payment->_code == 'klarnainvoice') {
+            if ($payment->getCode() == 'klarnainvoice') {
                 $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
                 $order->save();
             }
@@ -497,7 +497,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             if (!empty($this->_client->orders->success)) {
                 $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getQuoteId(), $body = array(), $query_string = false);
-                if ($payment->_code == 'klarnainvoice') {
+                if ($payment->getCode() == 'klarnainvoice') {
                     $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
                     $order->save();
                 }
@@ -693,10 +693,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $environment = $this->getMainConfigData('msp_env');
 
         if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -767,7 +767,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $order_email = $this->getMainConfigData('send_order_email');
         if (($order_email == "after_transaction" && $status != "initialized" && $status != "expired" && !$order->getEmailSent()) ||
-                ($payment->getMethodInstance()->_code == 'mspbanktransfer' && !$order->getEmailSent())
+                ($payment->getMethodInstance()->getCode() == 'mspbanktransfer' && !$order->getEmailSent())
         /* || ($status == "expired" && isset($this->_client->orders->data->transaction_id)) *///PLGMAGTWO-106.
         ) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -907,7 +907,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $order->setTotalPaid($paid_amount);
             }
 
-            if ($payment->getMethodInstance()->_code == 'klarnainvoice') {
+            if ($payment->getMethodInstance()->getCode() == 'klarnainvoice') {
                 $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
             }
 
@@ -916,10 +916,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
             $environment = $this->getMainConfigData('msp_env');
             if ($environment == true) {
-                $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+                $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
                 $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
             } else {
-                $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+                $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
                 $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
             }
 
@@ -973,7 +973,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         //Don't show payment method based on main configuration settings
-        if ($this->_code == 'connect') {
+        if ($this->getCode() == 'connect') {
             return false;
         }
 
@@ -1013,10 +1013,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $environment = $this->getMainConfigData('msp_env');
         if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -1145,7 +1145,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         if (null === $code) {
-            $code = $this->_code;
+            $code = $this->getCode();
         }
 
         $mspType = $this->_mspHelper->getPaymentType($code);
