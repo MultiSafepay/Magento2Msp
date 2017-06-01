@@ -329,9 +329,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         if ($this->_isAdmin) {
-            $notification = str_replace('/admin', '', $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]));
-            $redirecturl = str_replace('/admin', '', substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1));
-            $cancelurl = str_replace('/admin', '', substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId());
+            $store_id = $order->getStoreId();
+	        $notification = $this->_storeManager->getStore($store_id)->getBaseUrl().'multisafepay/connect/notification/&type=initial';
+	        $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl().'multisafepay/connect/success';
+	        $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl().'multisafepay/connect/cancel'.'?transactionid=' . $order->getIncrementId();
         } else {
             $notification = $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]);
             $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1);
