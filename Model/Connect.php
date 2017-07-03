@@ -249,16 +249,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $magentoInfo = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
-
-
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
-
+        $this->initializeClient($environment, $order);
 
         $items = "<ul>\n";
         foreach ($order->getAllVisibleItems() as $item) {
@@ -459,13 +450,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $environment = $this->getMainConfigData('msp_env');
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
+        $this->initializeClient($environment, $order);
 
         $endpoint = 'orders/' . $order->getIncrementId();
         $msporder = $this->_client->orders->patch(
@@ -692,13 +677,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $params = $this->_requestHttp->getParams();
         $environment = $this->getMainConfigData('msp_env');
 
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
+        $this->initializeClient($environment, $order);
 
         if (isset($params['transactionid'])) {
             $transactionid = $params['transactionid'];
@@ -915,13 +894,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
             $environment = $this->getMainConfigData('msp_env');
-            if ($environment == true) {
-                $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-                $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-            } else {
-                $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-                $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-            }
+            $this->initializeClient($environment, $order);
 
             foreach ($order->getInvoiceCollection() as $invoice) {
                 if ($invoice->getOrderId() == $order->getEntityId()) {
@@ -1012,13 +985,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $order = $payment->getOrder();
 
         $environment = $this->getMainConfigData('msp_env');
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->getCode()));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
+        $this->initializeClient($environment, $order);
 
         $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
         try {
@@ -1054,6 +1021,23 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
         }
         return $this;
+    }
+
+    /**
+     * Initialize the MSP API Client
+     * @param boolean $environment
+     * @param \Magento\Sales\Model\Order $order
+     * @return void
+     */
+    public function initializeClient($environment, $order)
+    {
+        if ($environment == true) {
+            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
+        } else {
+            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
+        }
     }
 
     /**
