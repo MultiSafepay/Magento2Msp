@@ -149,9 +149,6 @@ class Data
      */
     public function unlockProcess($lockName)
     {
-        if ($this->getState()->getMode() == State::MODE_PRODUCTION) {
-            return ;
-        }
         $this->lockFilePath = $this->getFilePath($lockName);
         $this->tmpDirectory->delete($this->lockFilePath);
     }
