@@ -267,6 +267,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $secondsCheck = $this->getConfigData('seconds_active', null, $order->getPayment()->getMethodInstance()->getCode());
         if (isset($secondsCheck)) {
             $secondsActive = $secondsCheck;
+            $daysActive = ""; //unset days_active if seconds_active is set
         } else {
             $secondsActive = "";
         }
