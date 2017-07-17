@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+  <event name="sales_order_shipment_save_after">
+    <observer name="msp_shipment_save_after" instance="MultiSafepay\Connect\Model\Observers\Shipment" />
+  </event>
+</config>
