@@ -288,6 +288,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $checkoutData = $this->getCheckoutData($order, $productRepo);
         $shoppingCart = $checkoutData["shopping_cart"];
         $checkoutData = $checkoutData["checkout_options"];
+        $use_base_currency = $this->getMainConfigData('transaction_currency');
+
+        $currency = $this->_mspHelper->getCurrencyCode($order, $use_base_currency);
+
 
         $addressData = $this->parseCustomerAddress($billing->getStreetLine(1));
 
@@ -322,9 +326,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if ($this->_isAdmin) {
             $store_id = $order->getStoreId();
-	        $notification = $this->_storeManager->getStore($store_id)->getBaseUrl().'multisafepay/connect/notification/&type=initial';
-	        $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl().'multisafepay/connect/success';
-	        $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl().'multisafepay/connect/cancel'.'?transactionid=' . $order->getIncrementId();
+            $notification = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/notification/&type=initial';
+            $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/success';
+            $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/cancel' . '?transactionid=' . $order->getIncrementId();
         } else {
             $notification = $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]);
             $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1);
@@ -337,8 +341,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $msporder = $this->_client->orders->post(array(
             "type" => $type,
             "order_id" => $order->getIncrementId(),
-            "currency" => $order->getBaseCurrencyCode(),
-            "amount" => $this->getAmountInCents($order),
+            "currency" => $currency,
+            "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
             "description" => $order->getIncrementId(),
             "var1" => "",
             "var2" => "",
@@ -402,11 +406,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             return NULL;
         }
-    }
-
-    private function getAmountInCents($order)
-    {
-        return round($order->getBaseGrandTotal() * 100);
     }
 
     function getIssuers()

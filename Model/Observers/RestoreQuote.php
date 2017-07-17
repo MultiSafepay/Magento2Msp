@@ -56,7 +56,7 @@ class RestoreQuote implements ObserverInterface
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
-    {        
+    {
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
         $session->restoreQuote();
         return $this;

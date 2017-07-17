@@ -67,8 +67,8 @@ class Notification extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-		$params = $this->_requestHttp->getParams();
-		$this->_mspHelper->lockProcess('multisafepay-'.$params['transactionid']);  
+        $params = $this->_requestHttp->getParams();
+        $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
 
         $isInitial = false;
@@ -82,7 +82,7 @@ class Notification extends \Magento\Framework\App\Action\Action
         // Is this notification about shipping rates?
         if ($isShipping) {
             print_r($paymentMethod->getShippingRates($params));
-            $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
+            $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
             return;
         }
 
@@ -96,7 +96,7 @@ class Notification extends \Magento\Framework\App\Action\Action
         $order_information = $order->load($order_id);
 
         $updated = $paymentMethod->notification($order_information);
-        $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
+        $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
         if ($updated) {
             if (isset($params['type']) && $params['type'] == 'initial') {
                 $this->getResponse()->setContent('<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>');

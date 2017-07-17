@@ -30,20 +30,21 @@
  */
 
 namespace MultiSafepay\Connect\Model\Config\Source;
-use MultiSafepay\Connect\Helper\Data;
 
+use MultiSafepay\Connect\Helper\Data;
 
 /**
  * Order Status source model
  */
 class Methods
 {
+
     /**
      * @return array
      */
     public function toOptionArray()
     {
-	    $helper = new \MultiSafepay\Connect\Helper\Data;
+        $helper = new \MultiSafepay\Connect\Helper\Data;
         return $helper->getAllMethods();
     }
 
