@@ -284,11 +284,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
           $shoppingCart = '';
           $checkoutData = '';
           } */
+        $use_base_currency = $this->getMainConfigData('transaction_currency');
 
-        $checkoutData = $this->getCheckoutData($order, $productRepo);
+        $checkoutData = $this->getCheckoutData($order, $productRepo, $use_base_currency);
         $shoppingCart = $checkoutData["shopping_cart"];
         $checkoutData = $checkoutData["checkout_options"];
-        $use_base_currency = $this->getMainConfigData('transaction_currency');
+
 
         $currency = $this->_mspHelper->getCurrencyCode($order, $use_base_currency);
 
@@ -495,7 +496,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
     }
 
-    public function getCheckoutData($order, $productRepo)
+    public function getCheckoutData($order, $productRepo, $use_base_currency)
     {
         $alternateTaxRates = array();
         $shoppingCart = array();
@@ -552,31 +553,63 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $proddata = $productRepo->load($product_id);
             $ndata = $item->getData();
 
+
+
             if ($ndata['price'] != 0) {
-                $price = $ndata['price'];
-                $tierprices = $proddata->getTierPrice();
-                if (count($tierprices) > 0) {
-                    $product_tier_prices = (object) $tierprices;
-                    $product_price = array();
-                    foreach ($product_tier_prices as $key => $value) {
-                        $value = (object) $value;
-                        if ($item->getQtyOrdered() >= $value->price_qty)
-                            if ($ndata['price'] < $value->price) {
-                                $price = $ndata['price'];
-                            } else {
-                                $price = $value->price;
-                            }
-                        $price = $price;
+
+
+                if ($use_base_currency) {
+                    $price = $ndata['base_price'];
+                    $tierprices = $proddata->getTierPrice();
+                    if (count($tierprices) > 0) {
+                        $product_tier_prices = (object) $tierprices;
+                        $product_price = array();
+                        foreach ($product_tier_prices as $key => $value) {
+                            $value = (object) $value;
+                            if ($item->getQtyOrdered() >= $value->price_qty)
+                                if ($ndata['base_price'] < $value->base_price) {
+                                    $price = $ndata['base_price'];
+                                } else {
+                                    $price = $value->base_price;
+                                }
+                            $price = $price;
+                        }
+                    }
+
+                    $storeId = $this->getStore();
+
+                    // Fix for 1027 with catalog prices including tax
+                    if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+                        $price = ($item->getBaseRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                        $price = round($price, 2);
+                    }
+                } else {
+                    $price = $ndata['price'];
+                    $tierprices = $proddata->getTierPrice();
+                    if (count($tierprices) > 0) {
+                        $product_tier_prices = (object) $tierprices;
+                        $product_price = array();
+                        foreach ($product_tier_prices as $key => $value) {
+                            $value = (object) $value;
+                            if ($item->getQtyOrdered() >= $value->price_qty)
+                                if ($ndata['price'] < $value->price) {
+                                    $price = $ndata['price'];
+                                } else {
+                                    $price = $value->price;
+                                }
+                            $price = $price;
+                        }
+                    }
+
+                    $storeId = $this->getStore();
+
+                    // Fix for 1027 with catalog prices including tax
+                    if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+                        $price = ($item->getRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                        $price = round($price, 2);
                     }
                 }
 
-                $storeId = $this->getStore();
-
-                // Fix for 1027 with catalog prices including tax
-                if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                    $price = ($item->getRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
-                    $price = round($price, 2);
-                }
 
                 $shoppingCart['shopping_cart']['items'][] = array(
                     "name" => $itemName,
@@ -596,17 +629,34 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         //Add shipping line item
         $title = $order->getShippingDescription();
 
-        //Code blow added to recalculate excluding tax for the shipping cost. Older Magento installations round differently, causing a 1 cent mismatch. This is why we recalculate it.
-        $diff = $order->getShippingInclTax() - $order->getShippingAmount();
-        if ($order->getShippingAmount() > 0) {
-            $cost = ($diff / $order->getShippingAmount()) * 100;
+        if ($use_base_currency) {
+            //Code blow added to recalculate excluding tax for the shipping cost. Older Magento installations round differently, causing a 1 cent mismatch. This is why we recalculate it.
+            $diff = $order->getBaseShippingInclTax() - $order->getBaseShippingAmount();
+            if ($order->getBaseShippingAmount() > 0) {
+                $cost = ($diff / $order->getBaseShippingAmount()) * 100;
+            } else {
+                $cost = $diff * 100;
+            }
+            $shipping_percentage = 1 + round($cost, 0) / 100;
+            $shippin_exc_tac_calculated = $order->getBaseShippingInclTax() / $shipping_percentage;
+            $shipping_percentage = 0 + round($cost, 0) / 100;
+            $shipping_cost_orig = $order->getBaseShippingAmount();
         } else {
-            $cost = $diff * 100;
+            //Code blow added to recalculate excluding tax for the shipping cost. Older Magento installations round differently, causing a 1 cent mismatch. This is why we recalculate it.
+            $diff = $order->getShippingInclTax() - $order->getShippingAmount();
+            if ($order->getShippingAmount() > 0) {
+                $cost = ($diff / $order->getShippingAmount()) * 100;
+            } else {
+                $cost = $diff * 100;
+            }
+            $shipping_percentage = 1 + round($cost, 0) / 100;
+            $shippin_exc_tac_calculated = $order->getShippingInclTax() / $shipping_percentage;
+            $shipping_percentage = 0 + round($cost, 0) / 100;
+            $shipping_cost_orig = $order->getShippingAmount();
         }
-        $shipping_percentage = 1 + round($cost, 0) / 100;
-        $shippin_exc_tac_calculated = $order->getShippingInclTax() / $shipping_percentage;
-        $shipping_percentage = 0 + round($cost, 0) / 100;
-        $shipping_cost_orig = $order->getShippingAmount();
+
+
+
         if ($shipping_percentage == 1 || $shipping_cost_orig == 0) {
             $shipping_percentage = "0.00";
         }
@@ -640,7 +690,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         //Process discounts
-        $discountAmount = $order->getData('base_discount_amount');
+
+        if ($use_base_currency) {
+            $discountAmount = $order->getData('base_discount_amount');
+        } else {
+            $discountAmount = $order->getData('discount_amount');
+        }
+
         $discountAmountFinal = number_format($discountAmount, 4, '.', '');
 
         //Add discount line item
@@ -663,6 +719,36 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "rules" => array(
                     array("rate" => '0.00')
                 ),
+            );
+        }
+
+
+        /*
+         * Start Payment fee support for official MultiSafepay payment fee extension
+         */
+        if ($order->getPaymentFee()) {
+            if ($use_base_currency) {
+                $payment_fee = $order->getBasePaymentFee();
+            } else {
+                $payment_fee = $order->getPaymentFee();
+            }
+
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $fee_title = $objectManager->create('MultiSafepay\PaymentFee\Helper\Data')->_getMethodDescription($order->getPayment()->getMethod());
+
+
+            //make fee name dynamic 
+            $shoppingCart['shopping_cart']['items'][] = array(
+                "name" => $fee_title,
+                "description" => $fee_title,
+                "unit_price" => $payment_fee,
+                "quantity" => "1",
+                "merchant_item_id" => 'payment-fee',
+                "tax_table_selector" => '0.00',
+                "weight" => array(
+                    "unit" => "KG",
+                    "value" => "0",
+                )
             );
         }
 
