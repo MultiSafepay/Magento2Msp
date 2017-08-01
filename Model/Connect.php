@@ -957,20 +957,25 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if (($order->canInvoice() || ($order->getStatus() == "pending_payment" && $msporder->status == "completed")) || ($order->getStatus() == "payment_review" && $msporder->status == "completed")) {
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
-            $payment->setCurrencyCode($msporder->currency);
+            
+            //NOTICE: There is an issue with Magento lower than 2.1.8 causing issues creating an invoice when not using the base currency
+            //https://github.com/magento/magento2/commit/c0c24116c3a790db671ae1831c09a4e51adf0549
+            //Set to the order base currency because of issue described above
+            $payment->setCurrencyCode($order->getBaseCurrencyCode());
             $payment->setPreparedMessage('<b>MultiSafepay status: ' . $msporder->status . '</b><br />');
             $payment->setParentTransactionId($msporder->transaction_id);
             $payment->setShouldCloseParentTransaction(false);
             $payment->setIsTransactionClosed(0);
-            $payment->registerCaptureNotification(($msporder->amount / 100), $skipFraudDetection && $msporder->transaction_id);
+
+            $payment->registerCaptureNotification($order->getBaseTotalDue(), $skipFraudDetection && $msporder->transaction_id);
             $payment->setIsTransactionApproved(true);
             $payment->save();
 
-            $paid_amount = ($msporder->amount / 100);
+            /*$paid_amount = ($msporder->amount / 100);
 
             if ($order->getTotalPaid() != $paid_amount) {
                 $order->setTotalPaid($paid_amount);
-            }
+            }*/
 
             if ($payment->getMethodInstance()->getCode() == 'klarnainvoice') {
                 $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
@@ -1068,6 +1073,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
 
+echo $amount;exit;
         $order = $payment->getOrder();
 
         $environment = $this->getMainConfigData('msp_env');
