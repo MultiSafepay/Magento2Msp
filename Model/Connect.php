@@ -104,14 +104,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      *
      * @var bool
      */
-    protected $_canRefund = false;
+    protected $_canRefund = true;
 
     /**
      * Availability option
      *
      * @var bool
      */
-    protected $_canRefundInvoicePartial = false;
+    protected $_canRefundInvoicePartial = true;
 
     /**
      * Availability option
@@ -224,6 +224,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->logger->addWriter($writer);
         $this->_client->logger = $this->logger;
         $this->_client->debug = ($this->getMainConfigData('msp_debug')) ? true : false;
+
+        $use_base_currency = $this->getMainConfigData('transaction_currency');
+
+        if (!$use_base_currency) {
+            $this->_canRefund = false;
+            $this->_canRefundInvoicePartial = false;
+        }
     }
 
     public function transactionRequest($order, $productRepo = null)
@@ -616,7 +623,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "description" => $item->getDescription(),
                     "unit_price" => $price,
                     "quantity" => $quantity,
-                    "merchant_item_id" => $item->getSku(),
+                    "merchant_item_id" => $item->getId(),
                     "tax_table_selector" => $taxClass,
                     "weight" => array(
                         "unit" => "KG",
@@ -957,7 +964,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if (($order->canInvoice() || ($order->getStatus() == "pending_payment" && $msporder->status == "completed")) || ($order->getStatus() == "payment_review" && $msporder->status == "completed")) {
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
-            
+
             //NOTICE: There is an issue with Magento lower than 2.1.8 causing issues creating an invoice when not using the base currency
             //https://github.com/magento/magento2/commit/c0c24116c3a790db671ae1831c09a4e51adf0549
             //Set to the order base currency because of issue described above
@@ -1067,46 +1074,150 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-
         $order = $payment->getOrder();
-
+        $gateway = $payment->getMethodInstance()->_gatewayCode;
         $environment = $this->getMainConfigData('msp_env');
         $this->initializeClient($environment, $order);
 
-        $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
-        try {
-            $msporder = $this->_client->orders->post(array(
+        if ($gateway == 'PAYAFTER' || $gateway == 'KLARNA' || $gateway == 'EINVOICE') {
+            //Get the creditmemo data as this is not yet stored at this moment.
+            $data = $this->_requestHttp->getPost('creditmemo');
+            //Do a status request for this order to receive already refunded item data from MSP transaction
+            $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getIncrementId(), $body = array(), $query_string = false);
+            $originalCart = $msporder->shopping_cart;
+            $refundData = array();
+
+            foreach ($originalCart->items as $key => $item) {
+                if ($item->unit_price > 0) {
+                    $refundData['checkout_data']['items'][] = $item;
+                }
+                foreach ($order->getCreditmemosCollection() as $creditmemo) {
+                    foreach ($creditmemo->getAllItems() as $product) {
+                        $product_id = $product->getData('order_item_id');
+                        if ($product_id == $item->merchant_item_id) {
+                            $qty_refunded = $product->getData('qty');
+                            if ($qty_refunded > 0) {
+                                if ($item->unit_price > 0) {
+                                    $refundItem = new \stdclass();
+                                    $refundItem->name = $item->name;
+                                    $refundItem->description = $item->description;
+                                    if ($this->hasMinusSign($item->unit_price)) {
+                                        $refundItem->unit_price = $item->unit_price;
+                                    } else {
+                                        $refundItem->unit_price = 0 - $item->unit_price;
+                                    }
+                                    $refundItem->quantity = round($qty_refunded);
+                                    $refundItem->merchant_item_id = $item->merchant_item_id;
+                                    $refundItem->tax_table_selector = $item->tax_table_selector;
+                                    $refundData['checkout_data']['items'][] = $refundItem;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach ($data['items'] as $productid => $proddata) {
+                    if ($item->merchant_item_id == $productid) {
+                        if ($proddata['qty'] > 0) {
+                            if ($item->unit_price > 0) {
+                                $refundItem = new \stdclass();
+                                $refundItem->name = $item->name;
+                                $refundItem->description = $item->description;
+                                $refundItem->unit_price = 0 - $item->unit_price;
+                                $refundItem->quantity = round($proddata['qty']);
+                                $refundItem->merchant_item_id = $item->merchant_item_id;
+                                $refundItem->tax_table_selector = $item->tax_table_selector;
+                                $refundData['checkout_data']['items'][] = $refundItem;
+                            }
+                        }
+                    }
+                }
+
+                //The complete shipping cost is refunded also so we can remove it from the checkout data and refund it
+                if ($item->merchant_item_id == 'msp-shipping') {
+                    if ($data['shipping_amount'] == $order->getShippingAmount()) {
+                        $refundItem = new \stdclass();
+                        $refundItem->name = $item->name;
+                        $refundItem->description = $item->description;
+                        if ($this->hasMinusSign($item->unit_price)) {
+                            $refundItem->unit_price = $item->unit_price;
+                        } else {
+                            $refundItem->unit_price = 0 - $item->unit_price;
+                        }
+                        $refundItem->quantity = '1';
+                        $refundItem->merchant_item_id = $item->merchant_item_id;
+                        $refundItem->tax_table_selector = $item->tax_table_selector;
+                        $refundData['checkout_data']['items'][] = $refundItem;
+                    } else {
+                        if ($data['shipping_amount'] != 0) {
+                            throw new \Magento\Framework\Exception\LocalizedException(__("Error: Refund not processed online as it did not match the complete shipping cost.  "));
+                            $order->addStatusHistoryComment('MultiSafepay: Refund not processed online as it did not match the complete shipping cost.', false);
+                            $order->save();
+                            return $this;
+                        }
+                    }
+                }
+                if ($item->name == $order->getShippingDescription() && $item->unit_price < 0) {
+                    $refundItem = new \stdclass();
+                    $refundItem->name = $item->name;
+                    $refundItem->description = $item->description;
+                    if ($this->hasMinusSign($item->unit_price)) {
+                        $refundItem->unit_price = $item->unit_price;
+                    } else {
+                        $refundItem->unit_price = 0 - $item->unit_price;
+                    }
+                    $refundItem->quantity = '1';
+                    $refundItem->merchant_item_id = $item->merchant_item_id;
+                    $refundItem->tax_table_selector = $item->tax_table_selector;
+                    $refundData['checkout_data']['items'][] = $refundItem;
+                }
+            }
+        } else {
+            /*
+             * Because we support transactions based on base- and storeview currency, we must check if we use the correct amount to refund i.c.m. with the correct currency
+             *
+             */
+            $use_base_currency = $this->getMainConfigData('transaction_currency');
+            if ($use_base_currency) {
+                $refund_amount = $amount;
+                $currency = $order->getBaseCurrencyCode();
+            } else {
+                $refund_amount = $amount * $order->getBaseToOrderRate();
+                $currency = $order->getOrderCurrencyCode();
+            }
+
+            $refundData = array(
                 "type" => "refund",
-                "amount" => $amount * 100,
-                "currency" => $order->getBaseCurrencyCode(),
+                "amount" => $refund_amount * 100,
+                "currency" => $currency,
                 "description" => "Refund: " . $order->getIncrementId(),
-                    ), $endpoint);
+            );
+        }
 
-            //$this->logger->info(print_r($this->_client->orders, true));
+        $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
 
+        try {
+            $msporder = $this->_client->orders->post($refundData, $endpoint);
             if (!empty($this->_client->orders->result->error_code)) {
                 $endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
                 try {
-                    $ordermsp = $this->_client->orders->post(array(
-                        "type" => "refund",
-                        "amount" => $amount * 100,
-                        "currency" => $order->getBaseCurrencyCode(),
-                        "description" => "Refund: " . $order->getIncrementId(),
-                            ), $endpoint);
-
+                    $ordermsp = $this->_client->orders->post($refundData, $endpoint);
                     if (!empty($this->_client->orders->result->error_code)) {
                         throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
                     }
                 } catch (\Magento\Framework\Exception\LocalizedException $e) {
                     throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
                 }
-
-                // throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
         }
         return $this;
+    }
+
+    protected function hasMinusSign($value)
+    {
+        return (substr(strval($value), 0, 1) == "-");
     }
 
     /**
@@ -1321,5 +1432,4 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         return $size - $pos - strlen($needle);
     }
-
 }
