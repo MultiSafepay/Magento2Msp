@@ -56,15 +56,15 @@ define(
               template: 'MultiSafepay_Connect/payment/connect',
               issuerid: '',
               creditcard: '',
-              active_method:'ideal',
+              active_method: 'ideal',
             },
             initialize: function () {
-            	this._super();
-            	if(configConnect.active_method == this.item.method){
-					this.selectPaymentMethod(configConnect.active_method)
-				}
-				return this;
-        	},
+              this._super();
+              if (configConnect.active_method == this.item.method) {
+                this.selectPaymentMethod(configConnect.active_method)
+              }
+              return this;
+            },
             initObservable: function () {
               this._super()
                       .observe('issuerid');

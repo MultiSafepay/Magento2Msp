@@ -3,10 +3,7 @@
  * Copyright © 2013-2017 Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 $id = $block->getContainerId() . mt_rand();
-
-
 ?>
 <script>
     require(['jquery', 'fastcheckout'], function ($, fastcheckout) {
@@ -14,14 +11,13 @@ $id = $block->getContainerId() . mt_rand();
     });
 </script>
 <br />
-<div class="multisafepay checkout fastcheckout-logo multisafepay-fastcheckout-logo<?php
-     /* @noEscape */ echo $block->getContainerId(); ?>-container" style="align-content: center;">
-    <button type="button"
-                data-role="proceed-to-fastcheckout"
-                title="<?php /* @escapeNotVerified */ echo __('Proceed to FastCheckout') ?>"
-                data-mage-init='{"Magento_Checkout/js/proceed-to-checkout":{"checkoutUrl":"<?php /* @escapeNotVerified */ echo $block->getCheckoutUrl(); ?>"}}'
-                class="fastcheckout-button<?php echo($block->isActive()) ? ' ' : ' disabled'; ?>"
-                <?php if (!$block->isActive()): ?>disabled="disabled"<?php endif; ?>>
-          <img src="<?php echo $block->getCheckoutImageUrl(); ?>"/>
-        </button>
+<div class="multisafepay checkout fastcheckout-logo multisafepay-fastcheckout-logo<?php /* @noEscape */ echo $block->getContainerId(); ?>-container" style="align-content: center;">
+  <button type="button"
+          data-role="proceed-to-fastcheckout"
+          title="<?php /* @escapeNotVerified */ echo __('Proceed to FastCheckout') ?>"
+          data-mage-init='{"Magento_Checkout/js/proceed-to-checkout":{"checkoutUrl":"<?php /* @escapeNotVerified */ echo $block->getCheckoutUrl(); ?>"}}'
+          class="fastcheckout-button<?php echo($block->isActive()) ? ' ' : ' disabled'; ?>"
+          <?php if (!$block->isActive()): ?>disabled="disabled"<?php endif; ?>>
+    <img src="<?php echo $block->getCheckoutImageUrl(); ?>"/>
+  </button>
 </div>

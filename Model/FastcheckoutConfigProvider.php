@@ -34,7 +34,7 @@ class FastcheckoutConfigProvider implements \Magento\Checkout\Model\ConfigProvid
         $config = array_merge_recursive($config, [
             'payment' => [
                 'connect' => [
-                    'hide_normal_checkout' => false,//$this->disableCheckout()
+                    'hide_normal_checkout' => false, //$this->disableCheckout()
                 ],
             ],
         ]);

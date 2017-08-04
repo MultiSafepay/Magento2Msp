@@ -671,50 +671,47 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             }
         }
 
-		
-		$used_method =strtolower($orderData->payment_details->type);
-		$method_activated = false;
-		
-		if(in_array($used_method, $this->_mspHelper->gateways)){
-			$is_method_active = $this->getGlobalConfig('gateways/'.$used_method.'/active');
-			$type = 'gateways';
-		}else{
-			$is_method_active = $this->getGlobalConfig('giftcards/'.$used_method.'/active');
-			$type = 'giftcards';
-		}
-		
-		if(!$is_method_active){
-			$this->setGlobalConfig($type.'/'.$used_method.'/active', 1);
-			$method_activated = true;
-			
-			$cacheTypeList = $this->_objectManager->create('Magento\Framework\App\Cache\TypeListInterface');
-			$cacheFrontendPool = $this->_objectManager->create('Magento\Framework\App\Cache\Frontend\Pool');
 
-			$types = array('config','layout','block_html','collections','reflection','db_ddl','eav','config_integration','config_integration_api','full_page','translate','config_webservice');
-			foreach ($types as $type) {
-			    $cacheTypeList->cleanType($type);
-			}
-			foreach ($cacheFrontendPool as $cacheFrontend) {
-			    $cacheFrontend->getBackend()->clean();
-			}
-		}else{
-			$cacheTypeList = $this->_objectManager->create('Magento\Framework\App\Cache\TypeListInterface');
-			$cacheFrontendPool = $this->_objectManager->create('Magento\Framework\App\Cache\Frontend\Pool');
+        $used_method = strtolower($orderData->payment_details->type);
+        $method_activated = false;
 
-			$types = array('config','layout','block_html','collections','reflection','db_ddl','eav','config_integration','config_integration_api','full_page','translate','config_webservice');
-			foreach ($types as $type) {
-			    $cacheTypeList->cleanType($type);
-			}
-			foreach ($cacheFrontendPool as $cacheFrontend) {
-			    $cacheFrontend->getBackend()->clean();
-			}
-		}
-		
+        if (in_array($used_method, $this->_mspHelper->gateways)) {
+            $is_method_active = $this->getGlobalConfig('gateways/' . $used_method . '/active');
+            $type = 'gateways';
+        } else {
+            $is_method_active = $this->getGlobalConfig('giftcards/' . $used_method . '/active');
+            $type = 'giftcards';
+        }
+
+        if (!$is_method_active) {
+            $this->setGlobalConfig($type . '/' . $used_method . '/active', 1);
+            $method_activated = true;
+
+            $cacheTypeList = $this->_objectManager->create('Magento\Framework\App\Cache\TypeListInterface');
+            $cacheFrontendPool = $this->_objectManager->create('Magento\Framework\App\Cache\Frontend\Pool');
+
+            $types = array('config', 'layout', 'block_html', 'collections', 'reflection', 'db_ddl', 'eav', 'config_integration', 'config_integration_api', 'full_page', 'translate', 'config_webservice');
+            foreach ($types as $type) {
+                $cacheTypeList->cleanType($type);
+            }
+            foreach ($cacheFrontendPool as $cacheFrontend) {
+                $cacheFrontend->getBackend()->clean();
+            }
+        } else {
+            $cacheTypeList = $this->_objectManager->create('Magento\Framework\App\Cache\TypeListInterface');
+            $cacheFrontendPool = $this->_objectManager->create('Magento\Framework\App\Cache\Frontend\Pool');
+
+            $types = array('config', 'layout', 'block_html', 'collections', 'reflection', 'db_ddl', 'eav', 'config_integration', 'config_integration_api', 'full_page', 'translate', 'config_webservice');
+            foreach ($types as $type) {
+                $cacheTypeList->cleanType($type);
+            }
+            foreach ($cacheFrontendPool as $cacheFrontend) {
+                $cacheFrontend->getBackend()->clean();
+            }
+        }
+
 
         $quote->setPaymentMethod(strtolower($orderData->payment_details->type)); //payment method
-        
-
-        
         //$quote->setInventoryProcessed(false); //not effect inventory
         $quote->save(); //Now Save quote and your quote is ready
         // Set Sales Order Payment
@@ -822,8 +819,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $path = 'multisafepay/connect/' . $field;
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
-    
-    
 
     public function getGlobalConfig($path, $storeId = null)
     {
@@ -833,19 +828,13 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         }
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
-    
-    
-    
+
     public function setGlobalConfig($path, $value)
     {
         $resourceConfig = $this->_objectManager->create('\Magento\Config\Model\ResourceModel\Config');
-        
-        return $resourceConfig->saveConfig($path, $value, 'default', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
+        return $resourceConfig->saveConfig($path, $value, 'default', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
-    
-    
-    
 
     function parseCustomerAddress($street_address)
     {
@@ -878,12 +867,12 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     } else {
                         $price = $carrierConfig['price'];
                     }
-					if(isset($carrierConfig['handling_fee'])){
-                    	$method->price = $price + $carrierConfig['handling_fee'];
-                   	}else{
-	                   	$method->price = $price ;
-                   	}
-                    
+                    if (isset($carrierConfig['handling_fee'])) {
+                        $method->price = $price + $carrierConfig['handling_fee'];
+                    } else {
+                        $method->price = $price;
+                    }
+
 
                     if (!empty($carrierConfig['specificcountry'])) {
                         $areas = explode(',', $carrierConfig['specificcountry']);
@@ -941,36 +930,36 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     $method->type = 'tablerate';
                     $method->provider = 'tablerate';
                     $method->name = $carrierConfig['title'];
-                    if(isset($carrierConfig['handling_fee'])){
-                    	$method->price = $rate_price + $carrierConfig['handling_fee'];
-                   	}else{
-	                   	$method->price = $rate_price ;
-                   	}
-                   	
-                   	if(isset($carrierConfig['specificcountry'])){
-                    	$ratecountries = $carrierConfig['specificcountry'];
-						$ratecountcheck = explode(',', $ratecountries);
+                    if (isset($carrierConfig['handling_fee'])) {
+                        $method->price = $rate_price + $carrierConfig['handling_fee'];
+                    } else {
+                        $method->price = $rate_price;
+                    }
 
-	                    if (!empty($ratecountries)) {
-	                        foreach ($ratecountcheck as $area) {
-	                            if ($area == 'NL') {//todo change me
-	                                $shippingMethods[] = $method;
-	                            }
-	                        }
-	                    } else {
-	                        $shippingMethods[] = $method;
-	                    }
-	                }else {
+                    if (isset($carrierConfig['specificcountry'])) {
+                        $ratecountries = $carrierConfig['specificcountry'];
+                        $ratecountcheck = explode(',', $ratecountries);
+
+                        if (!empty($ratecountries)) {
+                            foreach ($ratecountcheck as $area) {
+                                if ($area == 'NL') {//todo change me
+                                    $shippingMethods[] = $method;
+                                }
+                            }
+                        } else {
+                            $shippingMethods[] = $method;
+                        }
+                    } else {
                         $shippingMethods[] = $method;
                     }
                 }
             }
         }
-        
+
         $postnl_active = $this->scopeConfig->getValue('fastcheckout/fastcheckout_postnl/postnl_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        
-        if($postnl_active){
-	        $method = new \stdclass();
+
+        if ($postnl_active) {
+            $method = new \stdclass();
             $method->id = 'PostNL';
             $method->type = 'pickup';
             $method->provider = 'pickup';
@@ -978,7 +967,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             $method->price = $this->scopeConfig->getValue('fastcheckout/fastcheckout_postnl/postnl_amount', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
             $shippingMethods[] = $method;
         }
-        
+
 
         foreach ($shippingMethods as $shipmethod) {
             $shipping = array();

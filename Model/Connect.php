@@ -104,14 +104,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      *
      * @var bool
      */
-    protected $_canRefund = true;
+    protected $_canRefund = false;
 
     /**
      * Availability option
      *
      * @var bool
      */
-    protected $_canRefundInvoicePartial = true;
+    protected $_canRefundInvoicePartial = false;
 
     /**
      * Availability option
@@ -249,16 +249,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $magentoInfo = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
-
-
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
-
+        $this->initializeClient($environment, $order);
 
         $items = "<ul>\n";
         foreach ($order->getAllVisibleItems() as $item) {
@@ -266,16 +257,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
         $items .= "</ul>\n";
 
-        $dataCheck = $this->getConfigData('days_active', null, $order->getPayment()->getMethodInstance()->_code);
+        $dataCheck = $this->getConfigData('days_active', null, $order->getPayment()->getMethodInstance()->getCode());
         if (isset($dataCheck)) {
             $daysActive = $dataCheck;
         } else {
             $daysActive = '30';
         }
 
-        $secondsCheck = $this->getConfigData('seconds_active', null, $order->getPayment()->getMethodInstance()->_code);
+        $secondsCheck = $this->getConfigData('seconds_active', null, $order->getPayment()->getMethodInstance()->getCode());
         if (isset($secondsCheck)) {
             $secondsActive = $secondsCheck;
+            $daysActive = ""; //unset days_active if seconds_active is set
         } else {
             $secondsActive = "";
         }
@@ -292,10 +284,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
           $shoppingCart = '';
           $checkoutData = '';
           } */
+        $use_base_currency = $this->getMainConfigData('transaction_currency');
 
-        $checkoutData = $this->getCheckoutData($order, $productRepo);
+        $checkoutData = $this->getCheckoutData($order, $productRepo, $use_base_currency);
         $shoppingCart = $checkoutData["shopping_cart"];
         $checkoutData = $checkoutData["checkout_options"];
+
+
+        $currency = $this->_mspHelper->getCurrencyCode($order, $use_base_currency);
+
 
         $addressData = $this->parseCustomerAddress($billing->getStreetLine(1));
 
@@ -329,9 +326,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         if ($this->_isAdmin) {
-            $notification = str_replace('/admin', '', $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]));
-            $redirecturl = str_replace('/admin', '', substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1));
-            $cancelurl = str_replace('/admin', '', substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId());
+            $store_id = $order->getStoreId();
+            $notification = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/notification/&type=initial';
+            $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/success';
+            $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/cancel' . '?transactionid=' . $order->getIncrementId();
         } else {
             $notification = $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]);
             $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1);
@@ -344,8 +342,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $msporder = $this->_client->orders->post(array(
             "type" => $type,
             "order_id" => $order->getIncrementId(),
-            "currency" => $order->getBaseCurrencyCode(),
-            "amount" => $this->getAmountInCents($order),
+            "currency" => $currency,
+            "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
             "description" => $order->getIncrementId(),
             "var1" => "",
             "var2" => "",
@@ -380,7 +378,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.4.3',
+                "plugin_version" => ' - Plugin 1.4.4',
                 "partner" => "MultiSafepay",
             ),
             "gateway_info" => array(
@@ -409,11 +407,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             return NULL;
         }
-    }
-
-    private function getAmountInCents($order)
-    {
-        return round($order->getBaseGrandTotal() * 100);
     }
 
     function getIssuers()
@@ -458,13 +451,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $environment = $this->getMainConfigData('msp_env');
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
+        $this->initializeClient($environment, $order);
 
         $endpoint = 'orders/' . $order->getIncrementId();
         $msporder = $this->_client->orders->patch(
@@ -478,7 +465,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if (!empty($this->_client->orders->success)) {
             $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getIncrementId(), $body = array(), $query_string = false);
 
-            if ($payment->_code == 'klarnainvoice') {
+            if ($payment->getCode() == 'klarnainvoice') {
                 $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
                 $order->save();
             }
@@ -496,7 +483,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             if (!empty($this->_client->orders->success)) {
                 $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getQuoteId(), $body = array(), $query_string = false);
-                if ($payment->_code == 'klarnainvoice') {
+                if ($payment->getCode() == 'klarnainvoice') {
                     $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
                     $order->save();
                 }
@@ -509,7 +496,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
     }
 
-    public function getCheckoutData($order, $productRepo)
+    public function getCheckoutData($order, $productRepo, $use_base_currency)
     {
         $alternateTaxRates = array();
         $shoppingCart = array();
@@ -566,31 +553,63 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $proddata = $productRepo->load($product_id);
             $ndata = $item->getData();
 
+
+
             if ($ndata['price'] != 0) {
-                $price = $ndata['price'];
-                $tierprices = $proddata->getTierPrice();
-                if (count($tierprices) > 0) {
-                    $product_tier_prices = (object) $tierprices;
-                    $product_price = array();
-                    foreach ($product_tier_prices as $key => $value) {
-                        $value = (object) $value;
-                        if ($item->getQtyOrdered() >= $value->price_qty)
-                            if ($ndata['price'] < $value->price) {
-                                $price = $ndata['price'];
-                            } else {
-                                $price = $value->price;
-                            }
-                        $price = $price;
+
+
+                if ($use_base_currency) {
+                    $price = $ndata['base_price'];
+                    $tierprices = $proddata->getTierPrice();
+                    if (count($tierprices) > 0) {
+                        $product_tier_prices = (object) $tierprices;
+                        $product_price = array();
+                        foreach ($product_tier_prices as $key => $value) {
+                            $value = (object) $value;
+                            if ($item->getQtyOrdered() >= $value->price_qty)
+                                if ($ndata['base_price'] < $value->base_price) {
+                                    $price = $ndata['base_price'];
+                                } else {
+                                    $price = $value->base_price;
+                                }
+                            $price = $price;
+                        }
+                    }
+
+                    $storeId = $this->getStore();
+
+                    // Fix for 1027 with catalog prices including tax
+                    if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+                        $price = ($item->getBaseRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                        $price = round($price, 2);
+                    }
+                } else {
+                    $price = $ndata['price'];
+                    $tierprices = $proddata->getTierPrice();
+                    if (count($tierprices) > 0) {
+                        $product_tier_prices = (object) $tierprices;
+                        $product_price = array();
+                        foreach ($product_tier_prices as $key => $value) {
+                            $value = (object) $value;
+                            if ($item->getQtyOrdered() >= $value->price_qty)
+                                if ($ndata['price'] < $value->price) {
+                                    $price = $ndata['price'];
+                                } else {
+                                    $price = $value->price;
+                                }
+                            $price = $price;
+                        }
+                    }
+
+                    $storeId = $this->getStore();
+
+                    // Fix for 1027 with catalog prices including tax
+                    if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+                        $price = ($item->getRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                        $price = round($price, 2);
                     }
                 }
 
-                $storeId = $this->getStore();
-
-                // Fix for 1027 with catalog prices including tax
-                if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                    $price = ($item->getRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
-                    $price = round($price, 2);
-                }
 
                 $shoppingCart['shopping_cart']['items'][] = array(
                     "name" => $itemName,
@@ -610,17 +629,34 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         //Add shipping line item
         $title = $order->getShippingDescription();
 
-        //Code blow added to recalculate excluding tax for the shipping cost. Older Magento installations round differently, causing a 1 cent mismatch. This is why we recalculate it.
-        $diff = $order->getShippingInclTax() - $order->getShippingAmount();
-        if ($order->getShippingAmount() > 0) {
-            $cost = ($diff / $order->getShippingAmount()) * 100;
+        if ($use_base_currency) {
+            //Code blow added to recalculate excluding tax for the shipping cost. Older Magento installations round differently, causing a 1 cent mismatch. This is why we recalculate it.
+            $diff = $order->getBaseShippingInclTax() - $order->getBaseShippingAmount();
+            if ($order->getBaseShippingAmount() > 0) {
+                $cost = ($diff / $order->getBaseShippingAmount()) * 100;
+            } else {
+                $cost = $diff * 100;
+            }
+            $shipping_percentage = 1 + round($cost, 0) / 100;
+            $shippin_exc_tac_calculated = $order->getBaseShippingInclTax() / $shipping_percentage;
+            $shipping_percentage = 0 + round($cost, 0) / 100;
+            $shipping_cost_orig = $order->getBaseShippingAmount();
         } else {
-            $cost = $diff * 100;
+            //Code blow added to recalculate excluding tax for the shipping cost. Older Magento installations round differently, causing a 1 cent mismatch. This is why we recalculate it.
+            $diff = $order->getShippingInclTax() - $order->getShippingAmount();
+            if ($order->getShippingAmount() > 0) {
+                $cost = ($diff / $order->getShippingAmount()) * 100;
+            } else {
+                $cost = $diff * 100;
+            }
+            $shipping_percentage = 1 + round($cost, 0) / 100;
+            $shippin_exc_tac_calculated = $order->getShippingInclTax() / $shipping_percentage;
+            $shipping_percentage = 0 + round($cost, 0) / 100;
+            $shipping_cost_orig = $order->getShippingAmount();
         }
-        $shipping_percentage = 1 + round($cost, 0) / 100;
-        $shippin_exc_tac_calculated = $order->getShippingInclTax() / $shipping_percentage;
-        $shipping_percentage = 0 + round($cost, 0) / 100;
-        $shipping_cost_orig = $order->getShippingAmount();
+
+
+
         if ($shipping_percentage == 1 || $shipping_cost_orig == 0) {
             $shipping_percentage = "0.00";
         }
@@ -654,7 +690,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         //Process discounts
-        $discountAmount = $order->getData('base_discount_amount');
+
+        if ($use_base_currency) {
+            $discountAmount = $order->getData('base_discount_amount');
+        } else {
+            $discountAmount = $order->getData('discount_amount');
+        }
+
         $discountAmountFinal = number_format($discountAmount, 4, '.', '');
 
         //Add discount line item
@@ -680,6 +722,36 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             );
         }
 
+
+        /*
+         * Start Payment fee support for official MultiSafepay payment fee extension
+         */
+        if ($order->getPaymentFee()) {
+            if ($use_base_currency) {
+                $payment_fee = $order->getBasePaymentFee();
+            } else {
+                $payment_fee = $order->getPaymentFee();
+            }
+
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $fee_title = $objectManager->create('MultiSafepay\PaymentFee\Helper\Data')->_getMethodDescription($order->getPayment()->getMethod());
+
+
+            //make fee name dynamic 
+            $shoppingCart['shopping_cart']['items'][] = array(
+                "name" => $fee_title,
+                "description" => $fee_title,
+                "unit_price" => $payment_fee,
+                "quantity" => "1",
+                "merchant_item_id" => 'payment-fee',
+                "tax_table_selector" => '0.00',
+                "weight" => array(
+                    "unit" => "KG",
+                    "value" => "0",
+                )
+            );
+        }
+
         $checkoutData["shopping_cart"] = $shoppingCart['shopping_cart'];
         $checkoutData["checkout_options"] = $alternateTaxRates;
 
@@ -691,13 +763,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $params = $this->_requestHttp->getParams();
         $environment = $this->getMainConfigData('msp_env');
 
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
+        $this->initializeClient($environment, $order);
 
         if (isset($params['transactionid'])) {
             $transactionid = $params['transactionid'];
@@ -766,7 +832,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $order_email = $this->getMainConfigData('send_order_email');
         if (($order_email == "after_transaction" && $status != "initialized" && $status != "expired" && !$order->getEmailSent()) ||
-                ($payment->getMethodInstance()->_code == 'mspbanktransfer' && !$order->getEmailSent())
+                ($payment->getMethodInstance()->getCode() == 'mspbanktransfer' && !$order->getEmailSent())
         /* || ($status == "expired" && isset($this->_client->orders->data->transaction_id)) *///PLGMAGTWO-106.
         ) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -891,22 +957,22 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if (($order->canInvoice() || ($order->getStatus() == "pending_payment" && $msporder->status == "completed")) || ($order->getStatus() == "payment_review" && $msporder->status == "completed")) {
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
-            $payment->setCurrencyCode($msporder->currency);
+            
+            //NOTICE: There is an issue with Magento lower than 2.1.8 causing issues creating an invoice when not using the base currency
+            //https://github.com/magento/magento2/commit/c0c24116c3a790db671ae1831c09a4e51adf0549
+            //Set to the order base currency because of issue described above
+            $payment->setCurrencyCode($order->getBaseCurrencyCode());
             $payment->setPreparedMessage('<b>MultiSafepay status: ' . $msporder->status . '</b><br />');
             $payment->setParentTransactionId($msporder->transaction_id);
             $payment->setShouldCloseParentTransaction(false);
             $payment->setIsTransactionClosed(0);
-            $payment->registerCaptureNotification(($msporder->amount / 100), $skipFraudDetection && $msporder->transaction_id);
+
+            $payment->registerCaptureNotification($order->getBaseTotalDue(), $skipFraudDetection && $msporder->transaction_id);
             $payment->setIsTransactionApproved(true);
             $payment->save();
 
-            $paid_amount = ($msporder->amount / 100);
 
-            if ($order->getTotalPaid() != $paid_amount) {
-                $order->setTotalPaid($paid_amount);
-            }
-
-            if ($payment->getMethodInstance()->_code == 'klarnainvoice') {
+            if ($payment->getMethodInstance()->getCode() == 'klarnainvoice') {
                 $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
             }
 
@@ -914,13 +980,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
             $environment = $this->getMainConfigData('msp_env');
-            if ($environment == true) {
-                $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-                $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-            } else {
-                $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-                $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-            }
+            $this->initializeClient($environment, $order);
 
             foreach ($order->getInvoiceCollection() as $invoice) {
                 if ($invoice->getOrderId() == $order->getEntityId()) {
@@ -972,7 +1032,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         //Don't show payment method based on main configuration settings
-        if ($this->_code == 'connect') {
+        if ($this->getCode() == 'connect') {
             return false;
         }
 
@@ -1011,13 +1071,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $order = $payment->getOrder();
 
         $environment = $this->getMainConfigData('msp_env');
-        if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
-        } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', null, $order->getPayment()->getMethodInstance()->_code));
-            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
-        }
+        $this->initializeClient($environment, $order);
 
         $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
         try {
@@ -1053,6 +1107,23 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
         }
         return $this;
+    }
+
+    /**
+     * Initialize the MSP API Client
+     * @param boolean $environment
+     * @param \Magento\Sales\Model\Order $order
+     * @return void
+     */
+    public function initializeClient($environment, $order)
+    {
+        if ($environment == true) {
+            $this->_client->setApiKey($this->getConfigData('test_api_key', $order->getStoreId(), $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
+        } else {
+            $this->_client->setApiKey($this->getConfigData('live_api_key', $order->getStoreId(), $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
+        }
     }
 
     /**
@@ -1144,7 +1215,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         if (null === $code) {
-            $code = $this->_code;
+            $code = $this->getCode();
         }
 
         $mspType = $this->_mspHelper->getPaymentType($code);
