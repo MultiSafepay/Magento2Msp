@@ -225,11 +225,20 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_client->logger = $this->logger;
         $this->_client->debug = ($this->getMainConfigData('msp_debug')) ? true : false;
 
-        $use_base_currency = $this->getMainConfigData('transaction_currency');
+        //Get the invoice_id if available. If its available then we are on the backend invoice page
+        $invoiceId = $requestHttp->getParam('invoice_id');
+        if ($invoiceId) {
+            $invoice = $objectManager->create('Magento\Sales\Api\InvoiceRepositoryInterface')->get($invoiceId);
+            if ($invoice) {
+                //the invoice is loaded so we can check the invoice currencies.
+                $base_currency_code = $invoice->getBaseCurrencyCode();
+                $order_currency_code = $invoice->getOrderCurrencyCode();
 
-        if (!$use_base_currency) {
-            $this->_canRefund = false;
-            $this->_canRefundInvoicePartial = false;
+                if ($base_currency_code != $order_currency_code) {
+                    $this->_canRefund = false;
+                    $this->_canRefundInvoicePartial = false;
+                }
+            }
         }
     }
 
