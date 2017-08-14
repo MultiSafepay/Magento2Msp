@@ -889,7 +889,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
-                if ($cancelled != "pending") {
+                if ($cancelled == "canceled") {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($cancelled)->save();
@@ -900,7 +900,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $declined = $this->getMainConfigData('declined_order_status');
-                if ($declined != "pending") {
+                if ($cancelled == "canceled") {
                     $order->registerCancellation('<b>Transaction declined</b><br />')->save();
                 } else {
                     $order->setStatus($declined)->save();
@@ -911,19 +911,19 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $expired = $this->getMainConfigData('expired_order_status');
-                if ($expired != "pending") {
+                if ($cancelled == "canceled") {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($expired)->save();
                 }
-                $order->registerCancellation('<b>Transaction expired</b><br />')->save();
+                //$order->registerCancellation('<b>Transaction expired</b><br />')->save();
                 break;
             case "cancelled":
                 if ($fetch) {
                     return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
-                if ($cancelled != "pending") {
+                if ($cancelled == "canceled") {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($cancelled)->save();
@@ -1441,4 +1441,5 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         return $size - $pos - strlen($needle);
     }
+
 }
