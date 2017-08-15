@@ -70,10 +70,10 @@ class Chargeback implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         /*
-         * The $statuses used are predefined with values that are testend and confirmed working. However 
+         * The $statuses used are predefined with values that are tested and confirmed working. However 
          * in some circumstances you might want to use a different status then enabled by default.
          * In this case you can disable the line below mentioned by #1 and enable the line mentioned with #2.
-         * Keep in mind that this is done at your own risc.
+         * Keep in mind that this is done at your own risk.
          */
        
         //#1
