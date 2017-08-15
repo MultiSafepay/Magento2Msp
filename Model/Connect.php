@@ -218,7 +218,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->_invoiceSender = $objectManager->get('\Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         $this->stockRegistry = $stockRegistry;
-
+    
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
         $this->logger = new \Zend\Log\Logger();
         $this->logger->addWriter($writer);
@@ -986,6 +986,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $payment->registerCaptureNotification($order->getBaseTotalDue(), $skipFraudDetection && $msporder->transaction_id);
             $payment->setIsTransactionApproved(true);
             $payment->save();
+            
+            
+            $transdetails = array();
+            $transdetails['Fastcheckout'] = $msporder->fastcheckout;
+	        $transaction = $payment->addTransaction('capture', null, false, 'multisafepay');
+            $transaction->setParentTxnId($msporder->transaction_id);
+            $transaction->setIsClosed(1);
+            $transaction->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS, $transdetails);
+            $transaction->save();
 
 
             if ($payment->getMethodInstance()->getCode() == 'klarnainvoice') {
@@ -1083,7 +1092,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $order = $payment->getOrder();
+	    
+	   	$transaction_id = $payment->getParentTransactionId();
+	   	$order = $payment->getOrder();
+	   	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+       	$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+	   	$transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(),$order->getId());
+	   	$transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
+
         $gateway = $payment->getMethodInstance()->_gatewayCode;
         $environment = $this->getMainConfigData('msp_env');
         $this->initializeClient($environment, $order);
@@ -1202,28 +1218,28 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "description" => "Refund: " . $order->getIncrementId(),
             );
         }
-
-        $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
-
+        
+        if(isset($transaction_details['Fastcheckout'])){
+	        if($transaction_details['Fastcheckout'] == "YES"){
+		        $endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
+	        }else{
+		        $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
+	        }
+        }else{
+	        $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
+        }
+        
         try {
             $msporder = $this->_client->orders->post($refundData, $endpoint);
             if (!empty($this->_client->orders->result->error_code)) {
-                $endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
-                try {
-                    $ordermsp = $this->_client->orders->post($refundData, $endpoint);
-                    if (!empty($this->_client->orders->result->error_code)) {
-                        throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
-                    }
-                } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                    throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
-                }
+              	throw new \Magento\Framework\Exception\LocalizedException(__(htmlspecialchars("Error: ".$this->_client->orders->result->error_code).": ".htmlspecialchars($this->_client->orders->result->error_info)));
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
+            throw new \Magento\Framework\Exception\LocalizedException(__(htmlspecialchars($e->getMessage())));
         }
         return $this;
     }
-
+    
     protected function hasMinusSign($value)
     {
         return (substr(strval($value), 0, 1) == "-");
