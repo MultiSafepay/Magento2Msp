@@ -889,7 +889,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
-                if ($cancelled == "canceled") {
+                if ($cancelled == \Magento\Sales\Model\Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($cancelled)->save();
@@ -900,7 +900,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $declined = $this->getMainConfigData('declined_order_status');
-                if ($cancelled == "canceled") {
+                if ($declined == \Magento\Sales\Model\Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction declined</b><br />')->save();
                 } else {
                     $order->setStatus($declined)->save();
@@ -911,7 +911,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $expired = $this->getMainConfigData('expired_order_status');
-                if ($cancelled == "canceled") {
+                if ($expired == \Magento\Sales\Model\Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($expired)->save();
@@ -923,7 +923,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
-                if ($cancelled == "canceled") {
+                if ($cancelled == \Magento\Sales\Model\Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($cancelled)->save();
@@ -970,7 +970,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     protected function _registerPaymentCapture($skipFraudDetection = false, $transactionid, $order, $msporder)
     {
-        if (($order->canInvoice() || ($order->getStatus() == "pending_payment" && $msporder->status == "completed")) || ($order->getStatus() == "payment_review" && $msporder->status == "completed")) {
+        if (($order->canInvoice() || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT && $msporder->status == \Magento\Sales\Model\Order::STATE_PROCESSING)) || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW && $msporder->status == \Magento\Sales\Model\Order::STATE_PROCESSING)) {
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
 
