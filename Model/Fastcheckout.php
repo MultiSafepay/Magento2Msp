@@ -639,7 +639,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $quote->setStore($store); //set store for which you create quote
         // if you have allready buyer id then you can load customer directly 
         $customer = $this->customerRepository->getById($customer->getEntityId());
-        //$quote->setCurrency();
+        $quote->setCurrency();
         $quote->assignCustomer($customer); //Assign quote to customer
         //add items in quote
         foreach ($orderData->shopping_cart->items as $item) {
