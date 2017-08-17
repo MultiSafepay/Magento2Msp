@@ -1217,16 +1217,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "description" => "Refund: " . $order->getIncrementId(),
             );
         }
-        
-        if(isset($transaction_details['Fastcheckout'])){
-	        if($transaction_details['Fastcheckout'] == "YES"){
-		        $endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
-	        }else{
-		        $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
-	        }
-        }else{
-	        $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
-        }
+
+	    if($this->_mspHelper->isFastcheckoutTransaction($transaction_details)){
+		  	$endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
+	    }else{
+		   	$endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
+		}
         
         try {
             $msporder = $this->_client->orders->post($refundData, $endpoint);

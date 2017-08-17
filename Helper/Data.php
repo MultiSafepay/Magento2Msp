@@ -251,5 +251,23 @@ class Data
             return 'giftcards';
         }
     }
-
+    
+    
+    /**
+     * Check if transaction was a fastcheckout transaction
+     *
+     * @param array transaction_details
+     * @return boolean
+     */
+	 public function isFastcheckoutTransaction($transaction_details){
+	 	if(isset($transaction_details['Fastcheckout'])){
+		 	if($transaction_details['Fastcheckout'] == "YES"){
+			 	return true;
+		 	}else{
+			 	return false;
+		 	}
+		 }else{
+			 return false;
+		 }
+     }
 }
