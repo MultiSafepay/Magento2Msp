@@ -47,7 +47,7 @@ class Data
     const MSP_DECLINED = "declined";
     const MSP_EXPIRED = "expired";
     const MSP_CANCELLED = "cancelled";
-    const MSP_CHARGEBACK = "chargeback";
+    const MSP_CHARGEBACK = "chargedback";
     const MSP_REFUNDED = "refunded";
     const MSP_PARTIAL_REFUNDED = "partial_refunded";
     
