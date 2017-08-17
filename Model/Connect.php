@@ -483,18 +483,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 		}
          $params = $this->_requestHttp->getParams();
         
-        $tracking_numer = "";
+        $tracking_number = "";
         
         if(isset($params['tracking'])){
 	        foreach($params['tracking'] as $tracking){
-		       $tracking_numer = $tracking['number'];
+		       $tracking_number = $tracking['number'];
 	        }
         }
         
         $endpoint = 'orders/' . $id;
         $msporder = $this->_client->orders->patch(
                 array(
-            "tracktrace_code" => $tracking_numer,
+            "tracktrace_code" => $tracking_number,
             "carrier" => $order->getShippingDescription(),
             "ship_date" => date('Y-m-d H:i:s'),
             "reason" => 'Shipped'
