@@ -224,15 +224,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_client->logger = $this->logger;
         $this->_client->debug = ($this->getMainConfigData('msp_debug')) ? true : false;
 
-        //Get the invoice_id if available. If its available then we are on the backend invoice page
+        $app_state = $objectManager->get('\Magento\Framework\App\State');
+        $area_code = $app_state->getAreaCode();
+
         $invoiceId = $requestHttp->getParam('invoice_id');
-        if ($invoiceId) {
+        if ($invoiceId && $app_state->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
             $invoice = $objectManager->create('Magento\Sales\Api\InvoiceRepositoryInterface')->get($invoiceId);
             if ($invoice) {
                 //the invoice is loaded so we can check the invoice currencies.
                 $base_currency_code = $invoice->getBaseCurrencyCode();
                 $order_currency_code = $invoice->getOrderCurrencyCode();
-
                 if ($base_currency_code != $order_currency_code) {
                     $this->_canRefund = false;
                     $this->_canRefundInvoicePartial = false;
@@ -1091,7 +1092,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-	    
 	   	$transaction_id = $payment->getParentTransactionId();
 	   	$order = $payment->getOrder();
 	   	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
