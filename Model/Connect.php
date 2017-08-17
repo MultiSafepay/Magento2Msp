@@ -1101,6 +1101,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
        	$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
 	   	$transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(),$order->getId());
 	   	$transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
+	   	
+	   	if($this->_mspHelper->isFastcheckoutTransaction($transaction_details)){
+		  	$endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
+		  	$id = $order->getQuoteId();
+	    }else{
+		   	$endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
+		   	$id = $order->getIncrementId();
+		}
 
         $gateway = $payment->getMethodInstance()->_gatewayCode;
         $environment = $this->getMainConfigData('msp_env');
@@ -1110,7 +1118,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             //Get the creditmemo data as this is not yet stored at this moment.
             $data = $this->_requestHttp->getPost('creditmemo');
             //Do a status request for this order to receive already refunded item data from MSP transaction
-            $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getIncrementId(), $body = array(), $query_string = false);
+            $msporder = $this->_client->orders->get('orders', $id, $body = array(), $query_string = false);
             $originalCart = $msporder->shopping_cart;
             $refundData = array();
 
@@ -1217,15 +1225,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "type" => "refund",
                 "amount" => $refund_amount * 100,
                 "currency" => $currency,
-                "description" => "Refund: " . $order->getIncrementId(),
+                "description" => "Refund: " . $id,
             );
         }
-
-	    if($this->_mspHelper->isFastcheckoutTransaction($transaction_details)){
-		  	$endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
-	    }else{
-		   	$endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
-		}
         
         try {
             $msporder = $this->_client->orders->post($refundData, $endpoint);
