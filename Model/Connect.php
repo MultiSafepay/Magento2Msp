@@ -1222,7 +1222,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
 
             $refundData = array(
-                "type" => "refund",
                 "amount" => $refund_amount * 100,
                 "currency" => $currency,
                 "description" => "Refund: " . $id,
