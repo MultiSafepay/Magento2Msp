@@ -110,7 +110,7 @@ class Button extends Template implements ShortcutInterface
     {
 	    $quote = $this->checkoutSession->getQuote();
 	    if($quote->getQuoteCurrencyCode() != "EUR"){
-		    Return false;
+		    return false;
 	    }
 	    
         return $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
