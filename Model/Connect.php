@@ -840,10 +840,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     ->setTotalCanceled(0);
 
             $state = 'new';
-            $status = 'pending';
+            $new_status = 'pending';
 
-            $order->setStatus($status)->setState($state)->save();
-            $order->addStatusToHistory($status, 'Order has been reopened because a new transaction was started by the customer!');
+            $order->setStatus($new_status)->setState($state)->save();
+            $order->addStatusToHistory($new_status, 'Order has been reopened because a new transaction was started by the customer!');
             $order->save();
         }
 
