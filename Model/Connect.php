@@ -849,6 +849,20 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $payment = $order->getPayment();
 
+        /**
+        *    Update paymentmethod if paid with other payment method
+        */
+        $gatewayCode = $payment->getMethodInstance()->_gatewayCode;
+        $msp_gateway = $msporder->payment_details->type;
+        if ($gatewayCode != $msp_gateway) {
+            $new_gateway_code = $this->_mspHelper->getPaymentCode($msp_gateway);
+            if ($new_gateway_code) {
+                $payment->setMethod($new_gateway_code);
+                $payment_change_comment = 'MultiSafepay: payment method changed from ' . $this->_mspHelper->getPaymentCode($gatewayCode) . ' to ' . $new_gateway_code;
+                $order->addStatusHistoryComment($payment_change_comment, false);
+            }
+        }
+
         $order_email = $this->getMainConfigData('send_order_email');
         if (($order_email == "after_transaction" && $status != "initialized" && $status != "expired" && !$order->getEmailSent()) ||
                 ($payment->getMethodInstance()->getCode() == 'mspbanktransfer' && !$order->getEmailSent())

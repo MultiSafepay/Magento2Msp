@@ -101,6 +101,33 @@ class Data
         'ing'
     );
 
+    //MultiSafepay_gateways->Magento_codes
+    public $methodMap = array(
+        'ALIPAY' => 'alipay',
+        'AMEX' => 'americanexpress',
+        'BANKTRANS' => 'mspbanktransfer',
+        'BELFIUS' => 'belfius',
+        'DIRDEB' => 'directdebit',
+        'DIRECTBANK' => 'sofort',
+        'DOTPAY' => 'dotpay',
+        'EINVOICE' => 'einvoice',
+        'EPS' => 'eps',
+        'FERBUY' => 'ferbuy',
+        'GIROPAY' => 'giropay',
+        'IDEAL' => 'ideal',
+        'ING' => 'ing',
+        'KBC' => 'kbc',
+        'KLARNA' => 'klarnainvoice',
+        'MAESTRO' => 'maestro',
+        'MASTERCARD' => 'mastercard',
+        'MISTERCASH' => 'bancontact',
+        'PAYAFTER' => 'betaalnaontvangst',
+        'PAYPAL' => 'paypalmsp',
+        'PSAFECARD' => 'paysafecard',
+        'TRUSTPAY' => 'trustpay',
+        'VISA' => 'visa',
+    );
+
     /**
      * File extension lock
      */
@@ -270,4 +297,20 @@ class Data
 			 return false;
 		 }
      }
+
+    /**
+     * Returns payment code based on MultiSafepay gateway
+     *
+     * @param string gateway
+     * @return string
+     */
+    public function getPaymentCode($gateway){
+        if (isset($this->methodMap[$gateway])) {
+            return $this->methodMap[$gateway];
+        }
+        else {
+            return null;
+        }
+    }
+
 }
