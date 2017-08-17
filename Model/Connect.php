@@ -455,7 +455,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function shipOrder($order)
     {
-
+        $payment = $order->getPayment();
+        $transaction_id = $payment->getLastTransId();
+	   	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+       	$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+	   	$transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(),$order->getId());
+	   	$transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
+        
         $shipped = array();
         $shipped['success'] = false;
         $shipped['error'] = false;
@@ -469,17 +475,33 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $environment = $this->getMainConfigData('msp_env');
         $this->initializeClient($environment, $order);
 
-        $endpoint = 'orders/' . $order->getIncrementId();
+        
+        if($this->_mspHelper->isFastcheckoutTransaction($transaction_details)){
+		  	$id = $order->getQuoteId();
+	    }else{
+            $id = $order->getIncrementId();
+		}
+         $params = $this->_requestHttp->getParams();
+        
+        $tracking_numer = "";
+        
+        if(isset($params['tracking'])){
+	        foreach($params['tracking'] as $tracking){
+		       $tracking_numer = $tracking['number'];
+	        }
+        }
+        
+        $endpoint = 'orders/' . $id;
         $msporder = $this->_client->orders->patch(
                 array(
-            "tracktrace_code" => '',
+            "tracktrace_code" => $tracking_numer,
             "carrier" => $order->getShippingDescription(),
             "ship_date" => date('Y-m-d H:i:s'),
             "reason" => 'Shipped'
                 ), $endpoint);
 
         if (!empty($this->_client->orders->success)) {
-            $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getIncrementId(), $body = array(), $query_string = false);
+            $msporder = $this->_client->orders->get($endpoint = 'orders', $id, $body = array(), $query_string = false);
 
             if ($payment->getCode() == 'klarnainvoice') {
                 $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
@@ -488,27 +510,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $shipped['success'] = true;
             return $shipped;
         } else {
-            $endpoint = 'orders/' . $order->getQuoteId();
-            $msporder = $this->_client->orders->patch(
-                    array(
-                "tracktrace_code" => '',
-                "carrier" => $order->getShippingDescription(),
-                "ship_date" => date('Y-m-d H:i:s'),
-                "reason" => 'Shipped'
-                    ), $endpoint);
-
-            if (!empty($this->_client->orders->success)) {
-                $msporder = $this->_client->orders->get($endpoint = 'orders', $order->getQuoteId(), $body = array(), $query_string = false);
-                if ($payment->getCode() == 'klarnainvoice') {
-                    $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
-                    $order->save();
-                }
-                $shipped['success'] = true;
-                return $shipped;
-            } else {
-                $shipped['error'] = true;
-                return $shipped;
-            }
+            $shipped['error'] = true;
+            return $shipped;
         }
     }
 
