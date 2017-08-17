@@ -40,7 +40,17 @@ use Magento\Framework\App\ObjectManager;
 
 class Data
 {
-
+    const MSP_COMPLETED = "completed";
+    const MSP_INIT = "initialized";
+    const MSP_UNCLEARED = "uncleared";
+    const MSP_VOID = "void";
+    const MSP_DECLINED = "declined";
+    const MSP_EXPIRED = "expired";
+    const MSP_CANCELLED = "cancelled";
+    const MSP_CHARGEBACK = "chargeback";
+    const MSP_REFUNDED = "refunded";
+    const MSP_PARTIAL_REFUNDED = "partial_refunded";
+    
     public $giftcards = array(
         'webshopgiftcard',
         'babygiftcard',

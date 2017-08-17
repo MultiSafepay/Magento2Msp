@@ -41,7 +41,6 @@ use \Magento\CatalogInventory\Api\StockRegistryInterface;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
-
     protected $_isInitializeNeeded = true;
     protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
     public $issuer_id = null;
@@ -805,7 +804,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         /**
          *    Start undo cancel function
          */
-        if ($order->getState() == 'canceled' && $status == 'completed') {
+        if ($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED && $status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED) {
             foreach ($order->getItemsCollection() as $item) {
                 if ($item->getQtyCanceled() > 0) {
                     $item->setQtyCanceled(0)->save();
@@ -859,10 +858,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
          *    ENDING UNDO CANCEL CODE
          */
         switch ($status) {
-            case "initialized":
+            case \MultiSafepay\Connect\Helper\Data::MSP_INIT:
                 //We don't process this callback as the status would be the same as the new order status configured.
                 break;
-            case "completed":
+            case \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED:
 
                 $order_email = $this->getMainConfigData('send_order_email');
 
@@ -878,13 +877,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
 
                 break;
-            case "uncleared":
+            case \MultiSafepay\Connect\Helper\Data::MSP_UNCLEARED:
                 if ($fetch) {
                     return false;
                 }
                 $this->_registerPaymentPending($transactionid, $order, $msporder);
                 break;
-            case "void":
+            case \MultiSafepay\Connect\Helper\Data::MSP_VOID:
                 if ($fetch) {
                     return false;
                 }
@@ -895,7 +894,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $order->setStatus($cancelled)->save();
                 }
                 break;
-            case "declined":
+            case \MultiSafepay\Connect\Helper\Data::MSP_DECLINED:
                 if ($fetch) {
                     return false;
                 }
@@ -906,7 +905,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $order->setStatus($declined)->save();
                 }
                 break;
-            case "expired":
+            case \MultiSafepay\Connect\Helper\Data::MSP_EXPIRED:
                 if ($fetch) {
                     return false;
                 }
@@ -918,7 +917,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
                 //$order->registerCancellation('<b>Transaction expired</b><br />')->save();
                 break;
-            case "cancelled":
+            case \MultiSafepay\Connect\Helper\Data::MSP_CANCELLED:
                 if ($fetch) {
                     return false;
                 }
@@ -929,17 +928,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $order->setStatus($cancelled)->save();
                 }
                 break;
-            case "chargeback":
+            case \MultiSafepay\Connect\Helper\Data::MSP_CHARGEBACK:
                 if ($fetch) {
                     return false;
                 }
                 $chargeback = $this->getMainConfigData('chargeback_order_status');
                 $order->setStatus($chargeback)->save();
                 break;
-            case "refunded":
+            case \MultiSafepay\Connect\Helper\Data::MSP_REFUNDED:
                 //We don't process this callback as refunds are done using the Magento Backoffice now
                 break;
-            case "partial_refunded":
+            case \MultiSafepay\Connect\Helper\Data::MSP_PARTIAL_REFUNDED:
                 //We don't process this callback as refunds are done using the Magento Backoffice now
                 break;
             default:
@@ -970,7 +969,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     protected function _registerPaymentCapture($skipFraudDetection = false, $transactionid, $order, $msporder)
     {
-        if (($order->canInvoice() || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT && $msporder->status == \Magento\Sales\Model\Order::STATE_PROCESSING)) || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW && $msporder->status == \Magento\Sales\Model\Order::STATE_PROCESSING)) {
+        if (($order->canInvoice() || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) {
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
 
