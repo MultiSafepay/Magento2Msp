@@ -860,6 +860,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $payment->setMethod($new_gateway_code);
                 $payment_change_comment = 'MultiSafepay: payment method changed from ' . $this->_mspHelper->getPaymentCode($gatewayCode) . ' to ' . $new_gateway_code;
                 $order->addStatusHistoryComment($payment_change_comment, false);
+                $order->save();
             }
         }
 
