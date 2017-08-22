@@ -789,7 +789,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         if (empty($transactionid)) {
-            $transactionid = $order->getIncrementId();
+	        $payment = $order->getPayment();
+	        $int_transaction_id = $payment->getLastTransId();
+	        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+			$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+			$transaction = $transactionRepository->getByTransactionId($int_transaction_id, $payment->getId(),$order->getId());
+			$transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
+	   	
+			if($this->_mspHelper->isFastcheckoutTransaction($transaction_details)){
+		  		$transactionid = $order->getQuoteId();
+	    	}else{
+		   		$transactionid = $order->getIncrementId();
+			}
         }
 
 
