@@ -40,7 +40,17 @@ use Magento\Framework\App\ObjectManager;
 
 class Data
 {
-
+    const MSP_COMPLETED = "completed";
+    const MSP_INIT = "initialized";
+    const MSP_UNCLEARED = "uncleared";
+    const MSP_VOID = "void";
+    const MSP_DECLINED = "declined";
+    const MSP_EXPIRED = "expired";
+    const MSP_CANCELLED = "cancelled";
+    const MSP_CHARGEBACK = "chargedback";
+    const MSP_REFUNDED = "refunded";
+    const MSP_PARTIAL_REFUNDED = "partial_refunded";
+    
     public $giftcards = array(
         'webshopgiftcard',
         'babygiftcard',
@@ -89,6 +99,33 @@ class Data
         'alipay',
         'belfius',
         'ing'
+    );
+
+    //MultiSafepay_gateways->Magento_codes
+    public $methodMap = array(
+        'ALIPAY' => 'alipay',
+        'AMEX' => 'americanexpress',
+        'BANKTRANS' => 'mspbanktransfer',
+        'BELFIUS' => 'belfius',
+        'DIRDEB' => 'directdebit',
+        'DIRECTBANK' => 'sofort',
+        'DOTPAY' => 'dotpay',
+        'EINVOICE' => 'einvoice',
+        'EPS' => 'eps',
+        'FERBUY' => 'ferbuy',
+        'GIROPAY' => 'giropay',
+        'IDEAL' => 'ideal',
+        'ING' => 'ing',
+        'KBC' => 'kbc',
+        'KLARNA' => 'klarnainvoice',
+        'MAESTRO' => 'maestro',
+        'MASTERCARD' => 'mastercard',
+        'MISTERCASH' => 'bancontact',
+        'PAYAFTER' => 'betaalnaontvangst',
+        'PAYPAL' => 'paypalmsp',
+        'PSAFECARD' => 'paysafecard',
+        'TRUSTPAY' => 'trustpay',
+        'VISA' => 'visa',
     );
 
     /**
@@ -239,6 +276,40 @@ class Data
             return 'gateways';
         } elseif (in_array($code, $this->giftcards)) {
             return 'giftcards';
+        }
+    }
+    
+    
+    /**
+     * Check if transaction was a fastcheckout transaction
+     *
+     * @param array transaction_details
+     * @return boolean
+     */
+	 public function isFastcheckoutTransaction($transaction_details){
+	 	if(isset($transaction_details['Fastcheckout'])){
+		 	if($transaction_details['Fastcheckout'] == "YES"){
+			 	return true;
+		 	}else{
+			 	return false;
+		 	}
+		 }else{
+			 return false;
+		 }
+     }
+
+    /**
+     * Returns payment code based on MultiSafepay gateway
+     *
+     * @param string gateway
+     * @return string
+     */
+    public function getPaymentCode($gateway){
+        if (isset($this->methodMap[$gateway])) {
+            return $this->methodMap[$gateway];
+        }
+        else {
+            return null;
         }
     }
 
