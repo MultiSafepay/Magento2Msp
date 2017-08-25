@@ -30,6 +30,7 @@
  */
 
 namespace MultiSafepay\Connect\Controller\Connect;
+
 use MultiSafepay\Connect\Helper\Data;
 
 /**
@@ -67,9 +68,9 @@ class Cancel extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
-         
+
         if (isset($params['transactionid'])) {
-	        $this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
+            $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
             $incrementId = $params['transactionid'];
         }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
@@ -94,11 +95,12 @@ class Cancel extends \Magento\Framework\App\Action\Action
                 }
                 //Cancel the order so a new one can created
                 $order->registerCancellation('Order cancelled by customer')->save();
+                $this->messageManager->addError(__('The transaction was cancelled or declined and the order was closed, please try again.'));
             }
         }
 
 
-		$this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
+        $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
         $this->_redirect('checkout/cart');
         return;
     }

@@ -30,6 +30,7 @@
  */
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
+
 use MultiSafepay\Connect\Helper\Data;
 
 /**
@@ -66,11 +67,11 @@ class Success extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-	    	
-	   	
+
+
 
         $params = $this->_requestHttp->getParams();
-        $this->_mspHelper->lockProcess('multisafepay-'.$params['transactionid']);
+        $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
 
         $order_id = $paymentMethod->notification($params);
@@ -80,19 +81,19 @@ class Success extends \Magento\Framework\App\Action\Action
         $order_information = $order->load($order_id);
 
         $session->unsQuoteId();
-       
+
         $session->setLastOrderId($order_id);
         $session->setLastRealOrderId($order_information->getIncrementId());
 
         // set some vars for the success page
         $session->setLastSuccessQuoteId($params['transactionid']);
         $session->setLastQuoteId($params['transactionid']);
-		 $session->getQuote()->setIsActive(false)->save();
+        $session->getQuote()->setIsActive(false)->save();
         //To a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         //$updated = $paymentMethod->notification($order, true);
-		$this->_mspHelper->unlockProcess('multisafepay-'.$params['transactionid']);
+        $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
         $this->_redirect('checkout/onepage/success?utm_nooverride=1');
         return;
     }

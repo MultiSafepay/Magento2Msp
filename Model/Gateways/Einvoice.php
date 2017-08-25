@@ -36,7 +36,4 @@ class Einvoice extends \MultiSafepay\Connect\Model\Connect
 
     protected $_code = 'einvoice';
     public $_gatewayCode = 'EINVOICE';
-    protected $_canRefundInvoicePartial = false;
-    protected $_canRefund = false;
-
 }

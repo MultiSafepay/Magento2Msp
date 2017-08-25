@@ -11,13 +11,13 @@
     </arguments>
   </type>
   <type name="MultiSafepay\Connect\Block\Fastcheckout\Button">
-      <arguments>
-          <argument name="data" xsi:type="array">
-              <item name="template" xsi:type="string">MultiSafepay_Connect::fastcheckout/button.phtml</item>
-              <item name="fco_alias" xsi:type="string">multisafepay.fastcheckout.mini-cart</item>
-              <item name="fco_button_id" xsi:type="string">multisafepay-fastcheckout-mini-cart</item>
-          </argument>
-          <!--<argument name="payment" xsi:type="object">MultiSafepayConnect</argument>-->
-      </arguments>
+    <arguments>
+      <argument name="data" xsi:type="array">
+        <item name="template" xsi:type="string">MultiSafepay_Connect::fastcheckout/button.phtml</item>
+        <item name="fco_alias" xsi:type="string">multisafepay.fastcheckout.mini-cart</item>
+        <item name="fco_button_id" xsi:type="string">multisafepay-fastcheckout-mini-cart</item>
+      </argument>
+      <!--<argument name="payment" xsi:type="object">MultiSafepayConnect</argument>-->
+    </arguments>
   </type>
 </config>

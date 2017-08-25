@@ -9,6 +9,7 @@
         <instructions></instructions>
         <payment_action>true</payment_action>
         <model>MultiSafepay\Connect\Model\Connect</model>
+        <transaction_currency>true</transaction_currency>
         <group>multisafepay_connect</group>
       </connect>
     </multisafepay>
@@ -298,7 +299,7 @@
         <group>multisafepay_connect</group>
       </alipay>
       
-       <!-- Start Belfius -->
+      <!-- Start Belfius -->
       <belfius>
         <active>0</active>
         <title>Belfius</title>
@@ -312,7 +313,7 @@
       </belfius>
       
       
-       <!-- Start ing -->
+      <!-- Start ing -->
       <ing>
         <active>0</active>
         <title>ING Homepay</title>
@@ -815,7 +816,7 @@
       </paypalmsp>
       
       
-            <!-- Start Trustpay-->
+      <!-- Start Trustpay-->
       <trustpay>
         <active>0</active>
         <title>TrustPay</title>
@@ -854,7 +855,7 @@
         <group>multisafepay_connect</group>
       </alipay>
       
-       <!-- Start Belfius -->
+      <!-- Start Belfius -->
       <belfius>
         <active>0</active>
         <title>Belfius</title>
@@ -868,7 +869,7 @@
       </belfius>
       
       
-       <!-- Start ing -->
+      <!-- Start ing -->
       <ing>
         <active>0</active>
         <title>ING Homepay</title>
