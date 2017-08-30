@@ -77,7 +77,7 @@ class Expired implements \Magento\Framework\Option\ArrayInterface
          */
         
         //#1
-        $statuses = $this->_stateStatuses ? $this->_orderConfig->getStateStatuses($this->_stateStatuses) : $this->_orderConfig->getStatuses();
+        $statuses = $this->_stateStatuses;
         
         //#2
         //$statuses = $this->_orderConfig->getStatuses();
