@@ -582,7 +582,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $tierprices = $proddata->getTierPrice();
                     if (count($tierprices) > 0) {
                         $product_tier_prices = (object) $tierprices;
-                        $product_price = array();
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
                             if ($item->getQtyOrdered() >= $value->price_qty)
@@ -607,7 +606,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $tierprices = $proddata->getTierPrice();
                     if (count($tierprices) > 0) {
                         $product_tier_prices = (object) $tierprices;
-                        $product_price = array();
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
                             if ($item->getQtyOrdered() >= $value->price_qty)
