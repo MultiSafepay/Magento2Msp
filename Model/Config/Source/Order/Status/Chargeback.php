@@ -77,7 +77,7 @@ class Chargeback implements \Magento\Framework\Option\ArrayInterface
          */
        
         //#1
-        $statuses = $this->_stateStatuses;
+        $statuses = $this->_stateStatuses ? $this->_orderConfig->getStateStatuses($this->_stateStatuses) : $this->_orderConfig->getStatuses();
         
         //#2
         //$statuses = $this->_orderConfig->getStatuses();
