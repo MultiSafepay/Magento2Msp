@@ -1167,7 +1167,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                     } else {
                                         $refundItem->unit_price = 0 - $item->unit_price;
                                     }
-                                    $refundItem->quantity = round($qty_refunded);
+                                    $refundItem->quantity = $qty_refunded;
                                     $refundItem->merchant_item_id = $item->merchant_item_id;
                                     $refundItem->tax_table_selector = $item->tax_table_selector;
                                     $refundData['checkout_data']['items'][] = $refundItem;
@@ -1185,7 +1185,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                 $refundItem->name = $item->name;
                                 $refundItem->description = $item->description;
                                 $refundItem->unit_price = 0 - $item->unit_price;
-                                $refundItem->quantity = round($proddata['qty']);
+                                $refundItem->quantity = $proddata['qty'];
                                 $refundItem->merchant_item_id = $item->merchant_item_id;
                                 $refundItem->tax_table_selector = $item->tax_table_selector;
                                 $refundData['checkout_data']['items'][] = $refundItem;
