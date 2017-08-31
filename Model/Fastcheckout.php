@@ -523,7 +523,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             'telephone' => ($orderData->customer->phone1) ? $orderData->customer->phone1 : '0000000000',
             'email' => $orderData->customer->email,
             'fax' => '',
-            'save_in_address_book' => 1
+            'save_in_address_book' => 0
         );
 
 
@@ -538,7 +538,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             'telephone' => ($orderData->delivery->phone1) ? $orderData->delivery->phone1 : '0000000000',
             'fax' => '',
             'email' => $orderData->customer->email,
-            'save_in_address_book' => 1
+            'save_in_address_book' => 0
         );
 
 
