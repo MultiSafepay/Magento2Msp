@@ -586,10 +586,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
                             if ($item->getQtyOrdered() >= $value->price_qty)
-                                if ($ndata['base_price'] < $value->base_price) {
+                                if ($ndata['base_price'] < $value->price) {
                                     $price = $ndata['base_price'];
                                 } else {
-                                    $price = $value->base_price;
+                                    $price = $value->price;
                                 }
                             $price = $price;
                         }
