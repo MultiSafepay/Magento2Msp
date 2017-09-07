@@ -326,7 +326,25 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             $phone = $billing->getTelephone();
         }
+        
+        
+        //Shipping
+        $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1));
+        if (isset($shippingaddressData['housenumber']) && !empty($shippingaddressData['housenumber'])) {
+            $shipping_street = $shippingaddressData['address'];
+            $shipping_housenumber = $shippingaddressData['housenumber'];
+        } else {
+            $shipping_street = $shipping->getStreetLine(1);
+            $shipping_housenumber = $shipping->getStreetLine(2);
+        }
 
+        if ($shipping->getTelephone() == '-') {
+            $shipping_phone = '';
+        } else {
+            $shipping_phone = $shipping->getTelephone();
+        }
+        
+     
         if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS") {
             $type = 'direct';
         } else {
@@ -391,6 +409,19 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "phone" => $phone,
                 "email" => $order->getCustomerEmail(),
             ),
+            "delivery"=> array(
+		        "first_name"=> $shipping->getFirstName(),
+		        "last_name"=> $shipping->getLastName(),
+		        "address1"=> $shipping_street,
+		        "address2"=> $shipping->getStreetLine(2),
+		        "house_number"=> $shipping_housenumber,
+		        "zip_code"=> $shipping->getPostcode(),
+		        "city"=> $shipping->getCity(),
+		        "state"=> $shipping->getRegion(),
+		        "country"=> $shipping->getCountryId(),
+		        "phone"=> $shipping_phone,
+		        "email"=> $order->getCustomerEmail(),
+		    ),
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
