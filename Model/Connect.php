@@ -458,11 +458,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $payment = $order->getPayment();
         $transaction_id = $payment->getLastTransId();
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
-        $transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(), $order->getId());
+	   	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+       	$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+	   	$transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(),$order->getId());
+	   	
+        if ($transaction == NULL) {
+            return true;
+        }       
+                    
         $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
-
+        
         $shipped = array();
         $shipped['success'] = false;
         $shipped['error'] = false;
