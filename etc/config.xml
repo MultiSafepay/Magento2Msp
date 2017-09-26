@@ -5,7 +5,13 @@
       <connect>
         <active>0</active>
         <title>Connect</title>
+        
         <order_status>pending_payment</order_status>
+        <declined_order_status>canceled</declined_order_status>
+        <cancelled_order_status>canceled</cancelled_order_status>
+        <expired_order_status>canceled</expired_order_status>
+        <chargeback_order_status>holded</chargeback_order_status>
+        
         <instructions></instructions>
         <payment_action>true</payment_action>
         <model>MultiSafepay\Connect\Model\Connect</model>
