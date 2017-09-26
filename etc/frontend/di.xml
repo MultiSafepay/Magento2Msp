@@ -4,8 +4,6 @@
     <arguments>
       <argument name="configProviders" xsi:type="array">
         <item name="ConnectConfigProvider" xsi:type="object">MultiSafepay\Connect\Model\ConnectConfigProvider</item>
-      </argument>
-      <argument name="configProviders" xsi:type="array">
         <item name="FastcheckoutConfigProvider" xsi:type="object">MultiSafepay\Connect\Model\FastcheckoutConfigProvider</item>
       </argument>
     </arguments>
