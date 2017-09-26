@@ -672,7 +672,8 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        $used_method = strtolower($orderData->payment_details->type);
+        $msp_gateway = $orderData->payment_details->type;
+        $used_method = $this->_mspHelper->getPaymentCode($msp_gateway);
         $method_activated = false;
 
         if (in_array($used_method, $this->_mspHelper->gateways)) {
@@ -711,11 +712,11 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        $quote->setPaymentMethod(strtolower($orderData->payment_details->type)); //payment method
+        $quote->setPaymentMethod($used_method); //payment method
         //$quote->setInventoryProcessed(false); //not effect inventory
         $quote->save(); //Now Save quote and your quote is ready
         // Set Sales Order Payment
-        $quote->getPayment()->importData(['method' => strtolower($orderData->payment_details->type)]);
+        $quote->getPayment()->importData(['method' => $used_method]);
 
         // Collect Totals & Save Quote
         $quote->collectTotals()->save();
