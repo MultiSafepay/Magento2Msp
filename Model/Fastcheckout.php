@@ -329,7 +329,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                 $taxName = $taxCode . '(' . $taxRate . '%)';
 
                 $alternateTaxRates['tax_tables']['default'][] = array(
-                    "shpping_taxed" => "true",
+                    "shipping_taxed" => "true",
                     "name" => $taxName,
                     "rules" => array(
                         array("rate" => $taxRate / 100)
