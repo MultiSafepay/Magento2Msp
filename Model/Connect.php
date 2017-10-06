@@ -41,6 +41,7 @@ use \Magento\CatalogInventory\Api\StockRegistryInterface;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
+
     protected $_isInitializeNeeded = true;
     protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
     public $issuer_id = null;
@@ -217,7 +218,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->_invoiceSender = $objectManager->get('\Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         $this->stockRegistry = $stockRegistry;
-    
+
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
         $this->logger = new \Zend\Log\Logger();
         $this->logger->addWriter($writer);
@@ -326,7 +327,25 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             $phone = $billing->getTelephone();
         }
+        
+        
+        //Shipping
+        $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1));
+        if (isset($shippingaddressData['housenumber']) && !empty($shippingaddressData['housenumber'])) {
+            $shipping_street = $shippingaddressData['address'];
+            $shipping_housenumber = $shippingaddressData['housenumber'];
+        } else {
+            $shipping_street = $shipping->getStreetLine(1);
+            $shipping_housenumber = $shipping->getStreetLine(2);
+        }
 
+        if ($shipping->getTelephone() == '-') {
+            $shipping_phone = '';
+        } else {
+            $shipping_phone = $shipping->getTelephone();
+        }
+        
+     
         if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS") {
             $type = 'direct';
         } else {
@@ -391,6 +410,19 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "phone" => $phone,
                 "email" => $order->getCustomerEmail(),
             ),
+            "delivery"=> array(
+		        "first_name"=> $shipping->getFirstName(),
+		        "last_name"=> $shipping->getLastName(),
+		        "address1"=> $shipping_street,
+		        "address2"=> $shipping->getStreetLine(2),
+		        "house_number"=> $shipping_housenumber,
+		        "zip_code"=> $shipping->getPostcode(),
+		        "city"=> $shipping->getCity(),
+		        "state"=> $shipping->getRegion(),
+		        "country"=> $shipping->getCountryId(),
+		        "phone"=> $shipping_phone,
+		        "email"=> $order->getCustomerEmail(),
+		    ),
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
@@ -460,7 +492,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 	   	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
        	$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
 	   	$transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(),$order->getId());
-	   	$transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
+	   	
+        if ($transaction == NULL) {
+            return true;
+        }       
+                    
+        $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
         
         $shipped = array();
         $shipped['success'] = false;
@@ -475,22 +512,22 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $environment = $this->getMainConfigData('msp_env');
         $this->initializeClient($environment, $order);
 
-        
-        if($this->_mspHelper->isFastcheckoutTransaction($transaction_details)){
-		  	$id = $order->getQuoteId();
-	    }else{
+
+        if ($this->_mspHelper->isFastcheckoutTransaction($transaction_details)) {
+            $id = $order->getQuoteId();
+        } else {
             $id = $order->getIncrementId();
-		}
-         $params = $this->_requestHttp->getParams();
-        
-        $tracking_number = "";
-        
-        if(isset($params['tracking'])){
-	        foreach($params['tracking'] as $tracking){
-		       $tracking_number = $tracking['number'];
-	        }
         }
-        
+        $params = $this->_requestHttp->getParams();
+
+        $tracking_number = "";
+
+        if (isset($params['tracking'])) {
+            foreach ($params['tracking'] as $tracking) {
+                $tracking_number = $tracking['number'];
+            }
+        }
+
         $endpoint = 'orders/' . $id;
         $msporder = $this->_client->orders->patch(
                 array(
@@ -582,14 +619,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $tierprices = $proddata->getTierPrice();
                     if (count($tierprices) > 0) {
                         $product_tier_prices = (object) $tierprices;
-                        $product_price = array();
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
                             if ($item->getQtyOrdered() >= $value->price_qty)
-                                if ($ndata['base_price'] < $value->base_price) {
+                                if ($ndata['base_price'] < $value->price) {
                                     $price = $ndata['base_price'];
                                 } else {
-                                    $price = $value->base_price;
+                                    $price = $value->price;
                                 }
                             $price = $price;
                         }
@@ -607,7 +643,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $tierprices = $proddata->getTierPrice();
                     if (count($tierprices) > 0) {
                         $product_tier_prices = (object) $tierprices;
-                        $product_price = array();
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
                             if ($item->getQtyOrdered() >= $value->price_qty)
@@ -789,18 +824,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         if (empty($transactionid)) {
-	        $payment = $order->getPayment();
-	        $int_transaction_id = $payment->getLastTransId();
-	        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-			$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
-			$transaction = $transactionRepository->getByTransactionId($int_transaction_id, $payment->getId(),$order->getId());
-			$transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
-	   	
-			if($this->_mspHelper->isFastcheckoutTransaction($transaction_details)){
-		  		$transactionid = $order->getQuoteId();
-	    	}else{
-		   		$transactionid = $order->getIncrementId();
-			}
+            $payment = $order->getPayment();
+            $int_transaction_id = $payment->getLastTransId();
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+            $transaction = $transactionRepository->getByTransactionId($int_transaction_id, $payment->getId(), $order->getId());
+            $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
+
+            if ($this->_mspHelper->isFastcheckoutTransaction($transaction_details)) {
+                $transactionid = $order->getQuoteId();
+            } else {
+                $transactionid = $order->getIncrementId();
+            }
         }
 
 
@@ -863,15 +898,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         /**
         *    Update paymentmethod if paid with other payment method
         */
-        $gatewayCode = $payment->getMethodInstance()->_gatewayCode;
-        $msp_gateway = $msporder->payment_details->type;
-        if ($gatewayCode != $msp_gateway) {
-            $new_gateway_code = $this->_mspHelper->getPaymentCode($msp_gateway);
-            if ($new_gateway_code) {
-                $payment->setMethod($new_gateway_code);
-                $payment_change_comment = 'MultiSafepay: payment method changed from ' . $this->_mspHelper->getPaymentCode($gatewayCode) . ' to ' . $new_gateway_code;
-                $order->addStatusHistoryComment($payment_change_comment, false);
-                $order->save();
+        if(isset($msporder->payment_details)) {
+            $msp_gateway = $msporder->payment_details->type;
+            $gatewayCode = $payment->getMethodInstance()->_gatewayCode;
+            if ($gatewayCode != $msp_gateway) {
+                $new_gateway_code = $this->_mspHelper->getPaymentCode($msp_gateway);
+                if ($new_gateway_code) {
+                    $payment->setMethod($new_gateway_code);
+                    $payment_change_comment = 'MultiSafepay: payment method changed from ' . $this->_mspHelper->getPaymentCode($gatewayCode) . ' to ' . $new_gateway_code;
+                    $order->addStatusHistoryComment($payment_change_comment, false);
+                    $order->save();
+                }
             }
         }
 
@@ -1015,11 +1052,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $payment->registerCaptureNotification($order->getBaseTotalDue(), $skipFraudDetection && $msporder->transaction_id);
             $payment->setIsTransactionApproved(true);
             $payment->save();
-            
-            
+
+
             $transdetails = array();
             $transdetails['Fastcheckout'] = $msporder->fastcheckout;
-	        $transaction = $payment->addTransaction('capture', null, false, 'multisafepay');
+            $transaction = $payment->addTransaction('capture', null, false, 'multisafepay');
             $transaction->setParentTxnId($msporder->transaction_id);
             $transaction->setIsClosed(1);
             $transaction->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS, $transdetails);
@@ -1121,20 +1158,20 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-	   	$transaction_id = $payment->getParentTransactionId();
-	   	$order = $payment->getOrder();
-	   	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-       	$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
-	   	$transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(),$order->getId());
-	   	$transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
-	   	
-	   	if($this->_mspHelper->isFastcheckoutTransaction($transaction_details)){
-		  	$endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
-		  	$id = $order->getQuoteId();
-	    }else{
-		   	$endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
-		   	$id = $order->getIncrementId();
-		}
+        $transaction_id = $payment->getParentTransactionId();
+        $order = $payment->getOrder();
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+        $transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(), $order->getId());
+        $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
+
+        if ($this->_mspHelper->isFastcheckoutTransaction($transaction_details)) {
+            $endpoint = 'orders/' . $order->getQuoteId() . '/refunds';
+            $id = $order->getQuoteId();
+        } else {
+            $endpoint = 'orders/' . $order->getIncrementId() . '/refunds';
+            $id = $order->getIncrementId();
+        }
 
         $gateway = $payment->getMethodInstance()->_gatewayCode;
         $environment = $this->getMainConfigData('msp_env');
@@ -1167,7 +1204,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                     } else {
                                         $refundItem->unit_price = 0 - $item->unit_price;
                                     }
-                                    $refundItem->quantity = round($qty_refunded);
+                                    $refundItem->quantity = $qty_refunded;
                                     $refundItem->merchant_item_id = $item->merchant_item_id;
                                     $refundItem->tax_table_selector = $item->tax_table_selector;
                                     $refundData['checkout_data']['items'][] = $refundItem;
@@ -1185,7 +1222,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                 $refundItem->name = $item->name;
                                 $refundItem->description = $item->description;
                                 $refundItem->unit_price = 0 - $item->unit_price;
-                                $refundItem->quantity = round($proddata['qty']);
+                                $refundItem->quantity = $proddata['qty'];
                                 $refundItem->merchant_item_id = $item->merchant_item_id;
                                 $refundItem->tax_table_selector = $item->tax_table_selector;
                                 $refundData['checkout_data']['items'][] = $refundItem;
@@ -1253,18 +1290,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "description" => "Refund: " . $id,
             );
         }
-        
+
         try {
             $msporder = $this->_client->orders->post($refundData, $endpoint);
             if (!empty($this->_client->orders->result->error_code)) {
-              	throw new \Magento\Framework\Exception\LocalizedException(__(htmlspecialchars("Error: ".$this->_client->orders->result->error_code).": ".htmlspecialchars($this->_client->orders->result->error_info)));
+                throw new \Magento\Framework\Exception\LocalizedException(__(htmlspecialchars("Error: " . $this->_client->orders->result->error_code) . ": " . htmlspecialchars($this->_client->orders->result->error_info)));
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__(htmlspecialchars($e->getMessage())));
         }
         return $this;
     }
-    
+
     protected function hasMinusSign($value)
     {
         return (substr(strval($value), 0, 1) == "-");
