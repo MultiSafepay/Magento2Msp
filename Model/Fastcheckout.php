@@ -290,7 +290,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.4.5',
+                "plugin_version" => ' - Plugin 1.4.6',
                 "partner" => "MultiSafepay",
             ),
             "shopping_cart" => $shoppingCart,
@@ -329,7 +329,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                 $taxName = $taxCode . '(' . $taxRate . '%)';
 
                 $alternateTaxRates['tax_tables']['default'][] = array(
-                    "shpping_taxed" => "true",
+                    "shipping_taxed" => "true",
                     "name" => $taxName,
                     "rules" => array(
                         array("rate" => $taxRate / 100)
@@ -523,7 +523,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             'telephone' => ($orderData->customer->phone1) ? $orderData->customer->phone1 : '0000000000',
             'email' => $orderData->customer->email,
             'fax' => '',
-            'save_in_address_book' => 1
+            'save_in_address_book' => 0
         );
 
 
@@ -538,7 +538,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             'telephone' => ($orderData->delivery->phone1) ? $orderData->delivery->phone1 : '0000000000',
             'fax' => '',
             'email' => $orderData->customer->email,
-            'save_in_address_book' => 1
+            'save_in_address_book' => 0
         );
 
 
@@ -672,7 +672,8 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        $used_method = strtolower($orderData->payment_details->type);
+        $msp_gateway = $orderData->payment_details->type;
+        $used_method = $this->_mspHelper->getPaymentCode($msp_gateway);
         $method_activated = false;
 
         if (in_array($used_method, $this->_mspHelper->gateways)) {
@@ -711,11 +712,11 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        $quote->setPaymentMethod(strtolower($orderData->payment_details->type)); //payment method
+        $quote->setPaymentMethod($used_method); //payment method
         //$quote->setInventoryProcessed(false); //not effect inventory
         $quote->save(); //Now Save quote and your quote is ready
         // Set Sales Order Payment
-        $quote->getPayment()->importData(['method' => strtolower($orderData->payment_details->type)]);
+        $quote->getPayment()->importData(['method' => $used_method]);
 
         // Collect Totals & Save Quote
         $quote->collectTotals()->save();
