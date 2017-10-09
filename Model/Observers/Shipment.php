@@ -62,6 +62,10 @@ class Shipment implements ObserverInterface
         $shipment = $event->getShipment();
         $order = $shipment->getOrder();
         $payment = $order->getPayment()->getMethodInstance();
+        
+        if (!in_array($payment->getCode(), $this->_objectManager->create('MultiSafepay\Connect\Helper\Data')->gateways)) {
+            return $this;
+        }
 
         $shipped = $paymentMethod->shipOrder($order);
         if ($shipped['success']) {

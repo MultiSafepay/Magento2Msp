@@ -84,7 +84,11 @@ class Order implements ObserverInterface
         if (!in_array($payment->getCode(), $this->_objectManager->create('MultiSafepay\Connect\Helper\Data')->gateways)) {
             return $this;
         }
-
+        
+        if(!$paymentMethod->getMainConfigData('create_paylink')){
+	    return $this;
+        }
+        
         $paymentMethod->_manualGateway = $payment->_gatewayCode;
 
         $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
