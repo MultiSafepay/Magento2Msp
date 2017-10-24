@@ -72,6 +72,8 @@ class Cancel extends \Magento\Framework\App\Action\Action
         if (isset($params['transactionid'])) {
             $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
             $incrementId = $params['transactionid'];
+        }else{
+            $incrementId = null;
         }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
         $session->restoreQuote();
@@ -99,8 +101,9 @@ class Cancel extends \Magento\Framework\App\Action\Action
             }
         }
 
-
-        $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
+        if (isset($params['transactionid'])) {
+            $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
+        }
         $this->_redirect('checkout/cart');
         return;
     }
