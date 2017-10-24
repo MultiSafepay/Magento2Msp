@@ -251,7 +251,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $this->issuer_id = $params['issuer'];
         }
         $billing = $order->getBillingAddress();
-        $shipping = $order->getShippingAddress();
+        if ($order->canShip()) {
+            $shipping = $order->getShippingAddress();
+        }
         $this->_gatewayCode = $order->getPayment()->getMethodInstance()->_gatewayCode;
 
         if (isset($params['creditcard'])) {
@@ -327,25 +329,44 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             $phone = $billing->getTelephone();
         }
-        
-        
+
+
+
         //Shipping
-        $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1));
-        if (isset($shippingaddressData['housenumber']) && !empty($shippingaddressData['housenumber'])) {
-            $shipping_street = $shippingaddressData['address'];
-            $shipping_housenumber = $shippingaddressData['housenumber'];
+        if ($order->canShip()) {
+            $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1));
+            if (isset($shippingaddressData['housenumber']) && !empty($shippingaddressData['housenumber'])) {
+                $shipping_street = $shippingaddressData['address'];
+                $shipping_housenumber = $shippingaddressData['housenumber'];
+            } else {
+                $shipping_street = $shipping->getStreetLine(1);
+                $shipping_housenumber = $shipping->getStreetLine(2);
+            }
+
+            if ($shipping->getTelephone() == '-') {
+                $shipping_phone = '';
+            } else {
+                $shipping_phone = $shipping->getTelephone();
+            }
+
+            $delivery_data = array(
+                "first_name" => $shipping->getFirstName(),
+                "last_name" => $shipping->getLastName(),
+                "address1" => $shipping_street,
+                "address2" => $shipping->getStreetLine(2),
+                "house_number" => $shipping_housenumber,
+                "zip_code" => $shipping->getPostcode(),
+                "city" => $shipping->getCity(),
+                "state" => $shipping->getRegion(),
+                "country" => $shipping->getCountryId(),
+                "phone" => $shipping_phone,
+                "email" => $order->getCustomerEmail()
+            );
         } else {
-            $shipping_street = $shipping->getStreetLine(1);
-            $shipping_housenumber = $shipping->getStreetLine(2);
+            $delivery_data = array();
         }
 
-        if ($shipping->getTelephone() == '-') {
-            $shipping_phone = '';
-        } else {
-            $shipping_phone = $shipping->getTelephone();
-        }
-        
-     
+
         if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS") {
             $type = 'direct';
         } else {
@@ -410,19 +431,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "phone" => $phone,
                 "email" => $order->getCustomerEmail(),
             ),
-            "delivery"=> array(
-		        "first_name"=> $shipping->getFirstName(),
-		        "last_name"=> $shipping->getLastName(),
-		        "address1"=> $shipping_street,
-		        "address2"=> $shipping->getStreetLine(2),
-		        "house_number"=> $shipping_housenumber,
-		        "zip_code"=> $shipping->getPostcode(),
-		        "city"=> $shipping->getCity(),
-		        "state"=> $shipping->getRegion(),
-		        "country"=> $shipping->getCountryId(),
-		        "phone"=> $shipping_phone,
-		        "email"=> $order->getCustomerEmail(),
-		    ),
+            "delivery" => $delivery_data,
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
@@ -489,16 +498,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $payment = $order->getPayment();
         $transaction_id = $payment->getLastTransId();
-	   	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-       	$transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
-	   	$transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(),$order->getId());
-	   	
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+        $transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(), $order->getId());
+
         if ($transaction == NULL) {
             return true;
-        }       
-                    
+        }
+
         $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
-        
+
         $shipped = array();
         $shipped['success'] = false;
         $shipped['error'] = false;
@@ -896,9 +905,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $payment = $order->getPayment();
 
         /**
-        *    Update paymentmethod if paid with other payment method
-        */
-        if(isset($msporder->payment_details)) {
+         *    Update paymentmethod if paid with other payment method
+         */
+        if (isset($msporder->payment_details)) {
             $msp_gateway = $msporder->payment_details->type;
             $gatewayCode = $payment->getMethodInstance()->_gatewayCode;
             if ($gatewayCode != $msp_gateway) {
