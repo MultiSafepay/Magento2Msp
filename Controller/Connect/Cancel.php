@@ -72,7 +72,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
         if (isset($params['transactionid'])) {
             $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
             $incrementId = $params['transactionid'];
-        }else{
+        } else {
             $incrementId = null;
         }
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
@@ -96,7 +96,10 @@ class Cancel extends \Magento\Framework\App\Action\Action
                     
                 }
                 //Cancel the order so a new one can created
+                //You can disable the line below if you are using a fulfillment system that does not expect the order to be cancelled, 
+                //but reopened again by second chance. Removing the line will keep the order pending. (PLGMAGTWOS-196)
                 $order->registerCancellation('Order cancelled by customer')->save();
+
                 $this->messageManager->addError(__('The transaction was cancelled or declined and the order was closed, please try again.'));
             }
         }
@@ -104,6 +107,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
         if (isset($params['transactionid'])) {
             $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
         }
+
         $this->_redirect('checkout/cart');
         return;
     }
