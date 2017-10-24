@@ -65,7 +65,7 @@ class RestoreQuote implements ObserverInterface
         $lastRealOrder = $session->getLastRealOrder();
         if ($lastRealOrder != null && $lastRealOrder->getState() == \Magento\Sales\Model\Order::STATE_NEW) {
             $payment = $lastRealOrder->getPayment()->getMethodInstance();
-            if (!in_array($payment->getCode(), $this->_objectManager->create('MultiSafepay\Connect\Helper\Data')->gateways)) {
+            if (!in_array($payment->getCode(), $this->_objectManager->create('MultiSafepay\Connect\Helper\Data')->gateways) || $payment->getCode() == "mspbanktransfer") {
                 return $this;
             }
         }
