@@ -330,6 +330,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         
         
         //Shipping
+        if (empty($shipping)) {
+            $shipping = $billing;
+        }
+
         $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1));
         if (isset($shippingaddressData['housenumber']) && !empty($shippingaddressData['housenumber'])) {
             $shipping_street = $shippingaddressData['address'];
