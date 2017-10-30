@@ -645,7 +645,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     // Fix for 1027 with catalog prices including tax
                     if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
                         $price = ($item->getBaseRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
-                        $price = round($price, 2);
+                        $price = round($price, 10);
                     }
                 } else {
                     $price = $ndata['price'];
@@ -669,7 +669,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     // Fix for 1027 with catalog prices including tax
                     if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
                         $price = ($item->getRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
-                        $price = round($price, 2);
+                        $price = round($price, 10);
                     }
                 }
 
