@@ -57,13 +57,25 @@ class RestoreQuote implements ObserverInterface
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
 
         /**
          *    Only for MSP payment methods
-         */        
+         */
         $lastRealOrder = $session->getLastRealOrder();
-        if ($lastRealOrder != null && $lastRealOrder->getState() == \Magento\Sales\Model\Order::STATE_NEW) {
+        $trans_id = null;
+        try {
+            $payment = $lastRealOrder->getPayment();
+            if (is_object($payment)) {
+                $trans_id = $payment->getLastTransId();
+            }
+        } catch (Exception $e) {
+            //Something went wrong when trying to load the payment record, In this situation the trans_id can stay null as the object does not exists and the quote can be restored
+        }
+
+
+        if ($lastRealOrder != null && $lastRealOrder->getState() == \Magento\Sales\Model\Order::STATE_NEW && $trans_id == null) {
             $payment = $lastRealOrder->getPayment()->getMethodInstance();
             if (!in_array($payment->getCode(), $this->_objectManager->create('MultiSafepay\Connect\Helper\Data')->gateways) || $payment->getCode() == "mspbanktransfer") {
                 return $this;
