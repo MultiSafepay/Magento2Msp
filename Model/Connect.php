@@ -624,7 +624,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
                 if ($use_base_currency) {
-                    $price = $ndata['base_price'] - $item->getBaseDiscountAmount();
+                    $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
                     $tierprices = $proddata->getTierPrice();
                     if (count($tierprices) > 0) {
                         $product_tier_prices = (object) $tierprices;
@@ -632,9 +632,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                             $value = (object) $value;
                             if ($item->getQtyOrdered() >= $value->price_qty)
                                 if ($ndata['base_price'] < $value->price) {
-                                    $price = $ndata['base_price'] - $item->getBaseDiscountAmount();
+                                    $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
                                 } else {
-                                    $price = $value->price - $item->getBaseDiscountAmount();
+                                    $price = $value->price - ($item->getBaseDiscountAmount() / $quantity);
                                 }
                             $price = $price;
                         }
@@ -648,7 +648,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $price = round($price, 10);
                     }
                 } else {
-                    $price = $ndata['price'] - $item->getDiscountAmount();
+                    $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                     $tierprices = $proddata->getTierPrice();
                     if (count($tierprices) > 0) {
                         $product_tier_prices = (object) $tierprices;
@@ -656,9 +656,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                             $value = (object) $value;
                             if ($item->getQtyOrdered() >= $value->price_qty)
                                 if ($ndata['price'] < $value->price) {
-                                    $price = $ndata['price'] - $item->getDiscountAmount();
+                                    $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                                 } else {
-                                    $price = $value->price - $item->getDiscountAmount();
+                                    $price = $value->price - ($item->getDiscountAmount() / $quantity);
                                 }
                             $price = $price;
                         }
