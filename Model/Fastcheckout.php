@@ -399,7 +399,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     $product_price = array();
                     foreach ($product_tier_prices as $key => $value) {
                         $value = (object) $value;
-                        if ($item->getQtyOrdered() >= $value->price_qty)
+                        if ($item->getQty() >= $value->price_qty)
                             if ($ndata['price'] < $value->price) {
                                 $price = $ndata['price'];
                             } else {
@@ -413,7 +413,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
                 // Fix for 1027 with catalog prices including tax
                 if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                    $price = ($item->getRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                    $price = ($item->getRowTotalInclTax() / $item->getQty() / (1 + ($item->getTaxPercent() / 100)));
                     $price = round($price, 2);
                 }
 
