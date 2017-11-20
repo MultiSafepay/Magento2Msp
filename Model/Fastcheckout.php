@@ -392,18 +392,18 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             $ndata = $item->getData();
 
             if ($ndata['price'] != 0) {
-                $price = $ndata['price'];
+                $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                 $tierprices = $proddata->getTierPrice();
                 if (count($tierprices) > 0) {
                     $product_tier_prices = (object) $tierprices;
                     $product_price = array();
                     foreach ($product_tier_prices as $key => $value) {
                         $value = (object) $value;
-                        if ($item->getQtyOrdered() >= $value->price_qty)
+                        if ($quantity >= $value->price_qty)
                             if ($ndata['price'] < $value->price) {
-                                $price = $ndata['price'];
+                                $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                             } else {
-                                $price = $value->price;
+                                $price = $value->price - ($item->getDiscountAmount() / $quantity);
                             }
                         $price = $price;
                     }
@@ -413,7 +413,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
                 // Fix for 1027 with catalog prices including tax
                 if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                    $price = ($item->getRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                    $price = (($item->getRowTotalInclTax() - $item->getDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
                     $price = round($price, 2);
                 }
 
@@ -430,33 +430,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     )
                 );
             }
-        }
-
-        //Process discounts
-        $discountAmount = $order->getData('base_discount_amount');
-        $discountAmountFinal = number_format($discountAmount, 4, '.', '');
-
-        //Add discount line item
-        if ($discountAmountFinal != 0) {
-            $shoppingCart['shopping_cart']['items'][] = array(
-                "name" => $title,
-                "description" => 'Discount',
-                "unit_price" => $discountAmountFinal,
-                "quantity" => "1",
-                "merchant_item_id" => 'discount',
-                "tax_table_selector" => '0.00',
-                "weight" => array(
-                    "unit" => "KG",
-                    "value" => "0",
-                )
-            );
-            $alternateTaxRates['tax_tables']['alternate'][] = array(
-                "standalone" => "true",
-                "name" => '0.00',
-                "rules" => array(
-                    array("rate" => '0.00')
-                ),
-            );
         }
 
         $checkoutData["shopping_cart"] = $shoppingCart['shopping_cart'];
