@@ -630,7 +630,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $product_tier_prices = (object) $tierprices;
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
-                            if ($item->getQtyOrdered() >= $value->price_qty)
+                            if ($quantity >= $value->price_qty)
                                 if ($ndata['base_price'] < $value->price) {
                                     $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
                                 } else {
@@ -644,7 +644,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
                     // Fix for 1027 with catalog prices including tax
                     if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                        $price = (($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                        $price = (($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
                         $price = round($price, 10);
                     }
                 } else {
@@ -654,7 +654,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $product_tier_prices = (object) $tierprices;
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
-                            if ($item->getQtyOrdered() >= $value->price_qty)
+                            if ($quantity >= $value->price_qty)
                                 if ($ndata['price'] < $value->price) {
                                     $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                                 } else {
@@ -668,7 +668,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
                     // Fix for 1027 with catalog prices including tax
                     if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                        $price = (($item->getRowTotalInclTax() - $item->getDiscountAmount()) / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                        $price = (($item->getRowTotalInclTax() - $item->getDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
                         $price = round($price, 10);
                     }
                 }
