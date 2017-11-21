@@ -701,7 +701,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $cost = $diff * 100;
             }
             $shipping_percentage = 1 + round($cost, 0) / 100;
-            $shippin_exc_tac_calculated = $order->getBaseShippingInclTax() / $shipping_percentage;
+            $shippin_exc_tac_calculated = ($order->getBaseShippingInclTax() - $order->getBaseShippingDiscountAmount()) / $shipping_percentage;
             $shipping_percentage = 0 + round($cost, 0) / 100;
             $shipping_cost_orig = $order->getBaseShippingAmount();
         } else {
@@ -713,7 +713,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $cost = $diff * 100;
             }
             $shipping_percentage = 1 + round($cost, 0) / 100;
-            $shippin_exc_tac_calculated = $order->getShippingInclTax() / $shipping_percentage;
+            $shippin_exc_tac_calculated = ($order->getShippingInclTax() - $order->getShippingDiscountAmount()) / $shipping_percentage;
             $shipping_percentage = 0 + round($cost, 0) / 100;
             $shipping_cost_orig = $order->getShippingAmount();
         }
