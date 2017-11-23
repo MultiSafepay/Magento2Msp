@@ -626,17 +626,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
                 if ($use_base_currency) {
-                    $price = $ndata['base_price'];
+                    $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
                     $tierprices = $proddata->getTierPrice();
                     if (count($tierprices) > 0) {
                         $product_tier_prices = (object) $tierprices;
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
-                            if ($item->getQtyOrdered() >= $value->price_qty)
+                            if ($quantity >= $value->price_qty)
                                 if ($ndata['base_price'] < $value->price) {
-                                    $price = $ndata['base_price'];
+                                    $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
                                 } else {
-                                    $price = $value->price;
+                                    $price = $value->price - ($item->getBaseDiscountAmount() / $quantity);
                                 }
                             $price = $price;
                         }
@@ -646,21 +646,21 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
                     // Fix for 1027 with catalog prices including tax
                     if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                        $price = ($item->getBaseRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                        $price = (($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
                         $price = round($price, 10);
                     }
                 } else {
-                    $price = $ndata['price'];
+                    $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                     $tierprices = $proddata->getTierPrice();
                     if (count($tierprices) > 0) {
                         $product_tier_prices = (object) $tierprices;
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
-                            if ($item->getQtyOrdered() >= $value->price_qty)
+                            if ($quantity >= $value->price_qty)
                                 if ($ndata['price'] < $value->price) {
-                                    $price = $ndata['price'];
+                                    $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                                 } else {
-                                    $price = $value->price;
+                                    $price = $value->price - ($item->getDiscountAmount() / $quantity);
                                 }
                             $price = $price;
                         }
@@ -670,7 +670,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
                     // Fix for 1027 with catalog prices including tax
                     if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                        $price = ($item->getRowTotalInclTax() / $item->getQtyOrdered() / (1 + ($item->getTaxPercent() / 100)));
+                        $price = (($item->getRowTotalInclTax() - $item->getDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
                         $price = round($price, 10);
                     }
                 }
@@ -703,7 +703,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $cost = $diff * 100;
             }
             $shipping_percentage = 1 + round($cost, 0) / 100;
-            $shippin_exc_tac_calculated = $order->getBaseShippingInclTax() / $shipping_percentage;
+            $shippin_exc_tac_calculated = ($order->getBaseShippingInclTax() - $order->getBaseShippingDiscountAmount()) / $shipping_percentage;
             $shipping_percentage = 0 + round($cost, 0) / 100;
             $shipping_cost_orig = $order->getBaseShippingAmount();
         } else {
@@ -715,7 +715,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $cost = $diff * 100;
             }
             $shipping_percentage = 1 + round($cost, 0) / 100;
-            $shippin_exc_tac_calculated = $order->getShippingInclTax() / $shipping_percentage;
+            $shippin_exc_tac_calculated = ($order->getShippingInclTax() - $order->getShippingDiscountAmount()) / $shipping_percentage;
             $shipping_percentage = 0 + round($cost, 0) / 100;
             $shipping_cost_orig = $order->getShippingAmount();
         }
@@ -752,40 +752,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "value" => "0",
             )
         );
-
-
-        //Process discounts
-
-        if ($use_base_currency) {
-            $discountAmount = $order->getData('base_discount_amount');
-        } else {
-            $discountAmount = $order->getData('discount_amount');
-        }
-
-        $discountAmountFinal = number_format($discountAmount, 4, '.', '');
-
-        //Add discount line item
-        if ($discountAmountFinal != 0) {
-            $shoppingCart['shopping_cart']['items'][] = array(
-                "name" => 'Discount',
-                "description" => 'Discount',
-                "unit_price" => $discountAmountFinal,
-                "quantity" => "1",
-                "merchant_item_id" => 'discount',
-                "tax_table_selector" => '0.00',
-                "weight" => array(
-                    "unit" => "KG",
-                    "value" => "0",
-                )
-            );
-            $alternateTaxRates['tax_tables']['alternate'][] = array(
-                "standalone" => "true",
-                "name" => '0.00',
-                "rules" => array(
-                    array("rate" => '0.00')
-                ),
-            );
-        }
 
 
         /*
