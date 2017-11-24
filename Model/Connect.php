@@ -247,7 +247,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $params = $this->_requestHttp->getParams();
 
-        if (isset($params['issuer'])) {
+        if (isset($params['issuer']) && $params['issuer'] != "null") {
             $this->issuer_id = $params['issuer'];
         }
         $billing = $order->getBillingAddress();
@@ -491,7 +491,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         try {
             $issuers = $this->_client->issuers->get();
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
+            return false;
         }
         return $issuers;
     }
