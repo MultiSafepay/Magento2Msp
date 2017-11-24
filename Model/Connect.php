@@ -239,6 +239,25 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $this->_canRefund = false;
                     $this->_canRefundInvoicePartial = false;
                 }
+
+                /*
+                * Refunding from the Magento backend is disabled when the order processed a Fooman Surcharge                
+                * This is done because the Fooman extension has an issue with partial refunds, causing wrong amounts refunded online at MultiSafepay
+                * Issue has been reported at Fooman, once resolved this functionality will be supported again.
+                */
+                $extensionAttributes = $invoice->getExtensionAttributes();
+                if ($extensionAttributes) {
+                    if(method_exists($extensionAttributes, 'getFoomanTotalGroup')) {
+                        $invoiceTotalGroup = $extensionAttributes->getFoomanTotalGroup();
+                        if ($invoiceTotalGroup) {
+                            $items = $invoiceTotalGroup->getItems();
+                            if (!empty($items)) {
+                                $this->_canRefund = false;
+                                $this->_canRefundInvoicePartial = false;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -787,41 +806,46 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $order = $orderRepository->get($order->getId());
 
             $extensionAttributes = $order->getExtensionAttributes();
-            $orderTotalGroup = $extensionAttributes->getFoomanTotalGroup();
-            $items = $orderTotalGroup->getItems();
-
-            if ($extensionAttributes && $orderTotalGroup && $items) {
-                foreach ($items as $total) {
-                    if ($total->getBaseTaxAmount() > 0) {
-                        $percentage = ($total->getBaseTaxAmount() / $total->getBaseAmount());
-                    } else {
-                        $percentage = "0.00";
+            if ($extensionAttributes) {
+                if (method_exists($extensionAttributes, 'getFoomanTotalGroup')) {
+                    $orderTotalGroup = $extensionAttributes->getFoomanTotalGroup();
+                    if($orderTotalGroup) {
+                        $items = $orderTotalGroup->getItems();
+                        if(!empty($items)) {
+                            foreach ($items as $total) {
+                                if ($total->getBaseTaxAmount() > 0) {
+                                    $percentage = ($total->getBaseTaxAmount() / $total->getBaseAmount());
+                                } else {
+                                    $percentage = "0.00";
+                                }
+            
+                                $shoppingCart['shopping_cart']['items'][] = array(
+                                    "name" => $total->getLabel(),
+                                    "description" => $total->getLabel(),
+                                    "unit_price" => $total->getBaseAmount(),
+                                    "quantity" => "1",
+                                    "merchant_item_id" => 'payment-fee',
+                                    "tax_table_selector" => $percentage,
+                                    "weight" => array(
+                                        "unit" => "KG",
+                                        "value" => "0",
+                                    )
+                                );
+            
+                                $alternateTaxRates['tax_tables']['alternate'][] = array(
+                                    "standalone" => "true",
+                                    "name" => $percentage,
+                                    "rules" => array(
+                                        array("rate" => $percentage)
+                                    ),
+                                );
+                            }
+                        }
                     }
-
-                    $shoppingCart['shopping_cart']['items'][] = array(
-                        "name" => $total->getLabel(),
-                        "description" => $total->getLabel(),
-                        "unit_price" => $total->getBaseAmount(),
-                        "quantity" => "1",
-                        "merchant_item_id" => 'payment-fee',
-                        "tax_table_selector" => $percentage,
-                        "weight" => array(
-                            "unit" => "KG",
-                            "value" => "0",
-                        )
-                    );
-
-                    $alternateTaxRates['tax_tables']['alternate'][] = array(
-                        "standalone" => "true",
-                        "name" => $percentage,
-                        "rules" => array(
-                            array("rate" => $percentage)
-                        ),
-                    );
                 }
             }
         }
-
+        
         $checkoutData["shopping_cart"] = $shoppingCart['shopping_cart'];
         $checkoutData["checkout_options"] = $alternateTaxRates;
 
