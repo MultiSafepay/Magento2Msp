@@ -61,8 +61,13 @@ class Redirect extends \Magento\Framework\App\Action\Action
             $quoteRepository->save($quote);
         }
 
-        if (!empty($transactionObject->result->error_code)) {
-            $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
+        if (!empty($transactionObject->result->error_code) || !$transactionObject) {
+            if (!$transactionObject) {
+                $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method.'));
+            } else {
+                $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
+            }
+            $session->restoreQuote();
             $this->_redirect('checkout/cart');
         } else {
             if (!empty($transactionObject->result->data->payment_details->type)) {

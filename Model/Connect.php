@@ -247,7 +247,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $params = $this->_requestHttp->getParams();
 
-        if (isset($params['issuer'])) {
+        if (isset($params['issuer']) && $params['issuer'] != "null") {
             $this->issuer_id = $params['issuer'];
         }
         $billing = $order->getBillingAddress();
@@ -395,55 +395,59 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $ip_address = $this->validateIP($order->getRemoteIp());
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
-        $msporder = $this->_client->orders->post(array(
-            "type" => $type,
-            "order_id" => $order->getIncrementId(),
-            "currency" => $currency,
-            "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
-            "description" => $order->getIncrementId(),
-            "var1" => "",
-            "var2" => "",
-            "var3" => "",
-            "items" => $items,
-            "manual" => "false",
-            "gateway" => $this->_gatewayCode,
-            "days_active" => $daysActive,
-            "seconds_active" => $secondsActive,
-            "payment_options" => array(
-                "notification_url" => $notification,
-                "redirect_url" => $redirecturl,
-                "cancel_url" => $cancelurl,
-                "close_window" => "true"
-            ),
-            "customer" => array(
-                "locale" => $resolver->getLocale(),
-                "ip_address" => $ip_address,
-                "forwarded_ip" => $forwarded_ip,
-                "first_name" => $billing->getFirstName(),
-                "last_name" => $billing->getLastName(),
-                "address1" => $street,
-                "address2" => $billing->getStreetLine(2),
-                "house_number" => $housenumber,
-                "zip_code" => $billing->getPostcode(),
-                "city" => $billing->getCity(),
-                "state" => $billing->getRegion(),
-                "country" => $billing->getCountryId(),
-                "phone" => $phone,
-                "email" => $order->getCustomerEmail(),
-            ),
-            "delivery" => $delivery_data,
-            "plugin" => array(
-                "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
-                "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.4.6',
-                "partner" => "MultiSafepay",
-            ),
-            "gateway_info" => array(
-                "issuer_id" => !empty($this->issuer_id) ? $this->issuer_id : NULL,
-            ),
-            "shopping_cart" => $shoppingCart,
-            "checkout_options" => $checkoutData,
-        ));
+        try {
+            $msporder = $this->_client->orders->post(array(
+                "type" => $type,
+                "order_id" => $order->getIncrementId(),
+                "currency" => $currency,
+                "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
+                "description" => $order->getIncrementId(),
+                "var1" => "",
+                "var2" => "",
+                "var3" => "",
+                "items" => $items,
+                "manual" => "false",
+                "gateway" => $this->_gatewayCode,
+                "days_active" => $daysActive,
+                "seconds_active" => $secondsActive,
+                "payment_options" => array(
+                    "notification_url" => $notification,
+                    "redirect_url" => $redirecturl,
+                    "cancel_url" => $cancelurl,
+                    "close_window" => "true"
+                ),
+                "customer" => array(
+                    "locale" => $resolver->getLocale(),
+                    "ip_address" => $ip_address,
+                    "forwarded_ip" => $forwarded_ip,
+                    "first_name" => $billing->getFirstName(),
+                    "last_name" => $billing->getLastName(),
+                    "address1" => $street,
+                    "address2" => $billing->getStreetLine(2),
+                    "house_number" => $housenumber,
+                    "zip_code" => $billing->getPostcode(),
+                    "city" => $billing->getCity(),
+                    "state" => $billing->getRegion(),
+                    "country" => $billing->getCountryId(),
+                    "phone" => $phone,
+                    "email" => $order->getCustomerEmail(),
+                ),
+                "delivery" => $delivery_data,
+                "plugin" => array(
+                    "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
+                    "shop_version" => $magentoInfo->getVersion(),
+                    "plugin_version" => ' - Plugin 1.4.6',
+                    "partner" => "MultiSafepay",
+                ),
+                "gateway_info" => array(
+                    "issuer_id" => !empty($this->issuer_id) ? $this->issuer_id : NULL,
+                ),
+                "shopping_cart" => $shoppingCart,
+                "checkout_options" => $checkoutData,
+            ));
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            return false;
+        }
 
         //$this->logger->info(print_r($msporder, true));
         if ($this->_gatewayCode != "BANKTRANS") {
@@ -491,7 +495,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         try {
             $issuers = $this->_client->issuers->get();
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($e->getMessage())));
+            return false;
         }
         return $issuers;
     }
