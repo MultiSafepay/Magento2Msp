@@ -766,9 +766,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $fee_title = $objectManager->create('MultiSafepay\PaymentFee\Helper\Data')->_getMethodDescription($order->getPayment()->getMethod());
-
-
-            //make fee name dynamic 
             $shoppingCart['shopping_cart']['items'][] = array(
                 "name" => $fee_title,
                 "description" => $fee_title,
@@ -781,6 +778,48 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "value" => "0",
                 )
             );
+        } else {
+            /*
+             * Start Fooman Surcharge support         
+             */
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $orderRepository = $objectManager->get('\Magento\Sales\Api\OrderRepositoryInterface');
+            $order = $orderRepository->get($order->getId());
+
+            $extensionAttributes = $order->getExtensionAttributes();
+            $orderTotalGroup = $extensionAttributes->getFoomanTotalGroup();
+            $items = $orderTotalGroup->getItems();
+
+            if ($extensionAttributes && $orderTotalGroup && $items) {
+                foreach ($items as $total) {
+                    if ($total->getBaseTaxAmount() > 0) {
+                        $percentage = ($total->getBaseTaxAmount() / $total->getBaseAmount());
+                    } else {
+                        $percentage = "0.00";
+                    }
+
+                    $shoppingCart['shopping_cart']['items'][] = array(
+                        "name" => $total->getLabel(),
+                        "description" => $total->getLabel(),
+                        "unit_price" => $total->getBaseAmount(),
+                        "quantity" => "1",
+                        "merchant_item_id" => 'payment-fee',
+                        "tax_table_selector" => $percentage,
+                        "weight" => array(
+                            "unit" => "KG",
+                            "value" => "0",
+                        )
+                    );
+
+                    $alternateTaxRates['tax_tables']['alternate'][] = array(
+                        "standalone" => "true",
+                        "name" => $percentage,
+                        "rules" => array(
+                            array("rate" => $percentage)
+                        ),
+                    );
+                }
+            }
         }
 
         $checkoutData["shopping_cart"] = $shoppingCart['shopping_cart'];
