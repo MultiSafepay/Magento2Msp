@@ -814,7 +814,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         if(!empty($items)) {
                             foreach ($items as $total) {
                                 if ($total->getBaseTaxAmount() > 0) {
-                                    $percentage = ($total->getBaseTaxAmount() / $total->getBaseAmount());
+                                    $percentage = round(($total->getBaseTaxAmount() / $total->getBaseAmount()), 2);
                                 } else {
                                     $percentage = "0.00";
                                 }
