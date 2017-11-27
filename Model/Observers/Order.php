@@ -85,7 +85,7 @@ class Order implements ObserverInterface
             return $this;
         }
         
-        if(!$paymentMethod->getMainConfigData('create_paylink')){
+        if(!$paymentMethod->getMainConfigData('create_paylink', $order->getStoreId())){
 	    return $this;
         }
         
