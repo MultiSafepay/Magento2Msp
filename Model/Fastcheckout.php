@@ -240,7 +240,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_client->debug = ($this->getConnectConfigData('msp_debug')) ? true : false;
     }
 
-    public function transactionRequest($session, $productRepo = null)
+    public function transactionRequest($session, $productRepo = null, $resetGateway = false)
     {
         $quote = $session->getQuote();
         $quoteId = $quote->getId();

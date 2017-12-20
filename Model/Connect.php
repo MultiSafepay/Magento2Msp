@@ -262,7 +262,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
     }
 
-    public function transactionRequest($order, $productRepo = null)
+    public function transactionRequest($order, $productRepo = null, $resetGateway = false)
     {
         $params = $this->_requestHttp->getParams();
 
@@ -398,6 +398,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if ($this->_manualGateway != null) {
             $this->_gatewayCode = $this->_manualGateway;
+        }
+        
+        if ($resetGateway && $this->_isAdmin) {
+            $this->_gatewayCode = "";
         }
 
         if ($this->_isAdmin) {
