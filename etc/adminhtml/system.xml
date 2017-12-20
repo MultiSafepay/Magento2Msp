@@ -79,6 +79,11 @@
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
           <comment>Create a payment link for manually created orders</comment>
         </field>
+        <field id="keep_cart_alive" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Keep cart alive</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <comment>This will restore the cart when processing the transaction. When a consumer uses the back button, the cart won't be empty.</comment>
+        </field>
         <!--<field id="order_status_initialized" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>MultiSafepay Status: Initialized</label>
             <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
@@ -123,7 +128,7 @@
             <label>MultiSafepay Status: Cancelled</label>
             <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
         </field>-->
-        <field id="msp_debug" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="msp_debug" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Enable debug mode</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <comment>All API request will be stored within var/log/multisafepay.log</comment>
