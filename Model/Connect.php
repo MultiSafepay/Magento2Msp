@@ -706,6 +706,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 				            
 				            if(!$this->_scopeConfig->getValue('tax/weee/apply_vat', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)){
 					            $weetaxClass ='BTW0';
+                                                    $alternateTaxRates['tax_tables']['alternate'][] = array(
+                                                        "standalone" => "true",
+                                                        "name" => "BTW0",
+                                                        "rules" => array(
+                                                            array("rate" => "0.00")
+                                                        ),
+                                                    );
 				            }else{
 					            $weetaxClass = $taxClass;
 				            }
