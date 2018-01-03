@@ -50,7 +50,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
         $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
 
 
-        $transactionObject = $paymentMethod->transactionRequest($order, $productRepo);
+        $transactionObject = $paymentMethod->transactionRequest($order, $productRepo, false);
 
         if ($order->getId()) {
             /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */

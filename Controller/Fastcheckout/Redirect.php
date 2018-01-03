@@ -67,7 +67,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
         $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
 
-        $transactionObject = $paymentMethod->transactionRequest($session, $productRepo);
+        $transactionObject = $paymentMethod->transactionRequest($session, $productRepo, false);
 
         if (!empty($transactionObject->result->error_code)) {
             $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
