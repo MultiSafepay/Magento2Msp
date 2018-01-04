@@ -30,14 +30,14 @@
 /*global define*/
 define(
         [
-          'jquery',
-          'Magento_Checkout/js/view/payment/default',
-          'Magento_Checkout/js/action/place-order',
-          'Magento_Checkout/js/action/select-payment-method',
-          'Magento_Customer/js/model/customer',
-          'Magento_Checkout/js/checkout-data',
-          'Magento_Checkout/js/model/payment/additional-validators',
-          'mage/url',
+            'jquery',
+            'Magento_Checkout/js/view/payment/default',
+            'Magento_Checkout/js/action/place-order',
+            'Magento_Checkout/js/action/select-payment-method',
+            'Magento_Customer/js/model/customer',
+            'Magento_Checkout/js/checkout-data',
+            'Magento_Checkout/js/model/payment/additional-validators',
+            'mage/url',
         ],
         function (
                 $,
@@ -48,11 +48,11 @@ define(
                 checkoutData,
                 additionalValidators,
                 url) {
-          var configConnect = window.checkoutConfig.payment.connect;
-          'use strict';
+            var configConnect = window.checkoutConfig.payment.connect;
+            'use strict';
 
-          if (configConnect.hide_normal_checkout == true) {
-            $('.checkout').filter('[data-role="proceed-to-checkout"]').hide();
-          }
+            if (configConnect.hide_normal_checkout == true) {
+                $('.checkout').filter('[data-role="proceed-to-checkout"]').hide();
+            }
         }
 );

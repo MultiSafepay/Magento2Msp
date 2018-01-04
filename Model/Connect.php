@@ -241,13 +241,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
 
                 /*
-                * Refunding from the Magento backend is disabled when the order processed a Fooman Surcharge                
-                * This is done because the Fooman extension has an issue with partial refunds, causing wrong amounts refunded online at MultiSafepay
-                * Issue has been reported at Fooman, once resolved this functionality will be supported again.
-                */
+                 * Refunding from the Magento backend is disabled when the order processed a Fooman Surcharge                
+                 * This is done because the Fooman extension has an issue with partial refunds, causing wrong amounts refunded online at MultiSafepay
+                 * Issue has been reported at Fooman, once resolved this functionality will be supported again.
+                 */
                 $extensionAttributes = $invoice->getExtensionAttributes();
                 if ($extensionAttributes) {
-                    if(method_exists($extensionAttributes, 'getFoomanTotalGroup')) {
+                    if (method_exists($extensionAttributes, 'getFoomanTotalGroup')) {
                         $invoiceTotalGroup = $extensionAttributes->getFoomanTotalGroup();
                         if ($invoiceTotalGroup) {
                             $items = $invoiceTotalGroup->getItems();
@@ -262,7 +262,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
     }
 
-    public function transactionRequest($order, $productRepo = null)
+    public function transactionRequest($order, $productRepo = null, $resetGateway = false)
     {
         $params = $this->_requestHttp->getParams();
 
@@ -328,12 +328,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $shoppingCart = $checkoutData["shopping_cart"];
         $checkoutData = $checkoutData["checkout_options"];
 
-
         $currency = $this->_mspHelper->getCurrencyCode($order, $use_base_currency);
 
-
         $addressData = $this->parseCustomerAddress($billing->getStreetLine(1));
-
 
         if (isset($addressData['housenumber']) && !empty($addressData['housenumber'])) {
             $street = $addressData['address'];
@@ -400,6 +397,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_gatewayCode = $this->_manualGateway;
         }
 
+        if ($resetGateway && $this->_isAdmin) {
+            $this->_gatewayCode = "";
+        }
+
         if ($this->_isAdmin) {
             $store_id = $order->getStoreId();
             $notification = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/notification/&type=initial';
@@ -455,7 +456,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => array(
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.4.7',
+                    "plugin_version" => ' - Plugin 1.4.8',
                     "partner" => "MultiSafepay",
                 ),
                 "gateway_info" => array(
@@ -643,11 +644,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $proddata = $productRepo->load($product_id);
             $ndata = $item->getData();
 
-
-
             if ($ndata['price'] != 0) {
-
-
                 if ($use_base_currency) {
                     $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
                     $tierprices = $proddata->getTierPrice();
@@ -697,6 +694,49 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $price = round($price, 10);
                     }
                 }
+
+                /*
+                 * We should process FPT within the cart data.
+                 */
+                if ($item->getWeeeTaxApplied()) {
+                    $weeeTax = json_decode($item->getWeeeTaxApplied());
+                    foreach ($weeeTax as $tax) {
+                        if (isset($tax->base_amount)) {
+                            if ($use_base_currency) {
+                                $amount = $tax->base_amount;
+                            } else {
+                                $amount = $tax->amount;
+                            }
+
+                            if (!$this->_scopeConfig->getValue('tax/weee/apply_vat', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+                                $weetaxClass = 'BTW0';
+                                $alternateTaxRates['tax_tables']['alternate'][] = array(
+                                    "standalone" => "true",
+                                    "name" => "BTW0",
+                                    "rules" => array(
+                                        array("rate" => "0.00")
+                                    ),
+                                );
+                            } else {
+                                $weetaxClass = $taxClass;
+                            }
+
+                            $shoppingCart['shopping_cart']['items'][] = array(
+                                "name" => $tax->title,
+                                "description" => $tax->title,
+                                "unit_price" => $amount,
+                                "quantity" => $quantity,
+                                "merchant_item_id" => 'FPT',
+                                "tax_table_selector" => $weetaxClass,
+                                "weight" => array(
+                                    "unit" => "KG",
+                                    "value" => "0",
+                                )
+                            );
+                        }
+                    }
+                }
+
 
 
                 $shoppingCart['shopping_cart']['items'][] = array(
@@ -806,50 +846,56 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
              * Start Fooman Surcharge support         
              */
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $orderRepository = $objectManager->get('\Magento\Sales\Api\OrderRepositoryInterface');
-            $order = $orderRepository->get($order->getId());
+            /* We don't process fooman fee's for backend created orders */
+            $app_state = $objectManager->get('\Magento\Framework\App\State');
+            $area_code = $app_state->getAreaCode();
+            if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+                $orderRepository = $objectManager->get('\Magento\Sales\Api\OrderRepositoryInterface');
+                $order = $orderRepository->get($order->getId());
 
-            $extensionAttributes = $order->getExtensionAttributes();
-            if ($extensionAttributes) {
-                if (method_exists($extensionAttributes, 'getFoomanTotalGroup')) {
-                    $orderTotalGroup = $extensionAttributes->getFoomanTotalGroup();
-                    if($orderTotalGroup) {
-                        $items = $orderTotalGroup->getItems();
-                        if(!empty($items)) {
-                            foreach ($items as $total) {
-                                if ($total->getBaseTaxAmount() > 0) {
-                                    $percentage = round(($total->getBaseTaxAmount() / $total->getBaseAmount()), 2);
-                                } else {
-                                    $percentage = "0.00";
+                $extensionAttributes = $order->getExtensionAttributes();
+                if ($extensionAttributes) {
+                    if (method_exists($extensionAttributes, 'getFoomanTotalGroup')) {
+                        $orderTotalGroup = $extensionAttributes->getFoomanTotalGroup();
+                        if ($orderTotalGroup) {
+                            $items = $orderTotalGroup->getItems();
+                            if (!empty($items)) {
+                                foreach ($items as $total) {
+                                    if ($total->getBaseTaxAmount() > 0) {
+                                        $percentage = round(($total->getBaseTaxAmount() / $total->getBaseAmount()), 2);
+                                    } else {
+                                        $percentage = "0.00";
+                                    }
+
+                                    $shoppingCart['shopping_cart']['items'][] = array(
+                                        "name" => $total->getLabel(),
+                                        "description" => $total->getLabel(),
+                                        "unit_price" => $total->getBaseAmount(),
+                                        "quantity" => "1",
+                                        "merchant_item_id" => 'payment-fee',
+                                        "tax_table_selector" => $percentage,
+                                        "weight" => array(
+                                            "unit" => "KG",
+                                            "value" => "0",
+                                        )
+                                    );
+
+                                    $alternateTaxRates['tax_tables']['alternate'][] = array(
+                                        "standalone" => "true",
+                                        "name" => $percentage,
+                                        "rules" => array(
+                                            array("rate" => $percentage)
+                                        ),
+                                    );
                                 }
-            
-                                $shoppingCart['shopping_cart']['items'][] = array(
-                                    "name" => $total->getLabel(),
-                                    "description" => $total->getLabel(),
-                                    "unit_price" => $total->getBaseAmount(),
-                                    "quantity" => "1",
-                                    "merchant_item_id" => 'payment-fee',
-                                    "tax_table_selector" => $percentage,
-                                    "weight" => array(
-                                        "unit" => "KG",
-                                        "value" => "0",
-                                    )
-                                );
-            
-                                $alternateTaxRates['tax_tables']['alternate'][] = array(
-                                    "standalone" => "true",
-                                    "name" => $percentage,
-                                    "rules" => array(
-                                        array("rate" => $percentage)
-                                    ),
-                                );
                             }
                         }
                     }
                 }
             }
         }
-        
+
+
         $checkoutData["shopping_cart"] = $shoppingCart['shopping_cart'];
         $checkoutData["checkout_options"] = $alternateTaxRates;
 
@@ -1387,10 +1433,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $order = $payment->getOrder();
             $order->setCanSendNewEmailFlag(false);
         }
-
-        $state = $this->getMainConfigData('order_status');
-        $stateObject->setState(\Magento\Sales\Model\Order::STATE_NEW);
-        $stateObject->setStatus($state);
+        $status = $this->getMainConfigData('order_status');
+        $stateObject->setState($this->_mspHelper->getAssignedState($status));
+        $stateObject->setStatus($status);
         $stateObject->setIsNotified(false);
     }
 

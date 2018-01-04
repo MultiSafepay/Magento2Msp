@@ -84,16 +84,18 @@ class Order implements ObserverInterface
         if (!in_array($payment->getCode(), $this->_objectManager->create('MultiSafepay\Connect\Helper\Data')->gateways)) {
             return $this;
         }
-        
-        if(!$paymentMethod->getMainConfigData('create_paylink', $order->getStoreId())){
-	    return $this;
+
+        if (!$paymentMethod->getMainConfigData('create_paylink', $order->getStoreId())) {
+            return $this;
         }
-        
+
+        $resetGateway = $paymentMethod->getMainConfigData('reset_paylink_gateway', $order->getStoreId());
+
         $paymentMethod->_manualGateway = $payment->_gatewayCode;
 
         $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
 
-        $transactionObject = $paymentMethod->transactionRequest($order, $productRepo);
+        $transactionObject = $paymentMethod->transactionRequest($order, $productRepo, $resetGateway);
 
         if (!empty($transactionObject->result->error_code)) {
             $this->_messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
