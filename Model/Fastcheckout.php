@@ -240,7 +240,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_client->debug = ($this->getConnectConfigData('msp_debug')) ? true : false;
     }
 
-    public function transactionRequest($session, $productRepo = null)
+    public function transactionRequest($session, $productRepo = null, $resetGateway = false)
     {
         $quote = $session->getQuote();
         $quoteId = $quote->getId();
@@ -290,7 +290,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.4.7',
+                "plugin_version" => ' - Plugin 1.4.8',
                 "partner" => "MultiSafepay",
             ),
             "shopping_cart" => $shoppingCart,

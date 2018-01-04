@@ -90,7 +90,7 @@ class Success extends \Magento\Framework\App\Action\Action
         // clear quote from session
         $session->setLoadInactive(false);
         $session->replaceQuote($session->getQuote()->save());
-        
+
         //To a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
         $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');

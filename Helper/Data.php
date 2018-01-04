@@ -40,6 +40,7 @@ use Magento\Framework\App\ObjectManager;
 
 class Data
 {
+
     const MSP_COMPLETED = "completed";
     const MSP_INIT = "initialized";
     const MSP_UNCLEARED = "uncleared";
@@ -50,7 +51,7 @@ class Data
     const MSP_CHARGEBACK = "chargedback";
     const MSP_REFUNDED = "refunded";
     const MSP_PARTIAL_REFUNDED = "partial_refunded";
-    
+
     public $giftcards = array(
         'webshopgiftcard',
         'babygiftcard',
@@ -100,7 +101,6 @@ class Data
         'belfius',
         'ing'
     );
-
     //MultiSafepay_gateways->Magento_codes
     public $methodMap = array(
         'ALIPAY' => 'alipay',
@@ -278,25 +278,25 @@ class Data
             return 'giftcards';
         }
     }
-    
-    
+
     /**
      * Check if transaction was a fastcheckout transaction
      *
      * @param array transaction_details
      * @return boolean
      */
-	 public function isFastcheckoutTransaction($transaction_details){
-	 	if(isset($transaction_details['Fastcheckout'])){
-		 	if($transaction_details['Fastcheckout'] == "YES"){
-			 	return true;
-		 	}else{
-			 	return false;
-		 	}
-		 }else{
-			 return false;
-		 }
-     }
+    public function isFastcheckoutTransaction($transaction_details)
+    {
+        if (isset($transaction_details['Fastcheckout'])) {
+            if ($transaction_details['Fastcheckout'] == "YES") {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Returns payment code based on MultiSafepay gateway
@@ -304,13 +304,29 @@ class Data
      * @param string gateway
      * @return string
      */
-    public function getPaymentCode($gateway){
+    public function getPaymentCode($gateway)
+    {
         if (isset($this->methodMap[$gateway])) {
             return $this->methodMap[$gateway];
-        }
-        else {
+        } else {
             return null;
         }
+    }
+
+    /**
+     * Returns assigned state for status
+     * 
+     * @param string status
+     * @return string
+     */
+    public function getAssignedState($status)
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $item = $objectManager->get('\Magento\Sales\Model\ResourceModel\Order\Status\Collection')
+                ->joinStates()
+                ->addFieldToFilter('main_table.status', $status)
+                ->getFirstItem();
+        return $item->getState();
     }
 
 }
