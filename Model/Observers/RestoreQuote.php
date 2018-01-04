@@ -68,12 +68,12 @@ class RestoreQuote implements ObserverInterface
             $payment = $lastRealOrder->getPayment()->getMethodInstance();
 
             $keepCartAlive = $paymentModel->getMainConfigData('keep_cart_alive', $lastRealOrder->getStoreId());
-            
+
             if (is_object($payment) && in_array($payment->getCode(), $helper->gateways) && $payment->getCode() != "mspbanktransfer" && $keepCartAlive) {
                 $session->restoreQuote();
             }
         }
-        return $this;        
+        return $this;
     }
 
 }

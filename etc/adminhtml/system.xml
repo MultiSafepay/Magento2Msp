@@ -3059,63 +3059,63 @@
                 <label>Postnl Amount</label>
             </field>
 
-      </group>-->
-      <group id="fastcheckout_custom" translate="label" type="text" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Fastcheckout - Custom Fields</label>
-        <field id="agreements_active" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Force accept agreements</label>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          <comment>If enabled the customer must accept the terms and conditions in the fast checkout process</comment>
-        </field>
-        <field id="agreements_url" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Alternate Agreements URL</label>
-          <comment>Leave this empty for the standard URL for the agreements</comment>
-        </field>
-        <field id="company_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Company name</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_birthday" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Birthday</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_phone" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Phonenumber</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_chamberofcommerce" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Chamber of Commerce (CoC/KvK)</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_vatnumber" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>VAT number</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_passportnumber" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Passport number</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_driverslicense" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Drivers license</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_sec" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Sex</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_salution" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Salutation</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_comment" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Comment</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
-        </field>
-        <field id="extra_newsletter" translate="label" type="select" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Newsletter</label>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-      </group>
-    </section>
-  </system>
+            </group>-->
+            <group id="fastcheckout_custom" translate="label" type="text" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Fastcheckout - Custom Fields</label>
+                <field id="agreements_active" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Force accept agreements</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled the customer must accept the terms and conditions in the fast checkout process</comment>
+                </field>
+                <field id="agreements_url" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Alternate Agreements URL</label>
+                    <comment>Leave this empty for the standard URL for the agreements</comment>
+                </field>
+                <field id="company_active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Company name</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_birthday" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Birthday</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_phone" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Phonenumber</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_chamberofcommerce" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Chamber of Commerce (CoC/KvK)</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_vatnumber" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>VAT number</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_passportnumber" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Passport number</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_driverslicense" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Drivers license</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_sec" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sex</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_salution" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Salutation</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_comment" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Comment</label>
+                    <source_model>MultiSafepay\Connect\Model\Config\Source\Customfields</source_model>
+                </field>
+                <field id="extra_newsletter" translate="label" type="select" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Newsletter</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
 </config>

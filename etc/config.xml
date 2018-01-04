@@ -1,1191 +1,1191 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-  <default>
-    <multisafepay>
-      <connect>
-        <active>0</active>
-        <title>Connect</title>
-        <order_status>pending_payment</order_status>
-        <declined_order_status>canceled</declined_order_status>
-        <cancelled_order_status>canceled</cancelled_order_status>
-        <expired_order_status>canceled</expired_order_status>
-        <chargeback_order_status>holded</chargeback_order_status>
+    <default>
+        <multisafepay>
+            <connect>
+                <active>0</active>
+                <title>Connect</title>
+                <order_status>pending_payment</order_status>
+                <declined_order_status>canceled</declined_order_status>
+                <cancelled_order_status>canceled</cancelled_order_status>
+                <expired_order_status>canceled</expired_order_status>
+                <chargeback_order_status>holded</chargeback_order_status>
         
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Connect</model>
-        <transaction_currency>1</transaction_currency>
-        <reset_paylink_gateway>0</reset_paylink_gateway>
-        <keep_cart_alive>1</keep_cart_alive>
-        <group>multisafepay_connect</group>
-      </connect>
-    </multisafepay>
-    <gateways>
-      <!-- Start iDEAL -->
-      <ideal>
-        <active>0</active>
-        <title>iDEAL</title>
-        <instructions>Veilig betalen met iDEAL</instructions>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Ideal</model>
-        <group>multisafepay_connect</group>
-      </ideal>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Connect</model>
+                <transaction_currency>1</transaction_currency>
+                <reset_paylink_gateway>0</reset_paylink_gateway>
+                <keep_cart_alive>1</keep_cart_alive>
+                <group>multisafepay_connect</group>
+            </connect>
+        </multisafepay>
+        <gateways>
+            <!-- Start iDEAL -->
+            <ideal>
+                <active>0</active>
+                <title>iDEAL</title>
+                <instructions>Veilig betalen met iDEAL</instructions>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Ideal</model>
+                <group>multisafepay_connect</group>
+            </ideal>
       
-      <!-- Start Creditcard -->
-      <creditcard>
-        <active>0</active>
-        <title>Creditcard</title>
-        <instructions>Creditcard</instructions>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Creditcard</model>
-        <group>multisafepay_connect</group>
-      </creditcard>
+            <!-- Start Creditcard -->
+            <creditcard>
+                <active>0</active>
+                <title>Creditcard</title>
+                <instructions>Creditcard</instructions>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Creditcard</model>
+                <group>multisafepay_connect</group>
+            </creditcard>
       
-      <!-- Start Dotpay -->
-      <dotpay>
-        <active>0</active>
-        <title>DotPay</title>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Dotpay</model>
-        <group>multisafepay_connect</group>
-      </dotpay>
+            <!-- Start Dotpay -->
+            <dotpay>
+                <active>0</active>
+                <title>DotPay</title>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Dotpay</model>
+                <group>multisafepay_connect</group>
+            </dotpay>
       
-      <!-- Start Paysafecard -->
-      <paysafecard>
-        <active>0</active>
-        <title>Paysafecard</title>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Paysafecard</model>
-        <group>multisafepay_connect</group>
-      </paysafecard>
+            <!-- Start Paysafecard -->
+            <paysafecard>
+                <active>0</active>
+                <title>Paysafecard</title>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Paysafecard</model>
+                <group>multisafepay_connect</group>
+            </paysafecard>
             
-      <!-- Start Visa -->
-      <visa>
-        <active>0</active>
-        <title>Visa</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Visa</model>
-        <group>multisafepay_connect</group>
-      </visa>
+            <!-- Start Visa -->
+            <visa>
+                <active>0</active>
+                <title>Visa</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Visa</model>
+                <group>multisafepay_connect</group>
+            </visa>
       
-      <!-- Start Eps -->
-      <eps>
-        <active>0</active>
-        <title>Eps</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Eps</model>
-        <group>multisafepay_connect</group>
-      </eps>
+            <!-- Start Eps -->
+            <eps>
+                <active>0</active>
+                <title>Eps</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Eps</model>
+                <group>multisafepay_connect</group>
+            </eps>
       
-      <!-- Start Ferbuy -->
-      <ferbuy>
-        <active>0</active>
-        <title>Ferbuy</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Ferbuy</model>
-        <group>multisafepay_connect</group>
-      </ferbuy>
+            <!-- Start Ferbuy -->
+            <ferbuy>
+                <active>0</active>
+                <title>Ferbuy</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Ferbuy</model>
+                <group>multisafepay_connect</group>
+            </ferbuy>
             
-      <!-- Start Mastercard -->
-      <mastercard>
-        <active>0</active>
-        <title>Mastercard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Mastercard</model>
-        <group>multisafepay_connect</group>
-      </mastercard>
+            <!-- Start Mastercard -->
+            <mastercard>
+                <active>0</active>
+                <title>Mastercard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Mastercard</model>
+                <group>multisafepay_connect</group>
+            </mastercard>
             
-      <!-- Start GiroPay -->
-      <giropay>
-        <active>0</active>
-        <title>Giropay</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Giropay</model>
-        <group>multisafepay_connect</group>
-      </giropay>
+            <!-- Start GiroPay -->
+            <giropay>
+                <active>0</active>
+                <title>Giropay</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Giropay</model>
+                <group>multisafepay_connect</group>
+            </giropay>
             
-      <!-- Start Banktransfer -->
-      <mspbanktransfer>
-        <active>0</active>
-        <title>Bankoverschrijving</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Banktransfer</model>
-        <group>multisafepay_connect</group>
-      </mspbanktransfer>
+            <!-- Start Banktransfer -->
+            <mspbanktransfer>
+                <active>0</active>
+                <title>Bankoverschrijving</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Banktransfer</model>
+                <group>multisafepay_connect</group>
+            </mspbanktransfer>
             
-      <!-- Start Sofort -->
-      <sofort>
-        <active>0</active>
-        <title>Sofort</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Sofort</model>
-        <group>multisafepay_connect</group>
-      </sofort>
+            <!-- Start Sofort -->
+            <sofort>
+                <active>0</active>
+                <title>Sofort</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Sofort</model>
+                <group>multisafepay_connect</group>
+            </sofort>
             
-      <!-- Start Maestro -->
-      <maestro>
-        <active>0</active>
-        <title>Maestro</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Maestro</model>
-        <group>multisafepay_connect</group>
-      </maestro>
+            <!-- Start Maestro -->
+            <maestro>
+                <active>0</active>
+                <title>Maestro</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Maestro</model>
+                <group>multisafepay_connect</group>
+            </maestro>
             
-      <!-- Start Bancontact -->
-      <bancontact>
-        <active>0</active>
-        <title>Bancontact</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Bancontact</model>
-        <group>multisafepay_connect</group>
-      </bancontact>
+            <!-- Start Bancontact -->
+            <bancontact>
+                <active>0</active>
+                <title>Bancontact</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Bancontact</model>
+                <group>multisafepay_connect</group>
+            </bancontact>
             
-      <!-- Start Americanexpress -->
-      <americanexpress>
-        <active>0</active>
-        <title>American Express</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Americanexpress</model>
-        <group>multisafepay_connect</group>
-      </americanexpress>
+            <!-- Start Americanexpress -->
+            <americanexpress>
+                <active>0</active>
+                <title>American Express</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Americanexpress</model>
+                <group>multisafepay_connect</group>
+            </americanexpress>
             
-      <!-- Start Direct Debit -->
-      <directdebit>
-        <active>0</active>
-        <title>Direct Debit</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Directdebit</model>
-        <group>multisafepay_connect</group>
-      </directdebit>
+            <!-- Start Direct Debit -->
+            <directdebit>
+                <active>0</active>
+                <title>Direct Debit</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Directdebit</model>
+                <group>multisafepay_connect</group>
+            </directdebit>
             
     
             
             
-      <!-- Start Betaal na Ontvangst-->
-      <betaalnaontvangst>
-        <active>0</active>
-        <title>Betaal na ontvangst</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Betaalnaontvangst</model>
-        <group>multisafepay_connect</group>
-      </betaalnaontvangst>
+            <!-- Start Betaal na Ontvangst-->
+            <betaalnaontvangst>
+                <active>0</active>
+                <title>Betaal na ontvangst</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Betaalnaontvangst</model>
+                <group>multisafepay_connect</group>
+            </betaalnaontvangst>
       
-      <!-- Start E-invoicing-->
-      <einvoice>
-        <active>0</active>
-        <title>E-invoicing</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Einvoice</model>
-        <group>multisafepay_connect</group>
-      </einvoice>
+            <!-- Start E-invoicing-->
+            <einvoice>
+                <active>0</active>
+                <title>E-invoicing</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Einvoice</model>
+                <group>multisafepay_connect</group>
+            </einvoice>
       
-      <!-- Start Klarna Factuur-->
-      <klarnainvoice>
-        <active>0</active>
-        <title>Klarna Factuur</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Klarnainvoice</model>
-        <group>multisafepay_connect</group>
-      </klarnainvoice>
+            <!-- Start Klarna Factuur-->
+            <klarnainvoice>
+                <active>0</active>
+                <title>Klarna Factuur</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Klarnainvoice</model>
+                <group>multisafepay_connect</group>
+            </klarnainvoice>
             
-      <!-- Start PayPal-->
-      <paypalmsp>
-        <active>0</active>
-        <title>PayPal</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Paypal</model>
-        <group>multisafepay_connect</group>
-      </paypalmsp>
+            <!-- Start PayPal-->
+            <paypalmsp>
+                <active>0</active>
+                <title>PayPal</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Paypal</model>
+                <group>multisafepay_connect</group>
+            </paypalmsp>
       
-      <!-- Start Trustpay-->
-      <trustpay>
-        <active>0</active>
-        <title>TrustPay</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Trustpay</model>
-        <group>multisafepay_connect</group>
-      </trustpay>
+            <!-- Start Trustpay-->
+            <trustpay>
+                <active>0</active>
+                <title>TrustPay</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Trustpay</model>
+                <group>multisafepay_connect</group>
+            </trustpay>
       
-      <!-- Start Kbc -->
-      <kbc>
-        <active>0</active>
-        <title>KBC</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Kbc</model>
-        <group>multisafepay_connect</group>
-      </kbc>
+            <!-- Start Kbc -->
+            <kbc>
+                <active>0</active>
+                <title>KBC</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Kbc</model>
+                <group>multisafepay_connect</group>
+            </kbc>
       
-      <!-- Start Alipay-->
-      <alipay>
-        <active>0</active>
-        <title>AliPay</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Alipay</model>
-        <group>multisafepay_connect</group>
-      </alipay>
+            <!-- Start Alipay-->
+            <alipay>
+                <active>0</active>
+                <title>AliPay</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Alipay</model>
+                <group>multisafepay_connect</group>
+            </alipay>
       
-      <!-- Start Belfius -->
-      <belfius>
-        <active>0</active>
-        <title>Belfius</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Belfius</model>
-        <group>multisafepay_connect</group>
-      </belfius>
+            <!-- Start Belfius -->
+            <belfius>
+                <active>0</active>
+                <title>Belfius</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Belfius</model>
+                <group>multisafepay_connect</group>
+            </belfius>
       
       
-      <!-- Start ing -->
-      <ing>
-        <active>0</active>
-        <title>ING Homepay</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
-        <group>multisafepay_connect</group>
-      </ing>
-    </gateways>
+            <!-- Start ing -->
+            <ing>
+                <active>0</active>
+                <title>ING Homepay</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
+                <group>multisafepay_connect</group>
+            </ing>
+        </gateways>
         
-    <giftcards>
-      <!-- Start Wijncadeau-->
-      <wijncadeau>
-        <active>0</active>
-        <title>Wijncadeau</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Wijncadeau</model>
-        <group>multisafepay_connect</group>
-      </wijncadeau>
+        <giftcards>
+            <!-- Start Wijncadeau-->
+            <wijncadeau>
+                <active>0</active>
+                <title>Wijncadeau</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Wijncadeau</model>
+                <group>multisafepay_connect</group>
+            </wijncadeau>
             
-      <!-- Start Fashiongiftcard-->
-      <fashiongiftcard>
-        <active>0</active>
-        <title>Fashiongiftcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Fashiongiftcard</model>
-        <group>multisafepay_connect</group>
-      </fashiongiftcard>
+            <!-- Start Fashiongiftcard-->
+            <fashiongiftcard>
+                <active>0</active>
+                <title>Fashiongiftcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Fashiongiftcard</model>
+                <group>multisafepay_connect</group>
+            </fashiongiftcard>
             
-      <!-- Start Podium-->
-      <podium>
-        <active>0</active>
-        <title>Podium</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Podium</model>
-        <group>multisafepay_connect</group>
-      </podium>
+            <!-- Start Podium-->
+            <podium>
+                <active>0</active>
+                <title>Podium</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Podium</model>
+                <group>multisafepay_connect</group>
+            </podium>
             
                   
-      <!-- Start givacard-->
-      <givacard>
-        <active>0</active>
-        <title>Givacard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Givacard</model>
-        <group>multisafepay_connect</group>
-      </givacard>
+            <!-- Start givacard-->
+            <givacard>
+                <active>0</active>
+                <title>Givacard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Givacard</model>
+                <group>multisafepay_connect</group>
+            </givacard>
             
-      <!-- Start VVV Bon-->
-      <vvvbon>
-        <active>0</active>
-        <title>VVV Bon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Vvvbon</model>
-        <group>multisafepay_connect</group>
-      </vvvbon>
+            <!-- Start VVV Bon-->
+            <vvvbon>
+                <active>0</active>
+                <title>VVV Bon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Vvvbon</model>
+                <group>multisafepay_connect</group>
+            </vvvbon>
             
-      <!-- Start Sport en fit-->
-      <sportenfit>
-        <active>0</active>
-        <title>Sport en Fit</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Sportenfit</model>
-        <group>multisafepay_connect</group>
-      </sportenfit>
+            <!-- Start Sport en fit-->
+            <sportenfit>
+                <active>0</active>
+                <title>Sport en Fit</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Sportenfit</model>
+                <group>multisafepay_connect</group>
+            </sportenfit>
             
-      <!-- Start Goodcard-->
-      <goodcard>
-        <active>0</active>
-        <title>Goodcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Goodcard</model>
-        <group>multisafepay_connect</group>
-      </goodcard>
+            <!-- Start Goodcard-->
+            <goodcard>
+                <active>0</active>
+                <title>Goodcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Goodcard</model>
+                <group>multisafepay_connect</group>
+            </goodcard>
             
-      <!-- Start Nationaletuinbon-->
-      <nationaletuinbon>
-        <active>0</active>
-        <title>Nationale Tuinbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Nationaletuinbon</model>
-        <group>multisafepay_connect</group>
-      </nationaletuinbon>
+            <!-- Start Nationaletuinbon-->
+            <nationaletuinbon>
+                <active>0</active>
+                <title>Nationale Tuinbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Nationaletuinbon</model>
+                <group>multisafepay_connect</group>
+            </nationaletuinbon>
             
-      <!-- Start Nationaleverwencadeaubon-->
-      <nationaleverwencadeaubon>
-        <active>0</active>
-        <title>Nationale Verwen cadeaubon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Nationaleverwencadeaubon</model>
-        <group>multisafepay_connect</group>
-      </nationaleverwencadeaubon>
+            <!-- Start Nationaleverwencadeaubon-->
+            <nationaleverwencadeaubon>
+                <active>0</active>
+                <title>Nationale Verwen cadeaubon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Nationaleverwencadeaubon</model>
+                <group>multisafepay_connect</group>
+            </nationaleverwencadeaubon>
             
-      <!-- Start Gezondheidsbon-->
-      <gezondheidsbon>
-        <active>0</active>
-        <title>Gezondheidsbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Gezondheidsbon</model>
-        <group>multisafepay_connect</group>
-      </gezondheidsbon>
+            <!-- Start Gezondheidsbon-->
+            <gezondheidsbon>
+                <active>0</active>
+                <title>Gezondheidsbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Gezondheidsbon</model>
+                <group>multisafepay_connect</group>
+            </gezondheidsbon>
             
-      <!-- Start Babygiftcard-->
-      <babygiftcard>
-        <active>0</active>
-        <title>Babygiftcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Babygiftcard</model>
-        <group>multisafepay_connect</group>
-      </babygiftcard>
+            <!-- Start Babygiftcard-->
+            <babygiftcard>
+                <active>0</active>
+                <title>Babygiftcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Babygiftcard</model>
+                <group>multisafepay_connect</group>
+            </babygiftcard>
             
-      <!-- Start Boekenbon-->
-      <boekenbon>
-        <active>0</active>
-        <title>Boekenbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Boekenbon</model>
-        <group>multisafepay_connect</group>
-      </boekenbon>
+            <!-- Start Boekenbon-->
+            <boekenbon>
+                <active>0</active>
+                <title>Boekenbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Boekenbon</model>
+                <group>multisafepay_connect</group>
+            </boekenbon>
             
-      <!-- Start Erotiekbon-->
-      <erotiekbon>
-        <active>0</active>
-        <title>Erotiekbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Erotiekbon</model>
-        <group>multisafepay_connect</group>
-      </erotiekbon>
+            <!-- Start Erotiekbon-->
+            <erotiekbon>
+                <active>0</active>
+                <title>Erotiekbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Erotiekbon</model>
+                <group>multisafepay_connect</group>
+            </erotiekbon>
             
-      <!-- Start Fashioncheque-->
-      <fashioncheque>
-        <active>0</active>
-        <title>Fashioncheque</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Fashioncheque</model>
-        <group>multisafepay_connect</group>
-      </fashioncheque>
+            <!-- Start Fashioncheque-->
+            <fashioncheque>
+                <active>0</active>
+                <title>Fashioncheque</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Fashioncheque</model>
+                <group>multisafepay_connect</group>
+            </fashioncheque>
             
-      <!-- Start Parfumcadeaukaart-->
-      <parfumcadeaukaart>
-        <active>0</active>
-        <title>Parfumcadeaukaart</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Parfumcadeaukaart</model>
-        <group>multisafepay_connect</group>
-      </parfumcadeaukaart>
+            <!-- Start Parfumcadeaukaart-->
+            <parfumcadeaukaart>
+                <active>0</active>
+                <title>Parfumcadeaukaart</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Parfumcadeaukaart</model>
+                <group>multisafepay_connect</group>
+            </parfumcadeaukaart>
             
-      <!-- Start Webshopgiftcard-->
-      <webshopgiftcard>
-        <active>0</active>
-        <title>Webshopgiftcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Webshopgiftcard</model>
-        <group>multisafepay_connect</group>
-      </webshopgiftcard>
+            <!-- Start Webshopgiftcard-->
+            <webshopgiftcard>
+                <active>0</active>
+                <title>Webshopgiftcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Webshopgiftcard</model>
+                <group>multisafepay_connect</group>
+            </webshopgiftcard>
             
-      <!-- Start Beauty and Wellness-->
-      <beautyandwellness>
-        <active>0</active>
-        <title>Beautyandwellness</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Beautyandwellness</model>
-        <group>multisafepay_connect</group>
-      </beautyandwellness>
+            <!-- Start Beauty and Wellness-->
+            <beautyandwellness>
+                <active>0</active>
+                <title>Beautyandwellness</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Beautyandwellness</model>
+                <group>multisafepay_connect</group>
+            </beautyandwellness>
       
-      <!-- Start Fietsenbon-->
-      <fietsenbon>
-        <active>0</active>
-        <title>Fietsenbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Fietsenbon</model>
-        <group>multisafepay_connect</group>
-      </fietsenbon>
+            <!-- Start Fietsenbon-->
+            <fietsenbon>
+                <active>0</active>
+                <title>Fietsenbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Fietsenbon</model>
+                <group>multisafepay_connect</group>
+            </fietsenbon>
       
-      <!-- Start Wellness giftcard-->
-      <wellnessgiftcard>
-        <active>0</active>
-        <title>Wellness Giftcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Wellnessgiftcard</model>
-        <group>multisafepay_connect</group>
-      </wellnessgiftcard>
+            <!-- Start Wellness giftcard-->
+            <wellnessgiftcard>
+                <active>0</active>
+                <title>Wellness Giftcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Wellnessgiftcard</model>
+                <group>multisafepay_connect</group>
+            </wellnessgiftcard>
       
-      <!-- Start Winkel cheque-->
-      <winkelcheque>
-        <active>0</active>
-        <title>Winkel Cheque</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Winkelcheque</model>
-        <group>multisafepay_connect</group>
-      </winkelcheque>
+            <!-- Start Winkel cheque-->
+            <winkelcheque>
+                <active>0</active>
+                <title>Winkel Cheque</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Winkelcheque</model>
+                <group>multisafepay_connect</group>
+            </winkelcheque>
       
-    </giftcards>
+        </giftcards>
         
-    <payment>
-      <!-- Start iDEAL -->
-      <ideal>
-        <active>0</active>
-        <title>iDEAL</title>
-        <instructions>Veilig betalen met iDEAL</instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Ideal</model>
-        <group>multisafepay_connect</group>
-      </ideal>
+        <payment>
+            <!-- Start iDEAL -->
+            <ideal>
+                <active>0</active>
+                <title>iDEAL</title>
+                <instructions>Veilig betalen met iDEAL</instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Ideal</model>
+                <group>multisafepay_connect</group>
+            </ideal>
       
-      <!-- Start Creditcard -->
-      <creditcard>
-        <active>0</active>
-        <title>Creditcard</title>
-        <instructions>Creditcard</instructions>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Creditcard</model>
-        <group>multisafepay_connect</group>
-      </creditcard>
+            <!-- Start Creditcard -->
+            <creditcard>
+                <active>0</active>
+                <title>Creditcard</title>
+                <instructions>Creditcard</instructions>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Creditcard</model>
+                <group>multisafepay_connect</group>
+            </creditcard>
             
-      <!-- Start Visa -->
-      <visa>
-        <active>0</active>
-        <title>Visa</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Visa</model>
-        <group>multisafepay_connect</group>
-      </visa>
+            <!-- Start Visa -->
+            <visa>
+                <active>0</active>
+                <title>Visa</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Visa</model>
+                <group>multisafepay_connect</group>
+            </visa>
       
-      <!-- Start Eps -->
-      <eps>
-        <active>0</active>
-        <title>Eps</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Eps</model>
-        <group>multisafepay_connect</group>
-      </eps>
+            <!-- Start Eps -->
+            <eps>
+                <active>0</active>
+                <title>Eps</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Eps</model>
+                <group>multisafepay_connect</group>
+            </eps>
       
-      <!-- Start Ferbuy -->
-      <ferbuy>
-        <active>0</active>
-        <title>Ferbuy</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Ferbuy</model>
-        <group>multisafepay_connect</group>
-      </ferbuy>
+            <!-- Start Ferbuy -->
+            <ferbuy>
+                <active>0</active>
+                <title>Ferbuy</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Ferbuy</model>
+                <group>multisafepay_connect</group>
+            </ferbuy>
             
-      <!-- Start Mastercard -->
-      <mastercard>
-        <active>0</active>
-        <title>Mastercard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Mastercard</model>
-        <group>multisafepay_connect</group>
-      </mastercard>
+            <!-- Start Mastercard -->
+            <mastercard>
+                <active>0</active>
+                <title>Mastercard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Mastercard</model>
+                <group>multisafepay_connect</group>
+            </mastercard>
             
-      <!-- Start GiroPay -->
-      <giropay>
-        <active>0</active>
-        <title>Giropay</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Giropay</model>
-        <group>multisafepay_connect</group>
-      </giropay>
+            <!-- Start GiroPay -->
+            <giropay>
+                <active>0</active>
+                <title>Giropay</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Giropay</model>
+                <group>multisafepay_connect</group>
+            </giropay>
             
-      <!-- Start Banktransfer -->
-      <mspbanktransfer>
-        <active>0</active>
-        <title>Bankoverschrijving</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Banktransfer</model>
-        <group>multisafepay_connect</group>
-      </mspbanktransfer>
+            <!-- Start Banktransfer -->
+            <mspbanktransfer>
+                <active>0</active>
+                <title>Bankoverschrijving</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Banktransfer</model>
+                <group>multisafepay_connect</group>
+            </mspbanktransfer>
             
-      <!-- Start Sofort -->
-      <sofort>
-        <active>0</active>
-        <title>Sofort</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Sofort</model>
-        <group>multisafepay_connect</group>
-      </sofort>
+            <!-- Start Sofort -->
+            <sofort>
+                <active>0</active>
+                <title>Sofort</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Sofort</model>
+                <group>multisafepay_connect</group>
+            </sofort>
             
-      <!-- Start Bancontact -->
-      <maestro>
-        <active>0</active>
-        <title>Maestro</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Maestro</model>
-        <group>multisafepay_connect</group>
-      </maestro>
+            <!-- Start Bancontact -->
+            <maestro>
+                <active>0</active>
+                <title>Maestro</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Maestro</model>
+                <group>multisafepay_connect</group>
+            </maestro>
             
             
-      <!-- Start Bancontact -->
-      <bancontact>
-        <active>0</active>
-        <title>Bancontact</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Bancontact</model>
-        <group>multisafepay_connect</group>
-      </bancontact>
+            <!-- Start Bancontact -->
+            <bancontact>
+                <active>0</active>
+                <title>Bancontact</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Bancontact</model>
+                <group>multisafepay_connect</group>
+            </bancontact>
             
-      <!-- Start Americanexpress -->
-      <americanexpress>
-        <active>0</active>
-        <title>American Express</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Americanexpress</model>
-        <group>multisafepay_connect</group>
-      </americanexpress>
+            <!-- Start Americanexpress -->
+            <americanexpress>
+                <active>0</active>
+                <title>American Express</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Americanexpress</model>
+                <group>multisafepay_connect</group>
+            </americanexpress>
             
-      <!-- Start Direct Debit -->
-      <directdebit>
-        <active>0</active>
-        <title>Direct Debit</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Directdebit</model>
-        <group>multisafepay_connect</group>
-      </directdebit>
+            <!-- Start Direct Debit -->
+            <directdebit>
+                <active>0</active>
+                <title>Direct Debit</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Directdebit</model>
+                <group>multisafepay_connect</group>
+            </directdebit>
             
     
             
-      <!-- Start Betaal na Ontvangst-->
-      <betaalnaontvangst>
-        <active>0</active>
-        <title>Betaal na ontvangst</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Betaalnaontvangst</model>
-        <group>multisafepay_connect</group>
-      </betaalnaontvangst>
+            <!-- Start Betaal na Ontvangst-->
+            <betaalnaontvangst>
+                <active>0</active>
+                <title>Betaal na ontvangst</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Betaalnaontvangst</model>
+                <group>multisafepay_connect</group>
+            </betaalnaontvangst>
       
-      <!-- Start E-invoicing-->
-      <einvoice>
-        <active>0</active>
-        <title>E-invoicing</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Einvoice</model>
-        <group>multisafepay_connect</group>
-      </einvoice>
+            <!-- Start E-invoicing-->
+            <einvoice>
+                <active>0</active>
+                <title>E-invoicing</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Einvoice</model>
+                <group>multisafepay_connect</group>
+            </einvoice>
       
-      <!-- Start Klarna Factuur-->
-      <klarnainvoice>
-        <active>0</active>
-        <title>Klarna Factuur</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Klarnainvoice</model>
-        <group>multisafepay_connect</group>
-      </klarnainvoice>
+            <!-- Start Klarna Factuur-->
+            <klarnainvoice>
+                <active>0</active>
+                <title>Klarna Factuur</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Klarnainvoice</model>
+                <group>multisafepay_connect</group>
+            </klarnainvoice>
             
-      <!-- Start PayPal-->
-      <paypalmsp>
-        <active>0</active>
-        <title>PayPal</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Paypal</model>
-        <group>multisafepay_connect</group>
-      </paypalmsp>
-      
-      
-      <!-- Start Trustpay-->
-      <trustpay>
-        <active>0</active>
-        <title>TrustPay</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Trustpay</model>
-        <group>multisafepay_connect</group>
-      </trustpay>
-      
-      <!-- Start Kbc -->
-      <kbc>
-        <active>0</active>
-        <title>KBC</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Kbc</model>
-        <group>multisafepay_connect</group>
-      </kbc>
-      
-      <!-- Start Alipay-->
-      <alipay>
-        <active>0</active>
-        <title>AliPay</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Alipay</model>
-        <group>multisafepay_connect</group>
-      </alipay>
-      
-      <!-- Start Belfius -->
-      <belfius>
-        <active>0</active>
-        <title>Belfius</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Belfius</model>
-        <group>multisafepay_connect</group>
-      </belfius>
+            <!-- Start PayPal-->
+            <paypalmsp>
+                <active>0</active>
+                <title>PayPal</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Paypal</model>
+                <group>multisafepay_connect</group>
+            </paypalmsp>
       
       
-      <!-- Start ing -->
-      <ing>
-        <active>0</active>
-        <title>ING Homepay</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
-        <group>multisafepay_connect</group>
-      </ing>
-            
-      <!-- Start Wijncadeau-->
-      <wijncadeau>
-        <active>0</active>
-        <title>Wijncadeau</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Wijncadeau</model>
-        <group>multisafepay_connect</group>
-      </wijncadeau>
-            
-      <!-- Start Fashiongiftcard-->
-      <fashiongiftcard>
-        <active>0</active>
-        <title>Fashiongiftcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Fashiongiftcard</model>
-        <group>multisafepay_connect</group>
-      </fashiongiftcard>
-            
-      <!-- Start Podium-->
-      <podium>
-        <active>0</active>
-        <title>Podium</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Podium</model>
-        <group>multisafepay_connect</group>
-      </podium>
+            <!-- Start Trustpay-->
+            <trustpay>
+                <active>0</active>
+                <title>TrustPay</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Trustpay</model>
+                <group>multisafepay_connect</group>
+            </trustpay>
+      
+            <!-- Start Kbc -->
+            <kbc>
+                <active>0</active>
+                <title>KBC</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Kbc</model>
+                <group>multisafepay_connect</group>
+            </kbc>
+      
+            <!-- Start Alipay-->
+            <alipay>
+                <active>0</active>
+                <title>AliPay</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Alipay</model>
+                <group>multisafepay_connect</group>
+            </alipay>
+      
+            <!-- Start Belfius -->
+            <belfius>
+                <active>0</active>
+                <title>Belfius</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Belfius</model>
+                <group>multisafepay_connect</group>
+            </belfius>
       
       
-      <!-- Start givacard-->
-      <givacard>
-        <active>0</active>
-        <title>Givacard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Givacard</model>
-        <group>multisafepay_connect</group>
-      </givacard>
+            <!-- Start ing -->
+            <ing>
+                <active>0</active>
+                <title>ING Homepay</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
+                <group>multisafepay_connect</group>
+            </ing>
             
-      <!-- Start VVV Bon-->
-      <vvvbon>
-        <active>0</active>
-        <title>VVV Bon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Vvvbon</model>
-        <group>multisafepay_connect</group>
-      </vvvbon>
+            <!-- Start Wijncadeau-->
+            <wijncadeau>
+                <active>0</active>
+                <title>Wijncadeau</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Wijncadeau</model>
+                <group>multisafepay_connect</group>
+            </wijncadeau>
             
-      <!-- Start Sport en fit-->
-      <sportenfit>
-        <active>0</active>
-        <title>Sport en Fit</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Sportenfit</model>
-        <group>multisafepay_connect</group>
-      </sportenfit>
+            <!-- Start Fashiongiftcard-->
+            <fashiongiftcard>
+                <active>0</active>
+                <title>Fashiongiftcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Fashiongiftcard</model>
+                <group>multisafepay_connect</group>
+            </fashiongiftcard>
             
-      <!-- Start Yourgift-->
-      <yourgift>
-        <active>0</active>
-        <title>Yourgift</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Yourgift</model>
-        <group>multisafepay_connect</group>
-      </yourgift>
-            
-      <!-- Start Goodcard-->
-      <goodcard>
-        <active>0</active>
-        <title>Goodcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Goodcard</model>
-        <group>multisafepay_connect</group>
-      </goodcard>
-            
-      <!-- Start Nationaletuinbon-->
-      <nationaletuinbon>
-        <active>0</active>
-        <title>Nationale Tuinbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Nationaletuinbon</model>
-        <group>multisafepay_connect</group>
-      </nationaletuinbon>
-            
-      <!-- Start Nationaleverwencadeaubon-->
-      <nationaleverwencadeaubon>
-        <active>0</active>
-        <title>Nationale Verwen cadeaubon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Nationaleverwencadeaubon</model>
-        <group>multisafepay_connect</group>
-      </nationaleverwencadeaubon>
-            
-      <!-- Start Gezondheidsbon-->
-      <gezondheidsbon>
-        <active>0</active>
-        <title>Gezondheidsbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Gezondheidsbon</model>
-        <group>multisafepay_connect</group>
-      </gezondheidsbon>
-            
-      <!-- Start Babygiftcard-->
-      <babygiftcard>
-        <active>0</active>
-        <title>Babygiftcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Babygiftcard</model>
-        <group>multisafepay_connect</group>
-      </babygiftcard>
-            
-      <!-- Start Boekenbon-->
-      <boekenbon>
-        <active>0</active>
-        <title>Boekenbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Boekenbon</model>
-        <group>multisafepay_connect</group>
-      </boekenbon>
-            
-      <!-- Start Erotiekbon-->
-      <erotiekbon>
-        <active>0</active>
-        <title>Erotiekbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Erotiekbon</model>
-        <group>multisafepay_connect</group>
-      </erotiekbon>
-            
-      <!-- Start Fashioncheque-->
-      <fashioncheque>
-        <active>0</active>
-        <title>Fashioncheque</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Fashioncheque</model>
-        <group>multisafepay_connect</group>
-      </fashioncheque>
-            
-      <!-- Start Parfumcadeaukaart-->
-      <parfumcadeaukaart>
-        <active>0</active>
-        <title>Parfumcadeaukaart</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Parfumcadeaukaart</model>
-        <group>multisafepay_connect</group>
-      </parfumcadeaukaart>
-            
-      <!-- Start Webshopgiftcard-->
-      <webshopgiftcard>
-        <active>0</active>
-        <title>Webshopgiftcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Webshopgiftcard</model>
-        <group>multisafepay_connect</group>
-      </webshopgiftcard>
-            
-      <!-- Start Beauty and Wellness-->
-      <beautyandwellness>
-        <active>0</active>
-        <title>Beautyandwellness</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Beautyandwellness</model>
-        <group>multisafepay_connect</group>
-      </beautyandwellness>
+            <!-- Start Podium-->
+            <podium>
+                <active>0</active>
+                <title>Podium</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Podium</model>
+                <group>multisafepay_connect</group>
+            </podium>
       
       
-      <!-- Start Fietsenbon-->
-      <fietsenbon>
-        <active>0</active>
-        <title>Fietsenbon</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Fietsenbon</model>
-        <group>multisafepay_connect</group>
-      </fietsenbon>
+            <!-- Start givacard-->
+            <givacard>
+                <active>0</active>
+                <title>Givacard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Givacard</model>
+                <group>multisafepay_connect</group>
+            </givacard>
+            
+            <!-- Start VVV Bon-->
+            <vvvbon>
+                <active>0</active>
+                <title>VVV Bon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Vvvbon</model>
+                <group>multisafepay_connect</group>
+            </vvvbon>
+            
+            <!-- Start Sport en fit-->
+            <sportenfit>
+                <active>0</active>
+                <title>Sport en Fit</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Sportenfit</model>
+                <group>multisafepay_connect</group>
+            </sportenfit>
+            
+            <!-- Start Yourgift-->
+            <yourgift>
+                <active>0</active>
+                <title>Yourgift</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Yourgift</model>
+                <group>multisafepay_connect</group>
+            </yourgift>
+            
+            <!-- Start Goodcard-->
+            <goodcard>
+                <active>0</active>
+                <title>Goodcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Goodcard</model>
+                <group>multisafepay_connect</group>
+            </goodcard>
+            
+            <!-- Start Nationaletuinbon-->
+            <nationaletuinbon>
+                <active>0</active>
+                <title>Nationale Tuinbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Nationaletuinbon</model>
+                <group>multisafepay_connect</group>
+            </nationaletuinbon>
+            
+            <!-- Start Nationaleverwencadeaubon-->
+            <nationaleverwencadeaubon>
+                <active>0</active>
+                <title>Nationale Verwen cadeaubon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Nationaleverwencadeaubon</model>
+                <group>multisafepay_connect</group>
+            </nationaleverwencadeaubon>
+            
+            <!-- Start Gezondheidsbon-->
+            <gezondheidsbon>
+                <active>0</active>
+                <title>Gezondheidsbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Gezondheidsbon</model>
+                <group>multisafepay_connect</group>
+            </gezondheidsbon>
+            
+            <!-- Start Babygiftcard-->
+            <babygiftcard>
+                <active>0</active>
+                <title>Babygiftcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Babygiftcard</model>
+                <group>multisafepay_connect</group>
+            </babygiftcard>
+            
+            <!-- Start Boekenbon-->
+            <boekenbon>
+                <active>0</active>
+                <title>Boekenbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Boekenbon</model>
+                <group>multisafepay_connect</group>
+            </boekenbon>
+            
+            <!-- Start Erotiekbon-->
+            <erotiekbon>
+                <active>0</active>
+                <title>Erotiekbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Erotiekbon</model>
+                <group>multisafepay_connect</group>
+            </erotiekbon>
+            
+            <!-- Start Fashioncheque-->
+            <fashioncheque>
+                <active>0</active>
+                <title>Fashioncheque</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Fashioncheque</model>
+                <group>multisafepay_connect</group>
+            </fashioncheque>
+            
+            <!-- Start Parfumcadeaukaart-->
+            <parfumcadeaukaart>
+                <active>0</active>
+                <title>Parfumcadeaukaart</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Parfumcadeaukaart</model>
+                <group>multisafepay_connect</group>
+            </parfumcadeaukaart>
+            
+            <!-- Start Webshopgiftcard-->
+            <webshopgiftcard>
+                <active>0</active>
+                <title>Webshopgiftcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Webshopgiftcard</model>
+                <group>multisafepay_connect</group>
+            </webshopgiftcard>
+            
+            <!-- Start Beauty and Wellness-->
+            <beautyandwellness>
+                <active>0</active>
+                <title>Beautyandwellness</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Beautyandwellness</model>
+                <group>multisafepay_connect</group>
+            </beautyandwellness>
       
-      <!-- Start Wellness giftcard-->
-      <wellnessgiftcard>
-        <active>0</active>
-        <title>Wellness Giftcard</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Wellnessgiftcard</model>
-        <group>multisafepay_connect</group>
-      </wellnessgiftcard>
       
-      <!-- Start Winkel cheque-->
-      <winkelcheque>
-        <active>0</active>
-        <title>Winkel Cheque</title>
-        <instructions></instructions>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Giftcards\Winkelcheque</model>
-        <group>multisafepay_connect</group>
-      </winkelcheque>
+            <!-- Start Fietsenbon-->
+            <fietsenbon>
+                <active>0</active>
+                <title>Fietsenbon</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Fietsenbon</model>
+                <group>multisafepay_connect</group>
+            </fietsenbon>
       
-      <!-- Start Dotpay -->
-      <dotpay>
-        <active>0</active>
-        <title>DotPay</title>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Dotpay</model>
-        <group>multisafepay_connect</group>
-      </dotpay>
-      <!-- Start Paysafecard -->
-      <paysafecard>
-        <active>0</active>
-        <title>Paysafecard</title>
-        <payment_action>true</payment_action>
-        <allowed_currency>EUR</allowed_currency>
-        <allowed_groups>0,1,2,3</allowed_groups>
-        <payment_action>true</payment_action>
-        <model>MultiSafepay\Connect\Model\Gateways\Paysafecard</model>
-        <group>multisafepay_connect</group>
-      </paysafecard>
-    </payment>
-  </default>
+            <!-- Start Wellness giftcard-->
+            <wellnessgiftcard>
+                <active>0</active>
+                <title>Wellness Giftcard</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Wellnessgiftcard</model>
+                <group>multisafepay_connect</group>
+            </wellnessgiftcard>
+      
+            <!-- Start Winkel cheque-->
+            <winkelcheque>
+                <active>0</active>
+                <title>Winkel Cheque</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Giftcards\Winkelcheque</model>
+                <group>multisafepay_connect</group>
+            </winkelcheque>
+      
+            <!-- Start Dotpay -->
+            <dotpay>
+                <active>0</active>
+                <title>DotPay</title>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Dotpay</model>
+                <group>multisafepay_connect</group>
+            </dotpay>
+            <!-- Start Paysafecard -->
+            <paysafecard>
+                <active>0</active>
+                <title>Paysafecard</title>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Paysafecard</model>
+                <group>multisafepay_connect</group>
+            </paysafecard>
+        </payment>
+    </default>
 </config>

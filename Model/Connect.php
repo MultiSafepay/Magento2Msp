@@ -396,7 +396,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if ($this->_manualGateway != null) {
             $this->_gatewayCode = $this->_manualGateway;
         }
-        
+
         if ($resetGateway && $this->_isAdmin) {
             $this->_gatewayCode = "";
         }
@@ -602,7 +602,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $quantity = $item->getQtyOrdered();
                 }
             }
-            
+
             if ($item->getParentItem()) {
                 continue;
             }
@@ -694,49 +694,49 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $price = round($price, 10);
                     }
                 }
-                
+
                 /*
-	             * We should process FPT within the cart data.
-	             */
-                if($item->getWeeeTaxApplied()){
-	                $weeeTax = json_decode($item->getWeeeTaxApplied());
-	                foreach($weeeTax as $tax){
-		                if(isset($tax->base_amount)){
-			                if ($use_base_currency) {
-				                $amount = $tax->base_amount;
-				            }else{
-					            $amount = $tax->amount;
-				            }
-				            
-				            if(!$this->_scopeConfig->getValue('tax/weee/apply_vat', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)){
-					            $weetaxClass ='BTW0';
-                                                    $alternateTaxRates['tax_tables']['alternate'][] = array(
-                                                        "standalone" => "true",
-                                                        "name" => "BTW0",
-                                                        "rules" => array(
-                                                            array("rate" => "0.00")
-                                                        ),
-                                                    );
-				            }else{
-					            $weetaxClass = $taxClass;
-				            }
-				            
-			                $shoppingCart['shopping_cart']['items'][] = array(
-		                    "name" => $tax->title,
-		                    "description" => $tax->title,
-		                    "unit_price" => $amount,
-		                    "quantity" => $quantity,
-		                    "merchant_item_id" => 'FPT',
-		                    "tax_table_selector" => $weetaxClass, 
-		                    "weight" => array(
-		                        "unit" => "KG",
-		                        "value" => "0",
-								)
-							);
-	               	 	}
-	                }
-                }                
-                
+                 * We should process FPT within the cart data.
+                 */
+                if ($item->getWeeeTaxApplied()) {
+                    $weeeTax = json_decode($item->getWeeeTaxApplied());
+                    foreach ($weeeTax as $tax) {
+                        if (isset($tax->base_amount)) {
+                            if ($use_base_currency) {
+                                $amount = $tax->base_amount;
+                            } else {
+                                $amount = $tax->amount;
+                            }
+
+                            if (!$this->_scopeConfig->getValue('tax/weee/apply_vat', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+                                $weetaxClass = 'BTW0';
+                                $alternateTaxRates['tax_tables']['alternate'][] = array(
+                                    "standalone" => "true",
+                                    "name" => "BTW0",
+                                    "rules" => array(
+                                        array("rate" => "0.00")
+                                    ),
+                                );
+                            } else {
+                                $weetaxClass = $taxClass;
+                            }
+
+                            $shoppingCart['shopping_cart']['items'][] = array(
+                                "name" => $tax->title,
+                                "description" => $tax->title,
+                                "unit_price" => $amount,
+                                "quantity" => $quantity,
+                                "merchant_item_id" => 'FPT',
+                                "tax_table_selector" => $weetaxClass,
+                                "weight" => array(
+                                    "unit" => "KG",
+                                    "value" => "0",
+                                )
+                            );
+                        }
+                    }
+                }
+
 
 
                 $shoppingCart['shopping_cart']['items'][] = array(
@@ -894,7 +894,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
             }
         }
-        
+
 
         $checkoutData["shopping_cart"] = $shoppingCart['shopping_cart'];
         $checkoutData["checkout_options"] = $alternateTaxRates;
@@ -1434,7 +1434,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $order->setCanSendNewEmailFlag(false);
         }
         $status = $this->getMainConfigData('order_status');
-	    $stateObject->setState($this->_mspHelper->getAssignedState($status));
+        $stateObject->setState($this->_mspHelper->getAssignedState($status));
         $stateObject->setStatus($status);
         $stateObject->setIsNotified(false);
     }
