@@ -36,4 +36,5 @@ class Klarnainvoice extends \MultiSafepay\Connect\Model\Connect
 
     protected $_code = 'klarnainvoice';
     public $_gatewayCode = 'KLARNA';
+
 }

@@ -6,10 +6,10 @@
 */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-  <event name="shortcut_buttons_container">
-    <observer name="multisafepay_fastcheckout_shortcuts" instance="MultiSafepay\Connect\Model\Observers\AddFastcheckoutShortcuts"/>
-  </event>
-  <event name="controller_action_predispatch_checkout_cart_index">
-    <observer name="msp_action_predispatch_checkout_cart_index" instance="MultiSafepay\Connect\Model\Observers\RestoreQuote" />
-  </event>
+    <event name="shortcut_buttons_container">
+        <observer name="multisafepay_fastcheckout_shortcuts" instance="MultiSafepay\Connect\Model\Observers\AddFastcheckoutShortcuts"/>
+    </event>
+    <event name="controller_action_predispatch_checkout_cart_index">
+        <observer name="msp_action_predispatch_checkout_cart_index" instance="MultiSafepay\Connect\Model\Observers\RestoreQuote" />
+    </event>
 </config>
