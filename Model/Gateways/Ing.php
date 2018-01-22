@@ -35,6 +35,6 @@ class Ing extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'ing';
-    public $_gatewayCode = 'ING';
+    public $_gatewayCode = 'INGHOME';
 
 }
