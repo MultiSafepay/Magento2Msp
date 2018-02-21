@@ -64,7 +64,7 @@ class RestoreQuote implements ObserverInterface
         $status = $paymentModel->getMainConfigData('order_status', $lastRealOrder->getStoreId());
         $state = $helper->getAssignedState($status);
 
-        if ($lastRealOrder != null && $lastRealOrder->getState() == $state) {
+        if ($lastRealOrder != null && $lastRealOrder->getState() == $state && $lastRealOrder->getPayment() != null) {
             $payment = $lastRealOrder->getPayment()->getMethodInstance();
 
             $keepCartAlive = $paymentModel->getMainConfigData('keep_cart_alive', $lastRealOrder->getStoreId());

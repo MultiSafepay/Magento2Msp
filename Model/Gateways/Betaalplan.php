@@ -31,10 +31,10 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class Ing extends \MultiSafepay\Connect\Model\Connect
+class Betaalplan extends \MultiSafepay\Connect\Model\Connect
 {
 
-    protected $_code = 'ing';
-    public $_gatewayCode = 'INGHOME';
+    protected $_code = 'betaalplan';
+    public $_gatewayCode = 'SANTANDER';
 
 }

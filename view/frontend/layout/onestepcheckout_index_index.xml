@@ -70,6 +70,15 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
+                                                                <item name="betaalplan" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/betaalplan</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                                                        
+                                                                        <item name="betaalplan" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
                                                                 <item name="eps" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/eps</item>
                                                                     <item name="methods" xsi:type="array">

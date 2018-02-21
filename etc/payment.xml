@@ -28,6 +28,9 @@
         <method name="visa">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="betaalplan">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name="eps">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
