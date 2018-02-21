@@ -83,6 +83,7 @@ class Data
         'klarnainvoice',
         'bancontact',
         'visa',
+        'betaalplan',
         'eps',
         'ferbuy',
         'mastercard',
@@ -115,7 +116,7 @@ class Data
         'FERBUY' => 'ferbuy',
         'GIROPAY' => 'giropay',
         'IDEAL' => 'ideal',
-        'ING' => 'ing',
+        'INGHOME' => 'ing',
         'KBC' => 'kbc',
         'KLARNA' => 'klarnainvoice',
         'MAESTRO' => 'maestro',
@@ -126,6 +127,7 @@ class Data
         'PSAFECARD' => 'paysafecard',
         'TRUSTPAY' => 'trustpay',
         'VISA' => 'visa',
+        'SANTANDER' => 'betaalplan',
     );
 
     /**
