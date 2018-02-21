@@ -82,7 +82,7 @@
                 <group>multisafepay_connect</group>
             </visa>
             
-             <!-- Start Betaalplan -->
+            <!-- Start Betaalplan -->
             <betaalplan>
                 <active>0</active>
                 <title>Betaalplan</title>
@@ -652,7 +652,7 @@
                 <group>multisafepay_connect</group>
             </visa>
             
-             <!-- Start Betaalplan -->
+            <!-- Start Betaalplan -->
             <betaalplan>
                 <active>0</active>
                 <title>Betaalplan</title>
