@@ -373,7 +373,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "house_number" => $shipping_housenumber,
                 "zip_code" => $shipping->getPostcode(),
                 "city" => $shipping->getCity(),
-                "state" => $shipping->getRegion(),
+                "state" => $shipping->getRegionCode(),
                 "country" => $shipping->getCountryId(),
                 "phone" => $shipping_phone,
                 "email" => $order->getCustomerEmail()
@@ -447,7 +447,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "house_number" => $housenumber,
                     "zip_code" => $billing->getPostcode(),
                     "city" => $billing->getCity(),
-                    "state" => $billing->getRegion(),
+                    "state" => $billing->getRegionCode(),
                     "country" => $billing->getCountryId(),
                     "phone" => $phone,
                     "email" => $order->getCustomerEmail(),
