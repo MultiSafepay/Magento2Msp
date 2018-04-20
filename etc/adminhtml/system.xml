@@ -218,7 +218,7 @@
           <label>Title</label>
         </field>
         <field id="allowed_creditcards" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Allowed Greditcards</label>
+          <label>Allowed Creditcards</label>
           <source_model>MultiSafepay\Connect\Model\Config\Source\Creditcards</source_model>
           <can_be_empty>0</can_be_empty>
         </field>
