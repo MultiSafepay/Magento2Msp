@@ -1184,7 +1184,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $gateway = $payment->getMethodInstance()->_gatewayCode;
 
 
-                if ($emailInvoice && $gateway != 'PAYAFTER' && $gateway != 'KLARNA') {
+                if ($emailInvoice && $gateway != 'PAYAFTER' && $gateway != 'KLARNA' && $gateway != 'AFTERPAY') {
                     $this->_invoiceSender->send($invoice, true);
                 }/* elseif (($gateway == 'PAYAFTER' || $gateway == 'KLARNA') && $send_bno_invoice && $emailInvoice) {
                   $this->_invoiceSender->send($invoice, true);
@@ -1267,7 +1267,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $environment = $this->getMainConfigData('msp_env');
         $this->initializeClient($environment, $order);
 
-        if ($gateway == 'PAYAFTER' || $gateway == 'KLARNA' || $gateway == 'EINVOICE') {
+        if ($gateway == 'PAYAFTER' || $gateway == 'KLARNA' || $gateway == 'EINVOICE' || $gateway == 'AFTERPAY') {
             //Get the creditmemo data as this is not yet stored at this moment.
             $data = $this->_requestHttp->getPost('creditmemo');
             //Do a status request for this order to receive already refunded item data from MSP transaction
