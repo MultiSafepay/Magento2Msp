@@ -76,7 +76,15 @@ class Button extends Template implements ShortcutInterface
 
     public function getCheckoutImageUrl()
     {
-        return $this->_assetRepo->getUrl("MultiSafepay_Connect::images/" . strtolower($this->localeResolver->getLocale()) . "/fastcheckout.png");
+        $asset = $this->_assetRepo->createAsset("MultiSafepay_Connect::images/" . strtolower($this->localeResolver->getLocale()) . '/' . "fastcheckout.png");
+        try {
+            if ($asset->getSourceFile()) {
+                $image = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/" . strtolower($this->localeResolver->getLocale()) . '/' . "fastcheckout.png");
+            }
+        } catch (\Exception $e) {
+            $image = $this->_assetRepo->getUrl("MultiSafepay_Connect::images/nl_nl/fastcheckout.png");
+        }
+        return $image;
     }
 
     /**
