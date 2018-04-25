@@ -347,6 +347,19 @@
                 <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
                 <group>multisafepay_connect</group>
             </ing>
+
+            <!-- Start iDEAL QR -->
+            <idealqr>
+                <active>0</active>
+                <title>iDEAL QR</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Idealqr</model>
+                <group>multisafepay_connect</group>
+            </idealqr>
         </gateways>
         
         <giftcards>
@@ -918,6 +931,19 @@
                 <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
                 <group>multisafepay_connect</group>
             </ing>
+
+            <!-- Start iDEAL QR -->
+            <idealqr>
+                <active>0</active>
+                <title>iDEAL QR</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Idealqr</model>
+                <group>multisafepay_connect</group>
+            </idealqr>
             
             <!-- Start Wijncadeau-->
             <wijncadeau>

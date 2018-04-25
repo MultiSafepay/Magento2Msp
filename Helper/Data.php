@@ -100,7 +100,8 @@ class Data
         'kbc',
         'alipay',
         'belfius',
-        'ing'
+        'ing',
+        'idealqr',
     );
     //MultiSafepay_gateways->Magento_codes
     public $methodMap = array(
@@ -128,6 +129,7 @@ class Data
         'TRUSTPAY' => 'trustpay',
         'VISA' => 'visa',
         'SANTANDER' => 'betaalplan',
+        'IDEALQR' => 'idealqr',
     );
 
     /**
