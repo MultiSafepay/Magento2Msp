@@ -81,7 +81,7 @@
                 <model>MultiSafepay\Connect\Model\Gateways\Visa</model>
                 <group>multisafepay_connect</group>
             </visa>
-            
+
             <!-- Start Betaalplan -->
             <betaalplan>
                 <active>0</active>
@@ -347,6 +347,19 @@
                 <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
                 <group>multisafepay_connect</group>
             </ing>
+
+            <!-- Start Trustly -->
+            <trustly>
+                <active>0</active>
+                <title>Trustly</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Trustly</model>
+                <group>multisafepay_connect</group>
+            </trustly>
         </gateways>
         
         <giftcards>
@@ -918,7 +931,20 @@
                 <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
                 <group>multisafepay_connect</group>
             </ing>
-            
+
+            <!-- Start Trustly -->
+            <trustly>
+                <active>0</active>
+                <title>Trustly</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Trustly</model>
+                <group>multisafepay_connect</group>
+            </trustly>
+
             <!-- Start Wijncadeau-->
             <wijncadeau>
                 <active>0</active>
