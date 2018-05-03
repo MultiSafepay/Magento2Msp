@@ -161,6 +161,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -179,6 +182,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -228,6 +234,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -246,6 +255,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -290,6 +302,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -308,6 +323,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -350,6 +368,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -368,6 +389,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -410,6 +434,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -428,6 +455,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -470,6 +500,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -488,6 +521,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -530,6 +566,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -548,6 +587,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -590,6 +632,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -608,6 +653,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -650,6 +698,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -668,6 +719,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -710,6 +764,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -728,6 +785,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -770,6 +830,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -788,6 +851,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -831,6 +897,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -849,6 +918,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -897,6 +969,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -915,6 +990,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -963,6 +1041,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -981,6 +1062,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1030,6 +1114,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1048,6 +1135,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1090,6 +1180,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1108,6 +1201,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1150,6 +1246,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1168,6 +1267,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1210,6 +1312,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1228,6 +1333,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1270,6 +1378,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1288,6 +1399,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1330,6 +1444,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1348,6 +1465,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1391,6 +1511,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1409,6 +1532,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1451,6 +1577,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1469,6 +1598,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1513,6 +1645,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1531,6 +1666,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1577,6 +1715,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1595,6 +1736,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1638,6 +1782,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1656,6 +1803,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1700,6 +1850,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1718,6 +1871,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1771,6 +1927,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1789,6 +1948,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1837,6 +1999,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1855,6 +2020,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -1903,6 +2071,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1921,6 +2092,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -1969,6 +2143,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1987,6 +2164,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2035,6 +2215,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2053,6 +2236,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2102,6 +2288,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2120,6 +2309,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2168,6 +2360,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2186,6 +2381,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2234,6 +2432,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2252,6 +2453,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2300,6 +2504,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2318,6 +2525,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2366,6 +2576,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2384,6 +2597,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2432,6 +2648,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2450,6 +2669,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -2498,6 +2720,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2516,6 +2741,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2564,6 +2792,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2582,6 +2813,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2630,6 +2864,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2648,6 +2885,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2696,6 +2936,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2714,6 +2957,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2762,6 +3008,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2780,6 +3029,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -2825,6 +3077,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2843,6 +3098,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2891,6 +3149,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2909,6 +3170,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -2958,6 +3222,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2976,6 +3243,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -3024,6 +3294,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -3042,6 +3315,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
@@ -3090,6 +3366,9 @@
         </field>
         <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -3108,6 +3387,9 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>        
