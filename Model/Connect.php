@@ -484,6 +484,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function validateIP($ip)
     {
+        $ipList = explode(',', $ip);
+        $ip = trim(reset($ipList));
+
         $isValid = filter_var($ip, FILTER_VALIDATE_IP);
         if ($isValid) {
             return $isValid;
