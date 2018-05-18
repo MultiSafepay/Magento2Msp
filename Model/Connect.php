@@ -373,7 +373,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "house_number" => $shipping_housenumber,
                 "zip_code" => $shipping->getPostcode(),
                 "city" => $shipping->getCity(),
-                "state" => $shipping->getRegion(),
+                "state" => $shipping->getRegionCode(),
                 "country" => $shipping->getCountryId(),
                 "phone" => $shipping_phone,
                 "email" => $order->getCustomerEmail()
@@ -447,7 +447,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "house_number" => $housenumber,
                     "zip_code" => $billing->getPostcode(),
                     "city" => $billing->getCity(),
-                    "state" => $billing->getRegion(),
+                    "state" => $billing->getRegionCode(),
                     "country" => $billing->getCountryId(),
                     "phone" => $phone,
                     "email" => $order->getCustomerEmail(),
@@ -456,7 +456,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => array(
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.4.9',
+                    "plugin_version" => ' - Plugin 1.5.0',
                     "partner" => "MultiSafepay",
                 ),
                 "gateway_info" => array(
@@ -484,6 +484,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function validateIP($ip)
     {
+        $ipList = explode(',', $ip);
+        $ip = trim(reset($ipList));
+
         $isValid = filter_var($ip, FILTER_VALIDATE_IP);
         if ($isValid) {
             return $isValid;

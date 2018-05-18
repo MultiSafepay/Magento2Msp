@@ -91,6 +91,12 @@
         <method name="paypalmsp">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="trustly">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="idealqr">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name="wijncadeau">
             <allow_multiple_address>1</allow_multiple_address>
         </method>

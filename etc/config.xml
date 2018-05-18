@@ -49,7 +49,6 @@
             <dotpay>
                 <active>0</active>
                 <title>DotPay</title>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -61,7 +60,6 @@
             <paysafecard>
                 <active>0</active>
                 <title>Paysafecard</title>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -74,20 +72,18 @@
                 <active>0</active>
                 <title>Visa</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
                 <model>MultiSafepay\Connect\Model\Gateways\Visa</model>
                 <group>multisafepay_connect</group>
             </visa>
-            
+
             <!-- Start Betaalplan -->
             <betaalplan>
                 <active>0</active>
                 <title>Betaalplan</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -102,7 +98,6 @@
                 <active>0</active>
                 <title>Eps</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -115,7 +110,6 @@
                 <active>0</active>
                 <title>Ferbuy</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -128,7 +122,6 @@
                 <active>0</active>
                 <title>Mastercard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -141,7 +134,6 @@
                 <active>0</active>
                 <title>Giropay</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -154,7 +146,6 @@
                 <active>0</active>
                 <title>Bankoverschrijving</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -167,7 +158,6 @@
                 <active>0</active>
                 <title>Sofort</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -180,7 +170,6 @@
                 <active>0</active>
                 <title>Maestro</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -193,7 +182,6 @@
                 <active>0</active>
                 <title>Bancontact</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -206,7 +194,6 @@
                 <active>0</active>
                 <title>American Express</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -219,7 +206,6 @@
                 <active>0</active>
                 <title>Direct Debit</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -235,7 +221,6 @@
                 <active>0</active>
                 <title>Betaal na ontvangst</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -248,7 +233,6 @@
                 <active>0</active>
                 <title>E-invoicing</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -261,7 +245,6 @@
                 <active>0</active>
                 <title>Klarna Factuur</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -287,7 +270,6 @@
                 <active>0</active>
                 <title>PayPal</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -300,7 +282,6 @@
                 <active>0</active>
                 <title>TrustPay</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -313,7 +294,6 @@
                 <active>0</active>
                 <title>KBC</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -326,7 +306,6 @@
                 <active>0</active>
                 <title>AliPay</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -339,7 +318,6 @@
                 <active>0</active>
                 <title>Belfius</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -353,13 +331,37 @@
                 <active>0</active>
                 <title>ING Homepay</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
                 <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
                 <group>multisafepay_connect</group>
             </ing>
+
+            <!-- Start iDEAL QR -->
+            <idealqr>
+                <active>0</active>
+                <title>iDEAL QR</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Idealqr</model>
+                <group>multisafepay_connect</group>
+            </idealqr>
+
+            <!-- Start Trustly -->
+            <trustly>
+                <active>0</active>
+                <title>Trustly</title>
+                <instructions></instructions>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Trustly</model>
+                <group>multisafepay_connect</group>
+            </trustly>
         </gateways>
         
         <giftcards>
@@ -368,7 +370,6 @@
                 <active>0</active>
                 <title>Wijncadeau</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -381,7 +382,6 @@
                 <active>0</active>
                 <title>Fashiongiftcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -394,7 +394,6 @@
                 <active>0</active>
                 <title>Podium</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -408,7 +407,6 @@
                 <active>0</active>
                 <title>Givacard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -421,7 +419,6 @@
                 <active>0</active>
                 <title>VVV Bon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -434,7 +431,6 @@
                 <active>0</active>
                 <title>Sport en Fit</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -447,7 +443,6 @@
                 <active>0</active>
                 <title>Goodcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -460,7 +455,6 @@
                 <active>0</active>
                 <title>Nationale Tuinbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -473,7 +467,6 @@
                 <active>0</active>
                 <title>Nationale Verwen cadeaubon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -486,7 +479,6 @@
                 <active>0</active>
                 <title>Gezondheidsbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -499,7 +491,6 @@
                 <active>0</active>
                 <title>Babygiftcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -512,7 +503,6 @@
                 <active>0</active>
                 <title>Boekenbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -525,7 +515,6 @@
                 <active>0</active>
                 <title>Erotiekbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -538,7 +527,6 @@
                 <active>0</active>
                 <title>Fashioncheque</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -551,7 +539,6 @@
                 <active>0</active>
                 <title>Parfumcadeaukaart</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -564,7 +551,6 @@
                 <active>0</active>
                 <title>Webshopgiftcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -577,7 +563,6 @@
                 <active>0</active>
                 <title>Beautyandwellness</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -590,7 +575,6 @@
                 <active>0</active>
                 <title>Fietsenbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -603,7 +587,6 @@
                 <active>0</active>
                 <title>Wellness Giftcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -616,7 +599,6 @@
                 <active>0</active>
                 <title>Winkel Cheque</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -632,7 +614,6 @@
                 <active>0</active>
                 <title>iDEAL</title>
                 <instructions>Veilig betalen met iDEAL</instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -657,7 +638,6 @@
                 <active>0</active>
                 <title>Visa</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -670,7 +650,6 @@
                 <active>0</active>
                 <title>Betaalplan</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -685,7 +664,6 @@
                 <active>0</active>
                 <title>Eps</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -698,7 +676,6 @@
                 <active>0</active>
                 <title>Ferbuy</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -711,7 +688,6 @@
                 <active>0</active>
                 <title>Mastercard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -724,7 +700,6 @@
                 <active>0</active>
                 <title>Giropay</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -737,7 +712,6 @@
                 <active>0</active>
                 <title>Bankoverschrijving</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -750,7 +724,6 @@
                 <active>0</active>
                 <title>Sofort</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -763,7 +736,6 @@
                 <active>0</active>
                 <title>Maestro</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -777,7 +749,6 @@
                 <active>0</active>
                 <title>Bancontact</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -790,7 +761,6 @@
                 <active>0</active>
                 <title>American Express</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -803,7 +773,6 @@
                 <active>0</active>
                 <title>Direct Debit</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -818,7 +787,6 @@
                 <active>0</active>
                 <title>Betaal na ontvangst</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -831,7 +799,6 @@
                 <active>0</active>
                 <title>E-invoicing</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -844,7 +811,6 @@
                 <active>0</active>
                 <title>Klarna Factuur</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -870,7 +836,6 @@
                 <active>0</active>
                 <title>PayPal</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -884,7 +849,6 @@
                 <active>0</active>
                 <title>TrustPay</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -897,7 +861,6 @@
                 <active>0</active>
                 <title>KBC</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -910,7 +873,6 @@
                 <active>0</active>
                 <title>AliPay</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -923,7 +885,6 @@
                 <active>0</active>
                 <title>Belfius</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -937,20 +898,43 @@
                 <active>0</active>
                 <title>ING Homepay</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
                 <model>MultiSafepay\Connect\Model\Gateways\Ing</model>
                 <group>multisafepay_connect</group>
             </ing>
-            
+
+            <!-- Start iDEAL QR -->
+            <idealqr>
+                <active>0</active>
+                <title>iDEAL QR</title>
+                <instructions></instructions>
+                <payment_action>true</payment_action>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Idealqr</model>
+                <group>multisafepay_connect</group>
+            </idealqr>
+                
+            <!-- Start Trustly -->
+            <trustly>
+                <active>0</active>
+                <title>Trustly</title>
+                <instructions></instructions>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\Trustly</model>
+                <group>multisafepay_connect</group>
+            </trustly>
+
             <!-- Start Wijncadeau-->
             <wijncadeau>
                 <active>0</active>
                 <title>Wijncadeau</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -963,7 +947,6 @@
                 <active>0</active>
                 <title>Fashiongiftcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -976,7 +959,6 @@
                 <active>0</active>
                 <title>Podium</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -990,7 +972,6 @@
                 <active>0</active>
                 <title>Givacard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1003,7 +984,6 @@
                 <active>0</active>
                 <title>VVV Bon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1016,7 +996,6 @@
                 <active>0</active>
                 <title>Sport en Fit</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1029,7 +1008,6 @@
                 <active>0</active>
                 <title>Yourgift</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1042,7 +1020,6 @@
                 <active>0</active>
                 <title>Goodcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1055,7 +1032,6 @@
                 <active>0</active>
                 <title>Nationale Tuinbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1068,7 +1044,6 @@
                 <active>0</active>
                 <title>Nationale Verwen cadeaubon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1081,7 +1056,6 @@
                 <active>0</active>
                 <title>Gezondheidsbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1094,7 +1068,6 @@
                 <active>0</active>
                 <title>Babygiftcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1107,7 +1080,6 @@
                 <active>0</active>
                 <title>Boekenbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1120,7 +1092,6 @@
                 <active>0</active>
                 <title>Erotiekbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1133,7 +1104,6 @@
                 <active>0</active>
                 <title>Fashioncheque</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1146,7 +1116,6 @@
                 <active>0</active>
                 <title>Parfumcadeaukaart</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1159,7 +1128,6 @@
                 <active>0</active>
                 <title>Webshopgiftcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1172,7 +1140,6 @@
                 <active>0</active>
                 <title>Beautyandwellness</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1186,7 +1153,6 @@
                 <active>0</active>
                 <title>Fietsenbon</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1199,7 +1165,6 @@
                 <active>0</active>
                 <title>Wellness Giftcard</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1212,7 +1177,6 @@
                 <active>0</active>
                 <title>Winkel Cheque</title>
                 <instructions></instructions>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1224,7 +1188,6 @@
             <dotpay>
                 <active>0</active>
                 <title>DotPay</title>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -1235,7 +1198,6 @@
             <paysafecard>
                 <active>0</active>
                 <title>Paysafecard</title>
-                <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>

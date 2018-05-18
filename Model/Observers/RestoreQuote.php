@@ -57,20 +57,24 @@ class RestoreQuote implements ObserverInterface
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $helper = $this->_objectManager->create('MultiSafepay\Connect\Helper\Data');
         $paymentModel = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
         $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
         $lastRealOrder = $session->getLastRealOrder();
-        $status = $paymentModel->getMainConfigData('order_status', $lastRealOrder->getStoreId());
-        $state = $helper->getAssignedState($status);
 
-        if ($lastRealOrder != null && $lastRealOrder->getState() == $state && $lastRealOrder->getPayment() != null) {
-            $payment = $lastRealOrder->getPayment()->getMethodInstance();
-
+        if($lastRealOrder && $lastRealOrder->getPayment()) {
             $keepCartAlive = $paymentModel->getMainConfigData('keep_cart_alive', $lastRealOrder->getStoreId());
+            if (!$keepCartAlive) {
+                return $this;
+            }
+            $status = $paymentModel->getMainConfigData('order_status', $lastRealOrder->getStoreId());
+            $helper = $this->_objectManager->create('MultiSafepay\Connect\Helper\Data');
+            $state = $helper->getAssignedState($status);
 
-            if (is_object($payment) && in_array($payment->getCode(), $helper->gateways) && $payment->getCode() != "mspbanktransfer" && $keepCartAlive) {
-                $session->restoreQuote();
+            if ($lastRealOrder->getState() == $state) {
+                $payment = $lastRealOrder->getPayment()->getMethodInstance();
+                if (is_object($payment) && in_array($payment->getCode(), $helper->gateways) && $payment->getCode() != "mspbanktransfer") {
+                    $session->restoreQuote();
+                }
             }
         }
         return $this;
