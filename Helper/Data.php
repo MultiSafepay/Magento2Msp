@@ -81,6 +81,7 @@ class Data
         'betaalnaontvangst',
         'einvoice',
         'klarnainvoice',
+        'afterpaymsp',
         'bancontact',
         'visa',
         'betaalplan',
@@ -130,6 +131,7 @@ class Data
         'TRUSTPAY' => 'trustpay',
         'VISA' => 'visa',
         'SANTANDER' => 'betaalplan',
+        'AFTERPAY' => 'afterpaymsp',
         'IDEALQR' => 'idealqr',
         'TRUSTLY' => 'trustly',
     );
