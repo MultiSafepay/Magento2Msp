@@ -85,7 +85,7 @@
             <!-- Start Betaalplan -->
             <betaalplan>
                 <active>0</active>
-                <title>Betaalplan</title>
+                <title>Santander Betaalplan</title>
                 <instructions></instructions>
                 <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
@@ -655,7 +655,7 @@
             <!-- Start Betaalplan -->
             <betaalplan>
                 <active>0</active>
-                <title>Betaalplan</title>
+                <title>Santander Betaalplan</title>
                 <instructions></instructions>
                 <payment_action>true</payment_action>
                 <allowed_currency>EUR</allowed_currency>
