@@ -1118,7 +1118,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function _registerPaymentPending($transactionid, $order, $msporder)
     {
-        $order->addStatusToHistory($order->getStatus(), "<b>Uncleared Transaction you can accept the transaction manually within MultiSafepay Control</b><br />", false)->save();
+        if($order->getPayment()->getMethodInstance()->_gatewayCode != 'SANTANDER') {
+            $order->addStatusToHistory($order->getStatus(), "<b>Uncleared Transaction you can accept the transaction manually within MultiSafepay Control</b><br />", false)->save();
+        }
     }
 
     /**
