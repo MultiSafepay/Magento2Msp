@@ -373,7 +373,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "house_number" => $shipping_housenumber,
                 "zip_code" => $shipping->getPostcode(),
                 "city" => $shipping->getCity(),
-                "state" => $shipping->getRegion(),
+                "state" => $shipping->getRegionCode(),
                 "country" => $shipping->getCountryId(),
                 "phone" => $shipping_phone,
                 "email" => $order->getCustomerEmail()
@@ -447,7 +447,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "house_number" => $housenumber,
                     "zip_code" => $billing->getPostcode(),
                     "city" => $billing->getCity(),
-                    "state" => $billing->getRegion(),
+                    "state" => $billing->getRegionCode(),
                     "country" => $billing->getCountryId(),
                     "phone" => $phone,
                     "email" => $order->getCustomerEmail(),
@@ -456,7 +456,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => array(
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.4.9',
+                    "plugin_version" => ' - Plugin 1.5.0',
                     "partner" => "MultiSafepay",
                 ),
                 "gateway_info" => array(
@@ -484,6 +484,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function validateIP($ip)
     {
+        $ipList = explode(',', $ip);
+        $ip = trim(reset($ipList));
+
         $isValid = filter_var($ip, FILTER_VALIDATE_IP);
         if ($isValid) {
             return $isValid;
@@ -1115,7 +1118,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function _registerPaymentPending($transactionid, $order, $msporder)
     {
-        $order->addStatusToHistory($order->getStatus(), "<b>Uncleared Transaction you can accept the transaction manually within MultiSafepay Control</b><br />", false)->save();
+        if($order->getPayment()->getMethodInstance()->_gatewayCode != 'SANTANDER') {
+            $order->addStatusToHistory($order->getStatus(), "<b>Uncleared Transaction you can accept the transaction manually within MultiSafepay Control</b><br />", false)->save();
+        }
     }
 
     /**
@@ -1184,7 +1189,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $gateway = $payment->getMethodInstance()->_gatewayCode;
 
 
-                if ($emailInvoice && $gateway != 'PAYAFTER' && $gateway != 'KLARNA') {
+                if ($emailInvoice && $gateway != 'PAYAFTER' && $gateway != 'KLARNA' && $gateway != 'AFTERPAY') {
                     $this->_invoiceSender->send($invoice, true);
                 }/* elseif (($gateway == 'PAYAFTER' || $gateway == 'KLARNA') && $send_bno_invoice && $emailInvoice) {
                   $this->_invoiceSender->send($invoice, true);
@@ -1267,7 +1272,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $environment = $this->getMainConfigData('msp_env');
         $this->initializeClient($environment, $order);
 
-        if ($gateway == 'PAYAFTER' || $gateway == 'KLARNA' || $gateway == 'EINVOICE') {
+        if ($gateway == 'PAYAFTER' || $gateway == 'KLARNA' || $gateway == 'EINVOICE' || $gateway == 'AFTERPAY') {
             //Get the creditmemo data as this is not yet stored at this moment.
             $data = $this->_requestHttp->getPost('creditmemo');
             //Do a status request for this order to receive already refunded item data from MSP transaction

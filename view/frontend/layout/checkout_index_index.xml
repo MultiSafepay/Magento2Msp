@@ -198,7 +198,17 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
-                                                                
+
+                                                                <item name="afterpaymsp" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/afterpay</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        
+                                                                        <item name="afterpaymsp" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+
                                                                 <item name="paypalmsp" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/paypal</item>
                                                                     <item name="methods" xsi:type="array">
@@ -258,7 +268,27 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
-                                                                
+
+                                                                <item name="idealqr" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/idealqr</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        
+                                                                        <item name="idealqr" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+
+                                                                <item name="trustly" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/trustly</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        
+                                                                        <item name="trustly" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+
                                                                 <item name="wijncadeau" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/giftcards/wijncadeau</item>
                                                                     <item name="methods" xsi:type="array">

@@ -81,6 +81,7 @@ class Data
         'betaalnaontvangst',
         'einvoice',
         'klarnainvoice',
+        'afterpaymsp',
         'bancontact',
         'visa',
         'betaalplan',
@@ -100,7 +101,9 @@ class Data
         'kbc',
         'alipay',
         'belfius',
-        'ing'
+        'ing',
+        'idealqr',
+        'trustly',
     );
     //MultiSafepay_gateways->Magento_codes
     public $methodMap = array(
@@ -128,6 +131,9 @@ class Data
         'TRUSTPAY' => 'trustpay',
         'VISA' => 'visa',
         'SANTANDER' => 'betaalplan',
+        'AFTERPAY' => 'afterpaymsp',
+        'IDEALQR' => 'idealqr',
+        'TRUSTLY' => 'trustly',
     );
 
     /**
