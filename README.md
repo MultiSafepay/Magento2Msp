@@ -10,11 +10,11 @@ Paymentmethods:
 2. Klarna Invoice
 3. Dotpay
 4. EPS
-5. ING Homepay *
-6. Belfius *
-7. AliPay *
-8. KBC *
-9. TrustPay *
+5. ING Homepay
+6. Belfius
+7. AliPay
+8. KBC
+9. TrustPay
 10. PayPal
 11. Pay After Delivery
 12. Direct Debit
@@ -26,8 +26,12 @@ Paymentmethods:
 18. Giropay
 19. Mastercard
 20. Visa
-
-* These Payment methods can be used when officially released by MultiSafepay.
+21. E-Invoicing
+22. Ferbuy
+23. Paysafecard
+24. Trustly
+25. AfterPay
+26. Santander Betaalplan
 
 The following giftcards are supported:
 1. Wijncadeau
@@ -55,15 +59,15 @@ The following giftcards are supported:
 Next to the above it has support for
 1. Multistore setup
 2. Magestore one-step-checkout
-3. Magelaza one-step-checkout
+3. Mageplaza one-step-checkout
 4. Refunds from within Magento 
 5. Auto update transaction to shipped for Pay After Delivery, Klarna and E-invoice
 6. Cart is active on cancelled transaction
 7. iDEAL issuer selection within Magento
 8. Creditcard gateway, this one is optional and can be used to offer a grouped CreditCard payment method with a card dropdown.
  
-Your notifcation url can be set to the following: (within your MultiSafepay website profile)
-Set [yoursiteurl]/multisafepay/connect/notification as Notification URL in the MSP merchant center
+Your notification url can be set to the following: (within your MultiSafepay website profile)
+Set [yoursiteurl]/multisafepay/connect/notification as Notification URL in the MSP merchant center.
 If the url is not configured then the notification_url added to the transaction request will be used to process the callback.
 
 
