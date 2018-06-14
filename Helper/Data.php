@@ -78,6 +78,7 @@ class Data
         'maestro' => array('code' => 'MAESTRO', 'name' => 'Maestro', 'type' => 'gateways'),
         'mastercard' => array('code' => 'MASTERCARD', 'name' => 'Mastercard', 'type' => 'gateways'),
         'mistercash' => array('code' => 'MISTERCASH', 'name' => 'Bancontact', 'type' => 'gateways'),
+        'multisafepay' => array('code' => '', 'name' => 'MultiSafepay', 'type' => 'gateways'),
         'payafterdelivery'  => array('code' => 'PAYAFTER', 'name' => 'Pay After Delivery', 'type' => 'gateways'),
         'paypal' => array('code' => 'PAYPAL', 'name' => 'PayPal', 'type' => 'gateways'),
         'paysafecard' => array('code' => 'PSAFECARD', 'name' => 'PaySafeCard', 'type' => 'gateways'),

@@ -289,6 +289,16 @@
                                                                     </item>
                                                                 </item>
 
+                                                                <item name="multisafepay" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/multisafepay</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        
+                                                                        <item name="multisafepay" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>                                                                
+
                                                                 <item name="wijncadeau" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/giftcards/wijncadeau</item>
                                                                     <item name="methods" xsi:type="array">
