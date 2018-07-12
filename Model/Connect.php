@@ -602,7 +602,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             foreach ($order->getAllItems() as $order_item) {
                 $order_product_id = $order_item->getProductId();
                 if ($order_product_id == $product_id) {
-                    $quantity = $item->getQtyOrdered();
+                    $quantity = (string)floatval($item->getQtyOrdered());
                 }
             }
 
