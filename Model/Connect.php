@@ -383,7 +383,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS") {
+        if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS" || $this->_gatewayCode == "EINVOICE") {
             $type = 'direct';
         } else {
             $type = 'redirect';
