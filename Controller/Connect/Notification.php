@@ -78,21 +78,52 @@ class Notification extends \Magento\Framework\App\Action\Action
         $order = $this->_objectManager->get('Magento\Sales\Model\Order');
         $order_information = $order->loadByIncrementId($params['transactionid']);
 
-        $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
-        $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
-        $storeManager = $this->_objectManager->create('\Magento\Store\Model\StoreManagerInterface');
-        $paymentMethod->_stockInterface = $this->_objectManager->create('\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface');
+        if(!is_null($order_information->getId())) {
 
-        $updated = $paymentMethod->notification($order);
-        $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
-        if ($updated) {
-            if (isset($params['type']) && $params['type'] == 'initial') {
-                $this->getResponse()->setContent('<a href="' . $storeManager->getStore()->getBaseUrl() . 'multisafepay/connect/success?transactionid=' . $params['transactionid'] . '"> Return back to the webshop</a>');
-            } else {
-                $this->getResponse()->setContent('ok');
+            $gateway = $order_information->getPayment()->getMethod();
+            if($this->_mspHelper->isMspGateway($gateway) || $this->_mspHelper->isMspGiftcard($gateway)) {
+
+                $paymentMethod = $this->_objectManager->create(
+                    'MultiSafepay\Connect\Model\Connect'
+                );
+                $paymentMethod->_invoiceSender = $this->_objectManager->create(
+                    'Magento\Sales\Model\Order\Email\Sender\InvoiceSender'
+                );
+                $storeManager = $this->_objectManager->create(
+                    '\Magento\Store\Model\StoreManagerInterface'
+                );
+                $paymentMethod->_stockInterface = $this->_objectManager->create(
+                    '\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface'
+                );
+
+                $updated = $paymentMethod->notification($order);
+                $this->_mspHelper->unlockProcess(
+                    'multisafepay-' . $params['transactionid']
+                );
+                if ($updated) {
+                    if (isset($params['type'])
+                        && $params['type'] == 'initial'
+                    ) {
+                        $this->getResponse()->setContent(
+                            '<a href="' . $storeManager->getStore()->getBaseUrl(
+                            )
+                            . 'multisafepay/connect/success?transactionid='
+                            . $params['transactionid']
+                            . '"> Return back to the webshop</a>'
+                        );
+                    } else {
+                        $this->getResponse()->setContent('ok');
+                    }
+                } else {
+                    $this->getResponse()->setContent(
+                        'There was an error updating the order'
+                    );
+                }
+            }else{
+                $this->getResponse()->setContent('Non Msp order');
             }
-        } else {
-            $this->getResponse()->setContent('There was an error updating the order');
+        }else{
+            $this->getResponse()->setContent('Order not found');
         }
     }
 

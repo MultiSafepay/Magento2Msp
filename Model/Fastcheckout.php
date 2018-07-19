@@ -458,22 +458,25 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
 
-        $cart = $msporder->shopping_cart->items;
+        if(!empty(json_decode(json_encode($msporder),true))) {
+            $cart = $msporder->shopping_cart->items;
 
-        $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->customerFactory = $this->_objectManager->get('Magento\Customer\Model\CustomerFactory');
-        $this->cartManagementInterface = $this->_objectManager->get('Magento\Quote\Api\CartManagementInterface');
-        $this->cartRepositoryInterface = $this->_objectManager->get('Magento\Quote\Api\CartRepositoryInterface');
-        $this->customerRepository = $this->_objectManager->get('Magento\Customer\Api\CustomerRepositoryInterface');
-        $this->_productFactory = $this->_objectManager->get('Magento\Catalog\Model\ProductFactory');
-        $this->shippingRate = $this->_objectManager->get('Magento\Quote\Model\Quote\Address\Rate');
-        $this->quote = $this->_objectManager->get('Magento\Quote\Model\QuoteFactory');
-        $this->quoteManagement = $this->_objectManager->get('Magento\Quote\Model\QuoteManagement');
-        $this->orderService = $this->_objectManager->get('Magento\Sales\Model\Service\OrderService');
+            $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $this->customerFactory = $this->_objectManager->get('Magento\Customer\Model\CustomerFactory');
+            $this->cartManagementInterface = $this->_objectManager->get('Magento\Quote\Api\CartManagementInterface');
+            $this->cartRepositoryInterface = $this->_objectManager->get('Magento\Quote\Api\CartRepositoryInterface');
+            $this->customerRepository = $this->_objectManager->get('Magento\Customer\Api\CustomerRepositoryInterface');
+            $this->_productFactory = $this->_objectManager->get('Magento\Catalog\Model\ProductFactory');
+            $this->shippingRate = $this->_objectManager->get('Magento\Quote\Model\Quote\Address\Rate');
+            $this->quote = $this->_objectManager->get('Magento\Quote\Model\QuoteFactory');
+            $this->quoteManagement = $this->_objectManager->get('Magento\Quote\Model\QuoteManagement');
+            $this->orderService = $this->_objectManager->get('Magento\Sales\Model\Service\OrderService');
 
-        $created = $this->createOrder($msporder);
+            $created = $this->createOrder($msporder);
 
-        return $created;
+            return $created;
+        }
+        return false;
     }
 
     /**
@@ -596,7 +599,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $customer->loadByEmail($orderData->customer->email); // load customet by email address
         $passwordLength = 10;
         if (!$customer->getEntityId()) {
-            //If not avilable then create this customer 
+            //If not avilable then create this customer
             $customer->setWebsiteId($websiteId)
                     ->setStore($store)
                     ->setFirstname($orderData->customer->first_name)
@@ -610,7 +613,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         //$quote= $this->quote->create(); //Create object of quote
         $quote = $this->quote->create()->load($quote_id);
         $quote->setStore($store); //set store for which you create quote
-        // if you have allready buyer id then you can load customer directly 
+        // if you have allready buyer id then you can load customer directly
         $customer = $this->customerRepository->getById($customer->getEntityId());
         $quote->setCurrency();
         $quote->assignCustomer($customer); //Assign quote to customer
@@ -696,7 +699,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         //Here we need to detect if the order has already been created, if so then we can don't need to do anything and return.
-        // check if an order is already created        
+        // check if an order is already created
         $ordercollection = $this->_objectManager->create('Magento\Sales\Model\ResourceModel\Order\CollectionFactory');
         $collection = $ordercollection->create()->addAttributeToFilter('quote_id', $quote_id);
         if (count($collection)) {

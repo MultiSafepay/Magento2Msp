@@ -438,4 +438,20 @@ class Data
         return $storeManager->getStore()->getFrontendName();
     }
 
+    public function isMspGateway($gateway)
+    {
+        if(in_array($gateway, $this->gateways))
+        {
+            return true;
+        }
+        return false;
+    }
+    public function isMspGiftcard($giftcard)
+    {
+        if(in_array($giftcard, $this->giftcards))
+        {
+            return true;
+        }
+        return false;
+    }
 }
