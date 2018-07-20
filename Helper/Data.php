@@ -134,6 +134,28 @@ class Data
         'AFTERPAY' => 'afterpaymsp',
         'IDEALQR' => 'idealqr',
         'TRUSTLY' => 'trustly',
+
+        'BABYGIFTCARD' => 'babygiftcard',
+        'BEAUTYANDWELLNESS' => 'beautyandwellness',
+        'BOEKENBON' => 'boekenbon',
+        'EROTIEKBON' => 'erotiekbon',
+        'FASHIONCHEQUE' => 'fashioncheque',
+        'FASHIONGIFTCARD' => 'fashiongiftcard',
+        'FIETSENBON' => 'fietsenbon',
+        'GEZONDHEIDSBON' => 'gezondheidsbon',
+        'GIVACARD' => 'givacard',
+        'GOODCARD' =>'goodcard',
+        'NATIONALETUINBON' => 'nationaletuinbon',
+        'NATIONALEVERWENCADEAUBON' => 'nationaleverwencadeaubon',
+        'PARFUMCADEAUKAART' => 'parfumcadeaukaart',
+        'PODIUM' => 'podium',
+        'SPORTENFIT'=>'sportenfit',
+        'VVVBON' =>'vvvbon',
+        'WEBSHOPGIFTCARD' => 'webshopgiftcard',
+        'WELLNESSGIFTCARD' => 'wellnessgiftcard',
+        'WIJNCADEAU' => 'wijncadeau',
+        'WINKELCHEQUE' => 'winkelcheque',
+        'YOURGIFT' => 'yourgift',
     );
 
     /**
