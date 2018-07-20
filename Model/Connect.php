@@ -421,7 +421,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "order_id" => $order->getIncrementId(),
                 "currency" => $currency,
                 "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
-                "description" => $order->getIncrementId(),
+                "description" => __('Order')." #{$order->getIncrementId()} ". __('@') ." {$this->_mspHelper->getStoreName()}",
                 "var1" => "",
                 "var2" => "",
                 "var3" => "",

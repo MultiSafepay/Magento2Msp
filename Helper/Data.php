@@ -337,4 +337,13 @@ class Data
         return $item->getState();
     }
 
+    public function getStoreName()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $storeManager
+            = $objectManager->create("\Magento\Store\Model\StoreManagerInterface");
+
+        return $storeManager->getStore()->getFrontendName();
+    }
+
 }
