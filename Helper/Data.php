@@ -346,7 +346,7 @@ class Data
 
     /**
      * Returns assigned state for status
-     *
+     * 
      * @param string status
      * @return string
      */
@@ -354,9 +354,9 @@ class Data
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $item = $objectManager->get('\Magento\Sales\Model\ResourceModel\Order\Status\Collection')
-            ->joinStates()
-            ->addFieldToFilter('main_table.status', $status)
-            ->getFirstItem();
+                ->joinStates()
+                ->addFieldToFilter('main_table.status', $status)
+                ->getFirstItem();
         return $item->getState();
     }
 
