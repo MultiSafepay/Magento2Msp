@@ -20,18 +20,19 @@
  * @author      Ruud Jonk <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 namespace MultiSafepay\Connect\Controller\Connect;
 
 use MultiSafepay\Connect\Helper\Data;
+use MultiSafepay\Connect\Model\Api\MspClient;
 
 /**
  * Responsible for loading page content.
@@ -49,6 +50,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
      */
     protected $_coreRegistry = null;
     protected $_mspHelper;
+    protected $_client;
 
     /**
      * @var \Magento\Framework\App\RequestInterface
@@ -56,13 +58,14 @@ class Cancel extends \Magento\Framework\App\Action\Action
     protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
+        \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
     )
     {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
-        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
+        $this->_mspHelper = new Data();
+        $this->_client = new MspClient();
     }
 
     public function execute()
@@ -84,7 +87,9 @@ class Cancel extends \Magento\Framework\App\Action\Action
 
             if ($order->getId()) {
                 try {
-
+                    $environment = $this->_mspHelper->getMainConfigData('msp_env');
+                    $this->_mspHelper->initializeClient($environment, $order, $this->_client);
+                    $orderDetails = $this->_client->orders->get('orders', $incrementId);
                     /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */
                     $quoteRepository = $this->_objectManager->create('Magento\Quote\Api\CartRepositoryInterface');
                     /** @var \Magento\Quote\Model\Quote $quote */
@@ -93,14 +98,24 @@ class Cancel extends \Magento\Framework\App\Action\Action
                     $quote->setIsActive(1)->setReservedOrderId(null);
                     $quoteRepository->save($quote);
                 } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-                    
+
                 }
                 //Cancel the order so a new one can created
-                //You can disable the line below if you are using a fulfillment system that does not expect the order to be cancelled, 
+                //You can disable the line below if you are using a fulfillment system that does not expect the order to be cancelled,
                 //but reopened again by second chance. Removing the line will keep the order pending. (PLGMAGTWOS-196)
                 $order->registerCancellation('Order cancelled by customer')->save();
 
-                $this->messageManager->addError(__('The transaction was cancelled or declined and the order was closed, please try again.'));
+                $message = "The transaction was cancelled or declined and the order was closed, please try again.";
+
+                $reason_code = empty($orderDetails->reason_code) ? '' : ":{$orderDetails->reason_code}";
+
+                $reason = empty($orderDetails->reason) ? '' : "<br><ul><li>{$orderDetails->reason}{$reason_code}</li></ul>";
+
+                $this->messageManager->addError(
+                    __(
+                        $message . $reason
+                    )
+                );
             }
         }
 

@@ -20,12 +20,12 @@
  * @author      Ruud Jonk <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -37,6 +37,7 @@ use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\App\ObjectManager;
+use MultiSafepay\Connect\Model\Api\MspClient;
 
 class Data
 {
@@ -345,7 +346,7 @@ class Data
 
     /**
      * Returns assigned state for status
-     * 
+     *
      * @param string status
      * @return string
      */
@@ -353,10 +354,79 @@ class Data
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $item = $objectManager->get('\Magento\Sales\Model\ResourceModel\Order\Status\Collection')
-                ->joinStates()
-                ->addFieldToFilter('main_table.status', $status)
-                ->getFirstItem();
+            ->joinStates()
+            ->addFieldToFilter('main_table.status', $status)
+            ->getFirstItem();
         return $item->getState();
+    }
+
+
+    public function getStoreId()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $storeManager
+            = $objectManager->create("\Magento\Store\Model\StoreManagerInterface");
+
+        return $storeManager->getStore()->getId();
+    }
+
+    public function getConfig()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $scopeConfigManager
+            = $objectManager->create('Magento\Framework\App\Config\ScopeConfigInterface');
+
+        return $scopeConfigManager;
+    }
+
+    public function initializeClient($environment, $order, MspClient $mspClient)
+    {
+        if ($environment == true) {
+            $mspClient->setApiKey($this->getConfigData(
+                'test_api_key',
+                $order->getPayment()->getMethodInstance()->getCode(),
+                $order->getStoreId()
+            ));
+            $mspClient->setApiUrl('https://testapi.multisafepay.com/v1/json/');
+        } else {
+            $mspClient->setApiKey($this->getConfigData(
+                'live_api_key',
+                $order->getPayment()->getMethodInstance()->getCode(),
+                $order->getStoreId()
+
+            ));
+            $mspClient->setApiUrl('https://api.multisafepay.com/v1/json/');
+        }
+
+    }
+
+    public function getMainConfigData($field, $storeId = null)
+    {
+        if (null === $storeId) {
+            $this->getStoreId();
+        }
+
+
+        $path = "multisafepay/connect/{$field}";
+        return $this->getConfig()->getValue($path,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+
+    public function getConfigData($field, $code, $storeId = null){
+
+        if (null === $storeId) {
+            $storeId = $this->getStoreId();
+        }
+        $mspType = $this->getPaymentType($code);
+
+
+        $path = $mspType . '/' . $code . '/' . $field;
+
+        if ($field == "test_api_key" || $field == "live_api_key") {
+            return $this->getMainConfigData($field, $storeId);
+        }
+        return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function getStoreName()
