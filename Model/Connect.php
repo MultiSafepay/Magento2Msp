@@ -1514,14 +1514,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $path = $mspType . '/' . $code . '/' . $field;
 
 
-        if ($mspType != 'giftcards' && ($field == "test_api_key" || $field == "live_api_key")) {
+        if ($field == "test_api_key" || $field == "live_api_key") {
             return $this->getMainConfigData($field, $storeId);
-        } elseif ($mspType == 'giftcards' && ($field == "test_api_key" || $field == "live_api_key")) {
-            if (!empty($this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId))) {
-                return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
-            } else {
-                return $this->getMainConfigData($field, $storeId);
-            }
         }
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
