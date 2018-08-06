@@ -31,6 +31,19 @@
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
 
+
+use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Registry;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Sales\Model\Order;
+
+use MultiSafepay\Connect\Helper\Data;
+use MultiSafepay\Connect\Model\Connect;
+use MultiSafepay\Connect\Model\Fastcheckout;
+
+
 /**
  * Responsible for loading page content.
  *
@@ -39,37 +52,54 @@ namespace MultiSafepay\Connect\Controller\Fastcheckout;
  */
 class Notification extends \Magento\Framework\App\Action\Action
 {
+
     /**
      * Core registry
      *
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry = null;
+
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_requestHttp;
     protected $_mspHelper;
+    protected $_mspConnect;
+    protected $_mspFastcheckout;
+    protected $_invoiceSender;
+    protected $_storeManagerInterface;
+    protected $_stockRegistryProviderInterface;
+    protected $_order;
 
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\Registry $coreRegistry
+        Context $context,
+        Registry $coreRegistry,
+        InvoiceSender $invoiceSender,
+        StoreManagerInterface $storeManagerInterface,
+        StockRegistryProviderInterface $stockRegistryProviderInterface,
+        Order $order,
+        Data $data,
+        Connect $connect,
+        Fastcheckout $fastcheckout
     ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
-        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
+        $this->_invoiceSender = $invoiceSender;
+        $this->_storeManagerInterface = $storeManagerInterface;
+        $this->_stockRegistryProviderInterface = $stockRegistryProviderInterface;
+        $this->_mspHelper = $data;
+        $this->_mspConnect = $connect;
+        $this->_mspFastcheckout = $fastcheckout;
+        $this->_order = $order;
     }
 
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
-        $this->_mspHelper->lockProcess(
-            'multisafepay-' . $params['transactionid']
-        );
-        $paymentMethod = $this->_objectManager->create(
-            'MultiSafepay\Connect\Model\Fastcheckout'
-        );
+        $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
+        $paymentMethod = $this->_mspFastcheckout;
 
         $isInitial = false;
         $isShipping = false;
@@ -89,20 +119,12 @@ class Notification extends \Magento\Framework\App\Action\Action
         }
 
         $order_id = $paymentMethod->notification($params);
-        $paymentMethod = $this->_objectManager->create(
-            'MultiSafepay\Connect\Model\Connect'
-        );
-        $paymentMethod->_invoiceSender = $this->_objectManager->create(
-            'Magento\Sales\Model\Order\Email\Sender\InvoiceSender'
-        );
-        $storeManager = $this->_objectManager->create(
-            '\Magento\Store\Model\StoreManagerInterface'
-        );
-        $paymentMethod->_stockInterface = $this->_objectManager->create(
-            '\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface'
-        );
+        $paymentMethod = $this->_mspConnect;
+        $paymentMethod->_invoiceSender = $this->_invoiceSender;
+        $storeManager = $this->_storeManagerInterface;
+        $paymentMethod->_stockInterface = $this->_stockRegistryProviderInterface;
 
-        $order = $this->_objectManager->get('Magento\Sales\Model\Order');
+        $order = $this->_order;
         $order_information = $order->load($order_id);
 
         if (!is_null($order_information->getId())) {

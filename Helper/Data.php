@@ -35,9 +35,10 @@ use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
-use Magento\Framework\App\State;
-use Magento\Framework\App\ObjectManager;
 use MultiSafepay\Connect\Model\Api\MspClient;
+use Magento\Sales\Model\ResourceModel\Order\Status\Collection as orderStatusCollection;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Data
 {
@@ -185,21 +186,30 @@ class Data
     private $tmpDirectory;
 
     /**
-     * @var State
+     * @var StoreManagerInterface
      */
-    private $state;
+    protected $_storeManagerInterface;
 
     /**
-     * Constructor
-     *
-     * @param Filesystem $filesystem
+     * @var orderStatusCollection;
      */
-    public function __construct()
-    {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $filessystem = $objectManager->create('Magento\Framework\Filesystem');
-        $this->filesystem = $filessystem;
-        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+    protected $_orderStatusCollection;
+    protected $_ScopeConfigInterface;
+
+    public function __construct(
+        StoreManagerInterface $storeManagerInterface,
+        orderStatusCollection $orderStatusCollection,
+        Filesystem $filesystem,
+        ScopeConfigInterface $scopeConfigInterface
+    ) {
+        $this->_storeManagerInterface = $storeManagerInterface;
+        $this->filesystem = $filesystem;
+        $this->_orderStatusCollection = $orderStatusCollection;
+        $this->_scopeConfigInterface = $scopeConfigInterface;
+
+        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(
+            DirectoryList::VAR_DIR
+        );
     }
 
     /**
@@ -256,18 +266,6 @@ class Data
     private function getFilePath($name)
     {
         return DirectoryList::TMP . DIRECTORY_SEPARATOR . $name . self::LOCK_EXTENSION;
-    }
-
-    /**
-     * @return State
-     * @deprecated
-     */
-    private function getState()
-    {
-        if (null === $this->state) {
-            $this->state = ObjectManager::getInstance()->get(State::class);
-        }
-        return $this->state;
     }
 
     public function getAmountInCents($order, $use_base_currency)
@@ -346,37 +344,31 @@ class Data
 
     /**
      * Returns assigned state for status
-     * 
+     *
      * @param string status
      * @return string
      */
     public function getAssignedState($status)
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $item = $objectManager->get('\Magento\Sales\Model\ResourceModel\Order\Status\Collection')
-                ->joinStates()
-                ->addFieldToFilter('main_table.status', $status)
-                ->getFirstItem();
+        $item = $this->_orderStatusCollection
+            ->joinStates()
+            ->addFieldToFilter('main_table.status', $status)
+            ->getFirstItem();
         return $item->getState();
     }
 
 
     public function getStoreId()
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $storeManager
-            = $objectManager->create("\Magento\Store\Model\StoreManagerInterface");
+        $storeManager = $this->_storeManagerInterface;
 
         return $storeManager->getStore()->getId();
     }
 
     public function getConfig()
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $scopeConfigManager
-            = $objectManager->create('Magento\Framework\App\Config\ScopeConfigInterface');
 
-        return $scopeConfigManager;
+        return $this->_scopeConfigInterface;
     }
 
     public function initializeClient($environment, $order, MspClient $mspClient)
@@ -431,11 +423,7 @@ class Data
 
     public function getStoreName()
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $storeManager
-            = $objectManager->create("\Magento\Store\Model\StoreManagerInterface");
-
-        return $storeManager->getStore()->getFrontendName();
+        return $this->_storeManagerInterface->getStore()->getFrontendName();
     }
 
     public function isMspGateway($gateway)

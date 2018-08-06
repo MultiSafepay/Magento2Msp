@@ -20,26 +20,30 @@
  * @author      Ruud Jonk <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 namespace MultiSafepay\Connect\Model\Observers;
 
+use Magento\Catalog\Model\Product;
+use Magento\Framework\App\State;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Message\ManagerInterface;
+use MultiSafepay\Connect\Helper\Data;
+use MultiSafepay\Connect\Model\Connect;
 
 class Order implements ObserverInterface
 {
-
-    /**
-     * @var \Magento\Framework\ObjectManagerInterface
-     */
-    protected $_objectManager;
+    protected $_mspConnect;
+    protected $_state;
+    protected $_mspData;
+    protected $_product;
 
     /*
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -47,17 +51,30 @@ class Order implements ObserverInterface
     protected $_messageManager;
 
     /**
-     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Framework\App\State $state
+     * @param \Magento\Catalog\Model\Product $product
+     * @param \MultiSafepay\Connect\Model\Connect $connect
+     * @param \MultiSafepay\Connect\Helper\Data $data
      */
-    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\Message\ManagerInterface $messageManager)
+    public function __construct(
+        ManagerInterface $messageManager,
+        State $state,
+        Product $product,
+        Connect $connect,
+        Data $data
+    )
     {
-        $this->_objectManager = $objectManager;
         $this->_messageManager = $messageManager;
+        $this->_mspConnect = $connect;
+        $this->_mspData = $data;
+        $this->_product = $product;
+        $this->_state = $state;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
+        $paymentMethod = $this->_mspConnect;
         /** @var $event Varien_Event */
         $event = $observer->getEvent();
 
@@ -67,7 +84,7 @@ class Order implements ObserverInterface
         /** @var $order Mage_Sales_Model_Order */
         $order = $observer->getEvent()->getOrder();
 
-        $app_state = $this->_objectManager->get('\Magento\Framework\App\State');
+        $app_state = $this->_state;
         $area_code = $app_state->getAreaCode();
         if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
             return $this;
@@ -81,7 +98,7 @@ class Order implements ObserverInterface
 
         $payment = $order->getPayment()->getMethodInstance();
 
-        if (!in_array($payment->getCode(), $this->_objectManager->create('MultiSafepay\Connect\Helper\Data')->gateways)) {
+        if (!in_array($payment->getCode(), $this->_mspData->gateways)) {
             return $this;
         }
 
@@ -93,7 +110,7 @@ class Order implements ObserverInterface
 
         $paymentMethod->_manualGateway = $payment->_gatewayCode;
 
-        $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
+        $productRepo = $this->_product;
 
         $transactionObject = $paymentMethod->transactionRequest($order, $productRepo, $resetGateway);
 

@@ -31,7 +31,16 @@
 
 namespace MultiSafepay\Connect\Controller\Connect;
 
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Registry;
+use Magento\Checkout\Model\Session;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
+
 use MultiSafepay\Connect\Helper\Data;
+use MultiSafepay\Connect\Model\Connect;
 
 /**
  * Responsible for loading page content.
@@ -49,6 +58,12 @@ class Notification extends \Magento\Framework\App\Action\Action
      */
     protected $_coreRegistry = null;
     protected $_mspHelper;
+    protected $_mspConnect;
+    protected $_session;
+    protected $_order;
+    protected $_invoiceSender;
+    protected $_storeManager;
+    protected $_stockRegistryProvider;
 
     /**
      * @var \Magento\Framework\App\RequestInterface
@@ -56,13 +71,27 @@ class Notification extends \Magento\Framework\App\Action\Action
     protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
+        Context $context,
+        Registry $coreRegistry,
+        Session $session,
+        Order $order,
+        Data $data,
+        Connect $connect,
+        InvoiceSender $invoiceSender,
+        StoreManagerInterface $storeManager,
+        StockRegistryProviderInterface $stockRegistryProvider
     )
     {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
-        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
+        $this->_order = $order;
+        $this->_invoiceSender = $invoiceSender;
+        $this->_storeManager = $storeManager;
+        $this->_session = $session;
+        $this->_mspHelper = $data;
+        $this->_mspConnect = $connect;
+        $this->_stockRegistryProvider = $stockRegistryProvider;
     }
 
     public function execute()
@@ -74,8 +103,8 @@ class Notification extends \Magento\Framework\App\Action\Action
             $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
             return false;
         }
-        $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
-        $order = $this->_objectManager->get('Magento\Sales\Model\Order');
+        $session = $this->_session;
+        $order = $this->_order;
         $order_information = $order->loadByIncrementId($params['transactionid']);
 
         if(!is_null($order_information->getId())) {
@@ -83,18 +112,11 @@ class Notification extends \Magento\Framework\App\Action\Action
             $gateway = $order_information->getPayment()->getMethod();
             if($this->_mspHelper->isMspGateway($gateway) || $this->_mspHelper->isMspGiftcard($gateway)) {
 
-                $paymentMethod = $this->_objectManager->create(
-                    'MultiSafepay\Connect\Model\Connect'
-                );
-                $paymentMethod->_invoiceSender = $this->_objectManager->create(
-                    'Magento\Sales\Model\Order\Email\Sender\InvoiceSender'
-                );
-                $storeManager = $this->_objectManager->create(
-                    '\Magento\Store\Model\StoreManagerInterface'
-                );
-                $paymentMethod->_stockInterface = $this->_objectManager->create(
-                    '\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface'
-                );
+                $paymentMethod = $this->_mspConnect;
+                $paymentMethod->_invoiceSender = $this->_invoiceSender;
+                $storeManager = $this->_storeManager;
+                $paymentMethod->_stockInterface = $this->_stockRegistryProvider;
+
 
                 $updated = $paymentMethod->notification($order);
                 $this->_mspHelper->unlockProcess(

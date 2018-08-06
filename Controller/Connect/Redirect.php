@@ -31,6 +31,13 @@
 
 namespace MultiSafepay\Connect\Controller\Connect;
 
+use Magento\Catalog\Model\Product;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Context;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Sales\Model\Order;
+use MultiSafepay\Connect\Model\Connect;
+
 /**
  * Responsible for loading page content.
  *
@@ -39,22 +46,43 @@ namespace MultiSafepay\Connect\Controller\Connect;
  */
 class Redirect extends \Magento\Framework\App\Action\Action
 {
+    protected $_session;
+    protected $_order;
+    protected $_mspConnect;
+    protected $_product;
+    protected $_cartRepo;
+
+    public function __construct(
+        Context $context,
+        Session $session,
+        Order $order,
+        Product $product,
+        CartRepositoryInterface $cartRepository,
+        Connect $mspConnect
+
+    ) {
+        parent::__construct($context);
+        $this->_session = $session;
+        $this->_order = $order;
+        $this->_product = $product;
+        $this->_mspConnect = $mspConnect;
+        $this->_cartRepo = $cartRepository;
+    }
 
     public function execute()
     {
+        $session = $this->_session;
+        $order = $this->_order;
+        $paymentMethod = $this->_mspConnect;
+        $productRepo = $this->_product;
 
-
-        $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
-        $order = $this->_objectManager->create('Magento\Sales\Model\Order')->load($session->getLastOrderId());
-        $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
-        $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
-
+        $order->load($this->_session->getlastOrderId());
 
         $transactionObject = $paymentMethod->transactionRequest($order, $productRepo, false);
 
         if ($order->getId()) {
             /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */
-            $quoteRepository = $this->_objectManager->create('Magento\Quote\Api\CartRepositoryInterface');
+            $quoteRepository = $this->_cartRepo;
             /** @var \Magento\Quote\Model\Quote $quote */
             $quote = $quoteRepository->get($order->getQuoteId());
             $quote->setIsActive(1)->setReservedOrderId(null);

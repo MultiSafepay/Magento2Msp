@@ -31,10 +31,41 @@
 
 namespace MultiSafepay\Connect\Model;
 
-use Magento\Quote\Api\Data\PaymentInterface;
-use Magento\Sales\Model\Order\Payment;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Checkout\Model\Session;
+use Magento\Config\Model\ResourceModel\Config;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Model\CustomerFactory;
+use Magento\Framework\Api\AttributeValueFactory;
+use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\App\Cache\Frontend\Pool;
+use Magento\Framework\App\Cache\TypeListInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Module\ModuleListInterface;
+use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\UrlInterface;
+use Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Collection as TableRateCollection;
+use Magento\Payment\Helper\Data;
+use Magento\Payment\Model\Method\Logger;
+use Magento\Quote\Api\CartManagementInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Model\Quote\Address\Rate as AdressRate;
+use Magento\Quote\Model\QuoteFactory;
+use Magento\Quote\Model\QuoteManagement;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderNotifier;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Sales\Model\Service\OrderService;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Tax\Model\Calculation\Rate as TaxRate;
+use MultiSafepay\Connect\Helper\Data as MspHelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
-use MultiSafepay\Connect\Helper\Data;
 use Magento\Framework\AppInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 
@@ -174,10 +205,20 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_mspHelper;
     protected $_gatewayCode;
     protected $_product;
+    protected $_productMetadataInterface;
+    protected $tableRateCollection;
+    protected $_taxRate;
+    protected $_order;
+    protected $cacheTypeList;
+    protected $cacheFrontendPool;
+    protected $orderCollection;
+    protected $orderNotifier;
     public $_invoiceSender;
     public $_stockInterface;
     public $banktransurl;
     protected $logger;
+    protected $resourceConfig;
+    protected $_objectManager;
     public $_manualGateway = null;
     public $_isAdmin = false;
     public $customerFactory;
@@ -186,7 +227,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
     public $customerRepository;
     public $_productFactory;
     public $shippingRate;
-    public $_objectManager;
     public $quote;
     public $quoteManagement;
     public $orderService;
@@ -199,40 +239,120 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
     );
 
     /**
-     * @param \Magento\Framework\Model\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
-     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
-     * @param \Magento\Payment\Helper\Data $paymentData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Payment\Model\Method\Logger $logger
-     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\UrlInterface $urlBuilder
-     * @param \Magento\Framework\App\RequestInterface $requestHttp
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
-     * @param array $data
+     * @param \Magento\Framework\Model\Context                                          $context
+     * @param \Magento\Framework\Registry                                               $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory                         $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory                              $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data                                              $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface                        $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger                                      $logger
+     * @param \Magento\Framework\Module\ModuleListInterface                             $moduleList
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface                      $localeDate
+     * @param \Magento\Store\Model\StoreManagerInterface                                $storeManager
+     * @param \Magento\Framework\UrlInterface                                           $urlBuilder
+     * @param \Magento\Framework\App\RequestInterface                                   $requestHttp
+     * @param \Magento\Framework\App\ProductMetadataInterface                           $productMetadataInterface
+     * @param \Magento\Tax\Model\Calculation\Rate                                       $taxRate
+     *
+     * @param \Magento\Customer\Model\CustomerFactory                                   $customerFactory
+     * @param \Magento\Quote\Api\CartManagementInterface                                $cartManagementInterface
+     * @param \Magento\Quote\Api\CartRepositoryInterface                                $cartRepositoryInterface
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface                         $customerRepositoryInterface
+     * @param \Magento\Catalog\Model\ProductFactory                                     $productFactory
+     * @param \Magento\Quote\Model\Quote\Address\Rate                                   $adressRate
+     * @param \Magento\Quote\Model\QuoteFactory                                         $quoteFactory
+     * @param \Magento\Quote\Model\QuoteManagement                                      $quoteManagement
+     * @param \Magento\Sales\Model\Service\OrderService                                 $orderService
+     * @param \Magento\Framework\App\Cache\TypeListInterface                            $cacheTypeList
+     * @param \Magento\Framework\App\Cache\Frontend\Pool                                $cacheFrontendPool
+     * @param \Magento\Sales\Model\ResourceModel\Order\CollectionFactory                $collectionFactory
+     * @param \Magento\Sales\Model\Order                                                $order
+     * @param \Magento\Sales\Model\OrderNotifier                                        $orderNotifier
+     * @param \Magento\Config\Model\ResourceModel\Config                                $resourceConfig
+     * @param \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Collection $tableRateCollection
+     *
+     * @param \MultiSafepay\Connect\Model\Api\MspClient                                 $mspClient
+     * @param \MultiSafepay\Connect\Helper\Data                                         $helperData
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource                   $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb                             $resourceCollection
+     * @param array                                                                     $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-    \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Module\ModuleListInterface $moduleList, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder, \Magento\Framework\App\RequestInterface $requestHttp, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = []
+        Context $context,
+        Registry $registry,
+        ExtensionAttributesFactory $extensionFactory,
+        AttributeValueFactory $customAttributeFactory,
+        Data $paymentData,
+        ScopeConfigInterface $scopeConfig,
+        Logger $logger,
+        ModuleListInterface $moduleList,
+        TimezoneInterface $localeDate,
+        StoreManagerInterface $storeManager,
+        Session $checkoutSession,
+        UrlInterface $urlBuilder,
+        RequestInterface $requestHttp,
+        ProductMetadataInterface $productMetadataInterface,
+        TaxRate $taxRate,
+
+        CustomerFactory $customerFactory,
+        CartManagementInterface $cartManagementInterface,
+        CartRepositoryInterface $cartRepositoryInterface,
+        CustomerRepositoryInterface $customerRepositoryInterface,
+        ProductFactory $productFactory,
+        AdressRate $adressRate,
+        QuoteFactory $quoteFactory,
+        QuoteManagement $quoteManagement,
+        OrderService $orderService,
+        TypeListInterface $cacheTypeList,
+        Pool $cacheFrontendPool,
+        CollectionFactory $collectionFactory,
+        Order $order,
+        OrderNotifier $orderNotifier,
+        Config $resourceConfig,
+        TableRateCollection $tableRateCollection,
+
+        MspClient $mspClient,
+        MspHelperData $helperData,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        array $data = []
     )
     {
         parent::__construct(
-                $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger
+            $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger
         );
+
+        $this->cacheFrontendPool = $cacheFrontendPool;
+        $this->cacheTypeList = $cacheTypeList;
         $this->_checkoutSession = $checkoutSession;
         $this->_storeManager = $storeManager;
         $this->_urlBuilder = $urlBuilder;
-        $this->_client = new MspClient();
+        $this->_client = $mspClient;
         $this->_requestHttp = $requestHttp;
-        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
+        $this->_mspHelper = $helperData;
+        $this->_taxRate = $taxRate;
         $this->_minAmount = $this->getMainConfigData('min_order_total');
         $this->_maxAmount = $this->getMainConfigData('max_order_total');
         $this->scopeConfig = $scopeConfig;
 
+        $this->customerFactory = $customerFactory;
+        $this->cartManagementInterface = $cartManagementInterface;
+        $this->cartRepositoryInterface = $cartRepositoryInterface;
+        $this->customerRepository = $customerRepositoryInterface;
+        $this->_productFactory = $productFactory;
+        $this->shippingRate = $adressRate;
+        $this->quote = $quoteFactory;
+        $this->quoteManagement = $quoteManagement;
+        $this->orderService = $orderService;
+        $this->orderCollection = $collectionFactory;
+        $this->_order = $order;
+        $this->orderNotifier = $orderNotifier;
+        $this->resourceConfig = $resourceConfig;
+        $this->_productMetadataInterface = $productMetadataInterface;
+        $this->tableRateCollection = $tableRateCollection;
+
+        $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
         $this->logger = new \Zend\Log\Logger();
         $this->logger->addWriter($writer);
@@ -247,8 +367,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         $environment = $this->getConnectConfigData('msp_env');
 
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $magentoInfo = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
+        $magentoInfo = $this->_productMetadataInterface;
 
         if ($environment == true) {
             $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, null));
@@ -314,8 +433,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $store = $this->getStore();
         $shipping_tax_id = $this->getGlobalConfig('tax/classes/shipping_tax_class');
 
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $_taxModelConfig = $objectManager->get('Magento\Tax\Model\Calculation\Rate');
+        $_taxModelConfig = $this->_taxRate;
         $taxRates = $_taxModelConfig->getCollection()->getData();
         $taxArray = array();
         foreach ($taxRates as $tax) {
@@ -461,16 +579,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         if(!empty(json_decode(json_encode($msporder),true))) {
             $cart = $msporder->shopping_cart->items;
 
-            $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $this->customerFactory = $this->_objectManager->get('Magento\Customer\Model\CustomerFactory');
-            $this->cartManagementInterface = $this->_objectManager->get('Magento\Quote\Api\CartManagementInterface');
-            $this->cartRepositoryInterface = $this->_objectManager->get('Magento\Quote\Api\CartRepositoryInterface');
-            $this->customerRepository = $this->_objectManager->get('Magento\Customer\Api\CustomerRepositoryInterface');
-            $this->_productFactory = $this->_objectManager->get('Magento\Catalog\Model\ProductFactory');
-            $this->shippingRate = $this->_objectManager->get('Magento\Quote\Model\Quote\Address\Rate');
-            $this->quote = $this->_objectManager->get('Magento\Quote\Model\QuoteFactory');
-            $this->quoteManagement = $this->_objectManager->get('Magento\Quote\Model\QuoteManagement');
-            $this->orderService = $this->_objectManager->get('Magento\Sales\Model\Service\OrderService');
+
 
             $created = $this->createOrder($msporder);
 
@@ -520,92 +629,92 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         $quote_id = $orderData->order_id;
 
-        /** A QUOTE HAS ALREADY BEEN CREADED WHEN USING FASTCHECKOUT, SO THIS CODE SHOULD NOT BE USED. IT CAN BE USED FOR QWINDO
+        /** A QUOTE HAS ALREADY BEEN CREATED WHEN USING FASTCHECKOUT, SO THIS CODE SHOULD NOT BE USED. IT CAN BE USED FOR QWINDO
 
 
-          //init the store id and website id @todo pass from array
-          $store = $this->_storeManager->getStore();
-          $websiteId = $this->_storeManager->getStore()->getWebsiteId();
-          //init the customer
-          $customer=$this->customerFactory->create();
-          $customer->setWebsiteId($websiteId);
-          $customer->loadByEmail($orderData->customer->email);// load customer by email address
-          $passwordLength = 10;
-          //check the customer
-          if(!$customer->getEntityId()){
-          //If not avilable then create this customer
-          $customer->setWebsiteId($websiteId)
-          ->setStore($store)
-          ->setFirstname($orderData->customer->first_name)
-          ->setLastname($orderData->customer->last_name)
-          ->setEmail($orderData->customer->email)
-          ->setPassword($this->randomPassword($passwordLength));
-          $customer->save();
-          $customer->sendNewAccountEmail();
+        //init the store id and website id @todo pass from array
+        $store = $this->_storeManager->getStore();
+        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
+        //init the customer
+        $customer=$this->customerFactory->create();
+        $customer->setWebsiteId($websiteId);
+        $customer->loadByEmail($orderData->customer->email);// load customer by email address
+        $passwordLength = 10;
+        //check the customer
+        if(!$customer->getEntityId()){
+        //If not avilable then create this customer
+        $customer->setWebsiteId($websiteId)
+        ->setStore($store)
+        ->setFirstname($orderData->customer->first_name)
+        ->setLastname($orderData->customer->last_name)
+        ->setEmail($orderData->customer->email)
+        ->setPassword($this->randomPassword($passwordLength));
+        $customer->save();
+        $customer->sendNewAccountEmail();
 
-          }
-          //init the quote
-          $cart_id = $this->cartManagementInterface->createEmptyCart(); //We can do this for Qwindo, for FCO a quote already exists so we don't need to create a new empty one.
-          $cart = $this->cartRepositoryInterface->get($cart_id);
-          $cart->setStore($store);
-          // if you have already buyer id then you can load customer directly
-          $customer= $this->customerRepository->getById($customer->getEntityId());
-          $cart->setCurrency();
-          $cart->assignCustomer($customer); //Assign quote to customer
-          //add items in quote
-          foreach($orderData->shopping_cart->items as $item){
+        }
+        //init the quote
+        $cart_id = $this->cartManagementInterface->createEmptyCart(); //We can do this for Qwindo, for FCO a quote already exists so we don't need to create a new empty one.
+        $cart = $this->cartRepositoryInterface->get($cart_id);
+        $cart->setStore($store);
+        // if you have already buyer id then you can load customer directly
+        $customer= $this->customerRepository->getById($customer->getEntityId());
+        $cart->setCurrency();
+        $cart->assignCustomer($customer); //Assign quote to customer
+        //add items in quote
+        foreach($orderData->shopping_cart->items as $item){
 
-          $product = $this->_productFactory->create()->load($item->merchant_item_id);
-          $cart->addProduct(
-          $product,
-          intval($item->quantity)
-          );
-          }
-          //Set Address to quote @todo add section in order data for seperate billing and handle it
-          $cart->getBillingAddress()->addData($billing_address);
-          $cart->getShippingAddress()->addData($shipping_address);
-          // Collect Rates and Set Shipping & Payment Method
-          $this->shippingRate
-          ->setCode('freeshipping_freeshipping')
-          ->getPrice(1);
-          $shippingAddress = $cart->getShippingAddress();
-          //@todo set in order data
-          $shippingAddress->setCollectShippingRates(true)
-          ->collectShippingRates()
-          ->setShippingMethod('flatrate_flatrate'); //shipping method
-          $cart->getShippingAddress()->addShippingRate($this->shippingRate);
-          $cart->setPaymentMethod(strtolower($orderData->payment_details->type)); //payment method
-          //@todo insert a variable to affect the invetory
-          $cart->setInventoryProcessed(false);
-          // Set sales order payment
-          $cart->getPayment()->importData(['method' => strtolower($orderData->payment_details->type)]);
-          // Collect total and saeve
-          $cart->collectTotals();
-          // Submit the quote and create the order
-          $cart->save();
-          $cart = $this->cartRepositoryInterface->get($cart->getId());
-          $order_id = $this->cartManagementInterface->placeOrder($cart->getId());
+        $product = $this->_productFactory->create()->load($item->merchant_item_id);
+        $cart->addProduct(
+        $product,
+        intval($item->quantity)
+        );
+        }
+        //Set Address to quote @todo add section in order data for seperate billing and handle it
+        $cart->getBillingAddress()->addData($billing_address);
+        $cart->getShippingAddress()->addData($shipping_address);
+        // Collect Rates and Set Shipping & Payment Method
+        $this->shippingRate
+        ->setCode('freeshipping_freeshipping')
+        ->getPrice(1);
+        $shippingAddress = $cart->getShippingAddress();
+        //@todo set in order data
+        $shippingAddress->setCollectShippingRates(true)
+        ->collectShippingRates()
+        ->setShippingMethod('flatrate_flatrate'); //shipping method
+        $cart->getShippingAddress()->addShippingRate($this->shippingRate);
+        $cart->setPaymentMethod(strtolower($orderData->payment_details->type)); //payment method
+        //@todo insert a variable to affect the invetory
+        $cart->setInventoryProcessed(false);
+        // Set sales order payment
+        $cart->getPayment()->importData(['method' => strtolower($orderData->payment_details->type)]);
+        // Collect total and saeve
+        $cart->collectTotals();
+        // Submit the quote and create the order
+        $cart->save();
+        $cart = $this->cartRepositoryInterface->get($cart->getId());
+        $order_id = $this->cartManagementInterface->placeOrder($cart->getId());
 
-          $order = $this->_objectManager->create('Magento\Sales\Model\Order')->load($order_id);
+        $order = $this->_objectManager->create('Magento\Sales\Model\Order')->load($order_id);
 
-          $this->_objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
-          return $order_id;
+        $this->_objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
+        return $order_id;
 
          * */
         $store = $this->_storeManager->getStore();
         $websiteId = $this->_storeManager->getStore()->getWebsiteId();
         $customer = $this->customerFactory->create();
         $customer->setWebsiteId($websiteId);
-        $customer->loadByEmail($orderData->customer->email); // load customet by email address
+        $customer->loadByEmail($orderData->customer->email); // load customer by email address
         $passwordLength = 10;
         if (!$customer->getEntityId()) {
             //If not avilable then create this customer
             $customer->setWebsiteId($websiteId)
-                    ->setStore($store)
-                    ->setFirstname($orderData->customer->first_name)
-                    ->setLastname($orderData->customer->last_name)
-                    ->setEmail($orderData->customer->email)
-                    ->setPassword($this->randomPassword($passwordLength));
+                ->setStore($store)
+                ->setFirstname($orderData->customer->first_name)
+                ->setLastname($orderData->customer->last_name)
+                ->setEmail($orderData->customer->email)
+                ->setPassword($this->randomPassword($passwordLength));
             $customer->save();
             $customer->sendNewAccountEmail();
         }
@@ -664,8 +773,8 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             $this->setGlobalConfig($type . '/' . $used_method . '/active', 1);
             $method_activated = true;
 
-            $cacheTypeList = $this->_objectManager->create('Magento\Framework\App\Cache\TypeListInterface');
-            $cacheFrontendPool = $this->_objectManager->create('Magento\Framework\App\Cache\Frontend\Pool');
+            $cacheTypeList = $this->cacheTypeList;
+            $cacheFrontendPool = $this->cacheFrontendPool;
 
             $types = array('config', 'layout', 'block_html', 'collections', 'reflection', 'db_ddl', 'eav', 'config_integration', 'config_integration_api', 'full_page', 'translate', 'config_webservice');
             foreach ($types as $type) {
@@ -675,8 +784,8 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                 $cacheFrontend->getBackend()->clean();
             }
         } else {
-            $cacheTypeList = $this->_objectManager->create('Magento\Framework\App\Cache\TypeListInterface');
-            $cacheFrontendPool = $this->_objectManager->create('Magento\Framework\App\Cache\Frontend\Pool');
+            $cacheTypeList = $this->cacheTypeList;
+            $cacheFrontendPool = $this->cacheFrontendPool;
 
             $types = array('config', 'layout', 'block_html', 'collections', 'reflection', 'db_ddl', 'eav', 'config_integration', 'config_integration_api', 'full_page', 'translate', 'config_webservice');
             foreach ($types as $type) {
@@ -700,7 +809,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         //Here we need to detect if the order has already been created, if so then we can don't need to do anything and return.
         // check if an order is already created
-        $ordercollection = $this->_objectManager->create('Magento\Sales\Model\ResourceModel\Order\CollectionFactory');
+        $ordercollection = $this->orderCollection;
         $collection = $ordercollection->create()->addAttributeToFilter('quote_id', $quote_id);
         if (count($collection)) {
             foreach ($collection as $order) {
@@ -711,9 +820,9 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         // Create Order From Quote
         $order = $this->quoteManagement->submit($quote);
 
-        $order_model = $this->_objectManager->create('Magento\Sales\Model\Order')->load($order->getId());
+        $order_model = $this->_order->load($order->getId());
 
-        $this->_objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order_model);
+        $this->orderNotifier->notify($order_model);
         $order->setEmailSent(1);
         $order->save();
         return $order->getId();
@@ -741,9 +850,9 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
     public function _registerPaymentPending($transactionid, $order, $msporder)
     {
         $order->getPayment()->setPreparedMessage('<b>Uncleared Transaction you can accept the transaction manually within MultiSafepay Control</b><br />')->setTransactionId($transactionid)
-                ->setIsTransactionClosed(
-                        0
-                )->update(false);
+            ->setIsTransactionClosed(
+                0
+            )->update(false);
         $order->save();
     }
 
@@ -808,7 +917,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function setGlobalConfig($path, $value)
     {
-        $resourceConfig = $this->_objectManager->create('\Magento\Config\Model\ResourceModel\Config');
+        $resourceConfig = $this->resourceConfig;
 
         return $resourceConfig->saveConfig($path, $value, 'default', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
@@ -885,8 +994,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     }
                 } elseif ('Magento\OfflineShipping\Model\Carrier\Tablerate' == $carrierConfig['model']) {
                     //Table rate based
-                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                    $tablerateColl = $objectManager->get('Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate\Collection');
+                    $tablerateColl = $this->tableRateCollection;
                     foreach ($tablerateColl as $tablerate) {
                         $table_data = $tablerate->getData();
                         if ($table_data['condition_name'] == 'package_value') {

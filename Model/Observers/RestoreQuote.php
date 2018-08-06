@@ -31,34 +31,57 @@
 
 namespace MultiSafepay\Connect\Model\Observers;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Message\ManagerInterface;
+use MultiSafepay\Connect\Helper\Data;
+use MultiSafepay\Connect\Model\Connect;
 
 class RestoreQuote implements ObserverInterface
 {
-
     /**
-     * @var \Magento\Framework\ObjectManagerInterface
-     */
-    protected $_objectManager;
-
-    /*
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_messageManager;
 
     /**
-     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @var \MultiSafepay\Connect\Model\Connect
      */
-    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\Message\ManagerInterface $messageManager)
-    {
-        $this->_objectManager = $objectManager;
+    protected $_mspConnect;
+
+    /**
+     * @var \MultiSafepay\Connect\Helper\Data
+     */
+    protected $_mspData;
+
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
+    protected $_session;
+
+
+    /**
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Checkout\Model\Session $session
+     * @param \MultiSafepay\Connect\Model\Connect $connect
+     * @param \MultiSafepay\Connect\Helper\Data $data
+     */
+    public function __construct(
+        ManagerInterface $messageManager,
+        Session $session,
+        Connect $connect,
+        Data $data
+    ) {
         $this->_messageManager = $messageManager;
+        $this->_session = $session;
+        $this->_mspConnect = $connect;
+        $this->_mspData = $data;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $paymentModel = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
-        $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
+        $paymentModel = $this->_mspConnect;
+        $session = $this->_session;
         $lastRealOrder = $session->getLastRealOrder();
 
         if($lastRealOrder && $lastRealOrder->getPayment()) {
@@ -67,7 +90,7 @@ class RestoreQuote implements ObserverInterface
                 return $this;
             }
             $status = $paymentModel->getMainConfigData('order_status', $lastRealOrder->getStoreId());
-            $helper = $this->_objectManager->create('MultiSafepay\Connect\Helper\Data');
+            $helper = $this->_mspData;
             $state = $helper->getAssignedState($status);
 
             if ($lastRealOrder->getState() == $state) {

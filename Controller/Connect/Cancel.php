@@ -31,6 +31,11 @@
 
 namespace MultiSafepay\Connect\Controller\Connect;
 
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Registry;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Sales\Model\Order;
 use MultiSafepay\Connect\Helper\Data;
 use MultiSafepay\Connect\Model\Api\MspClient;
 
@@ -50,6 +55,9 @@ class Cancel extends \Magento\Framework\App\Action\Action
      */
     protected $_coreRegistry = null;
     protected $_mspHelper;
+    protected $_session;
+    protected $_order;
+    protected $_cartRepository;
     protected $_client;
 
     /**
@@ -57,15 +65,32 @@ class Cancel extends \Magento\Framework\App\Action\Action
      */
     protected $_requestHttp;
 
+    /**
+     * @param \Magento\Framework\App\Action\Context      $context
+     * @param \Magento\Framework\Registry                $coreRegistry
+     * @param \Magento\Sales\Model\Order                 $order
+     * @param \Magento\Checkout\Model\Session            $session
+     * @param \Magento\Quote\Api\CartRepositoryInterface $cartRepository
+     * @param \MultiSafepay\Connect\Helper\Data          $helperData
+     */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
+        Context $context,
+        Registry $coreRegistry,
+        Order $order,
+        Session $session,
+        CartRepositoryInterface $cartRepository,
+        Data $helperData
     )
     {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
-        $this->_mspHelper = new Data();
         $this->_client = new MspClient();
+        $this->_order = $order;
+        $this->_session = $session;
+        $this->_cartRepository = $cartRepository;
+
+        $this->_mspHelper = $helperData;
     }
 
     public function execute()
@@ -78,25 +103,23 @@ class Cancel extends \Magento\Framework\App\Action\Action
         } else {
             $incrementId = null;
         }
-        $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
-        $session->restoreQuote();
+        $this->_session->restoreQuote();
 
         if ($incrementId) {
             /* @var $order \Magento\Sales\Model\Order */
-            $order = $this->_objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($incrementId);
+            $order = $this->_order->loadByIncrementId($incrementId);
 
             if ($order->getId()) {
                 try {
                     $environment = $this->_mspHelper->getMainConfigData('msp_env');
                     $this->_mspHelper->initializeClient($environment, $order, $this->_client);
                     $orderDetails = $this->_client->orders->get('orders', $incrementId);
-                    /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */
-                    $quoteRepository = $this->_objectManager->create('Magento\Quote\Api\CartRepositoryInterface');
+
                     /** @var \Magento\Quote\Model\Quote $quote */
-                    $quote = $quoteRepository->get($order->getQuoteId());
+                    $quote = $this->_cartRepository->get($order->getQuoteId());
 
                     $quote->setIsActive(1)->setReservedOrderId(null);
-                    $quoteRepository->save($quote);
+                    $this->_cartRepository->save($quote);
                 } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
 
                 }

@@ -31,6 +31,11 @@
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
 
+use Magento\Framework\App\Action\Context;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Registry;
+use Magento\Checkout\Model\Session;
+use MultiSafepay\Connect\Model\Fastcheckout;
 /**
  * Responsible for loading page content.
  *
@@ -51,21 +56,32 @@ class Redirect extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_requestHttp;
+    protected $_product;
+    protected $_session;
+    protected $_mspFastcheckout;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
+    Context $context,
+    Registry $coreRegistry,
+    Product $product,
+    Session $session,
+    Fastcheckout $fastcheckout
     )
     {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
+
+        $this->_mspFastcheckout = $fastcheckout;
+        $this->_product = $product;
+        $this->_session = $session;
     }
 
     public function execute()
     {
-        $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
-        $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Fastcheckout');
-        $productRepo = $this->_objectManager->create('Magento\Catalog\Model\Product');
+        $session = $this->_session;
+        $paymentMethod = $this->_mspFastcheckout;
+        $productRepo = $this->_product;
 
         $transactionObject = $paymentMethod->transactionRequest($session, $productRepo, false);
 

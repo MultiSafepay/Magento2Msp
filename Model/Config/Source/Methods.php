@@ -39,12 +39,21 @@ use MultiSafepay\Connect\Helper\Data;
 class Methods
 {
 
+    protected $_mspHelper;
+
+    public function __construct(
+        Data $data
+    )
+    {
+        $this->_mspHelper = $data;
+    }
+
     /**
      * @return array
      */
     public function toOptionArray()
     {
-        $helper = new \MultiSafepay\Connect\Helper\Data;
+        $helper = $this->_mspHelper;
         return $helper->getAllMethods();
     }
 

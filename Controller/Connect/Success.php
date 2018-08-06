@@ -31,6 +31,12 @@
 
 namespace MultiSafepay\Connect\Controller\Connect;
 
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Registry;
+use Magento\Checkout\Model\Session;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use MultiSafepay\Connect\Model\Connect;
 use MultiSafepay\Connect\Helper\Data;
 
 /**
@@ -48,30 +54,45 @@ class Success extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry = null;
-    protected $_mspHelper;
+    protected $_order;
+    protected $_session;
+    protected $_invoiceSender;
 
+    protected $_mspHelper;
+    protected $_mspConnect;
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
+        Context $context,
+        Registry $coreRegistry,
+        Order $order,
+        Session $session,
+        InvoiceSender $invoiceSender,
+        Connect $connect,
+        Data $data
     )
     {
+        parent::__construct($context);
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
-        parent::__construct($context);
-        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
+        $this->_order = $order;
+        $this->_session = $session;
+        $this->_invoiceSender = $invoiceSender;
+
+        $this->_mspConnect = $connect;
+        $this->_mspHelper = $data;
     }
 
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
         $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
-        $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
+        $session = $this->_session;
 
-        $order = $this->_objectManager->get('Magento\Sales\Model\Order');
+        $order = $this->_order;
         $order_information = $order->loadByIncrementId($params['transactionid']);
 
         $session->unsQuoteId();
@@ -82,8 +103,8 @@ class Success extends \Magento\Framework\App\Action\Action
         $session->setLastQuoteId($params['transactionid']);
 
         //To a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
-        $paymentMethod = $this->_objectManager->create('MultiSafepay\Connect\Model\Connect');
-        $paymentMethod->_invoiceSender = $this->_objectManager->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
+        $paymentMethod = $this->_mspConnect;
+        $paymentMethod->_invoiceSender = $this->_invoiceSender;
         $updated = $paymentMethod->notification($order_information, true);
 
         $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
