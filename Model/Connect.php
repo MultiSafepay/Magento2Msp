@@ -31,13 +31,12 @@
 
 namespace MultiSafepay\Connect\Model;
 
+use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Framework\AppInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order\Payment;
 use MultiSafepay\Connect\Model\Api\MspClient;
-use MultiSafepay\Connect\Helper\Data;
-use Magento\Framework\AppInterface;
-use Magento\Sales\Api\TransactionRepositoryInterface;
-use \Magento\CatalogInventory\Api\StockRegistryInterface;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -1350,6 +1349,22 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         }
                     }
                 }
+
+                if ($item->merchant_item_id == 'FPT') {
+                    $refundItem = new \stdclass();
+                    $refundItem->name = $item->name;
+                    $refundItem->description = $item->description;
+                    if ($this->hasMinusSign($item->unit_price)) {
+                        $refundItem->unit_price = $item->unit_price;
+                    } else {
+                        $refundItem->unit_price = 0 - $item->unit_price;
+                    }
+                    $refundItem->quantity = '1';
+                    $refundItem->merchant_item_id = $item->merchant_item_id;
+                    $refundItem->tax_table_selector = $item->tax_table_selector;
+                    $refundData['checkout_data']['items'][] = $refundItem;
+                }
+
                 if ($item->name == $order->getShippingDescription() && $item->unit_price < 0) {
                     $refundItem = new \stdclass();
                     $refundItem->name = $item->name;
