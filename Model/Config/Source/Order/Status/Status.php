@@ -36,8 +36,6 @@ use Magento\Sales\Model\Order;
 class Status implements \Magento\Framework\Option\ArrayInterface
 {
 
-    const UNDEFINED_OPTION_LABEL = '-- Please Select --';
-
     /**
      * @var string[]
      */
@@ -82,7 +80,6 @@ class Status implements \Magento\Framework\Option\ArrayInterface
         //#2
         //$statuses = $this->_orderConfig->getStatuses();
 
-        $options = [['value' => '', 'label' => __(self::UNDEFINED_OPTION_LABEL)]];
         foreach ($statuses as $code => $label) {
             $options[] = ['value' => $code, 'label' => $label];
         }
