@@ -20,12 +20,12 @@
  * @author      Ruud Jonk <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -80,8 +80,7 @@ class Notification extends \Magento\Framework\App\Action\Action
         InvoiceSender $invoiceSender,
         StoreManagerInterface $storeManager,
         StockRegistryProviderInterface $stockRegistryProvider
-    )
-    {
+    ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
@@ -107,11 +106,9 @@ class Notification extends \Magento\Framework\App\Action\Action
         $order = $this->_order;
         $order_information = $order->loadByIncrementId($params['transactionid']);
 
-        if(!is_null($order_information->getId())) {
-
+        if (!is_null($order_information->getId())) {
             $gateway = $order_information->getPayment()->getMethod();
-            if($this->_mspHelper->isMspGateway($gateway) || $this->_mspHelper->isMspGiftcard($gateway)) {
-
+            if ($this->_mspHelper->isMspGateway($gateway) || $this->_mspHelper->isMspGiftcard($gateway)) {
                 $paymentMethod = $this->_mspConnect;
                 $paymentMethod->_invoiceSender = $this->_invoiceSender;
                 $storeManager = $this->_storeManager;
@@ -141,12 +138,11 @@ class Notification extends \Magento\Framework\App\Action\Action
                         'There was an error updating the order'
                     );
                 }
-            }else{
+            } else {
                 $this->getResponse()->setContent('Non Msp order');
             }
-        }else{
+        } else {
             $this->getResponse()->setContent('Order not found');
         }
     }
-
 }

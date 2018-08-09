@@ -294,7 +294,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         RequestInterface $requestHttp,
         ProductMetadataInterface $productMetadataInterface,
         TaxRate $taxRate,
-
         CustomerFactory $customerFactory,
         CartManagementInterface $cartManagementInterface,
         CartRepositoryInterface $cartRepositoryInterface,
@@ -311,16 +310,20 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         OrderNotifier $orderNotifier,
         Config $resourceConfig,
         TableRateCollection $tableRateCollection,
-
         MspClient $mspClient,
         MspHelperData $helperData,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct(
-            $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger
+            $context,
+            $registry,
+            $extensionFactory,
+            $customAttributeFactory,
+            $paymentData,
+            $scopeConfig,
+            $logger
         );
 
         $this->cacheFrontendPool = $cacheFrontendPool;
@@ -438,9 +441,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $taxArray = array();
         foreach ($taxRates as $tax) {
             if ($tax['tax_calculation_rate_id'] == $shipping_tax_id) {
-
-
-
                 $taxRateId = $tax['tax_calculation_rate_id'];
                 $taxCode = $tax["code"];
                 $taxRate = $tax["rate"];
@@ -517,12 +517,13 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     $product_price = array();
                     foreach ($product_tier_prices as $key => $value) {
                         $value = (object) $value;
-                        if ($quantity >= $value->price_qty)
+                        if ($quantity >= $value->price_qty) {
                             if ($ndata['price'] < $value->price) {
                                 $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                             } else {
                                 $price = $value->price - ($item->getDiscountAmount() / $quantity);
                             }
+                        }
                         $price = $price;
                     }
                 }
@@ -576,7 +577,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
 
-        if(!empty(json_decode(json_encode($msporder),true))) {
+        if (!empty(json_decode(json_encode($msporder), true))) {
             $cart = $msporder->shopping_cart->items;
 
 
@@ -728,7 +729,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $quote->assignCustomer($customer); //Assign quote to customer
         //add items in quote
         foreach ($orderData->shopping_cart->items as $item) {
-
             $product = $this->_productFactory->create()->load($item->merchant_item_id);
             //$quote->addProduct($product,intval($item->quantity));
         }
@@ -833,7 +833,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
      *
      */
 
-    function randomPassword($length = 8)
+    public function randomPassword($length = 8)
     {
         $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
         $length = rand(10, 16);
@@ -922,7 +922,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         return $resourceConfig->saveConfig($path, $value, 'default', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    function parseCustomerAddress($street_address)
+    public function parseCustomerAddress($street_address)
     {
         list($address, $apartment) = $this->parseAddress($street_address);
         $customer['address'] = $address;
@@ -937,7 +937,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         foreach ($carriers as $carrierCode => $carrierConfig) {
             if ($carrierConfig['active']) {
                 if (isset($carrierConfig['price'])) {
-
                     $method = new \stdclass();
                     $method->id = $carrierCode;
                     $method->type = $carrierCode;
@@ -1076,5 +1075,4 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         return $outxml;
     }
-
 }

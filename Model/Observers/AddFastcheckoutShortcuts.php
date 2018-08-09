@@ -35,5 +35,4 @@ class AddFastcheckoutShortcuts implements ObserverInterface
 
         $shortcutButtons->addShortcut($shortcut);
     }
-
 }

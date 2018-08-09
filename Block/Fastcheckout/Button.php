@@ -47,8 +47,7 @@ class Button extends Template implements ShortcutInterface
         ResolverInterface $localeResolver,
         Session $checkoutSession,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->localeResolver = $localeResolver;
@@ -126,5 +125,4 @@ class Button extends Template implements ShortcutInterface
 
         return $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
-
 }

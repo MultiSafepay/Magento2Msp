@@ -20,12 +20,12 @@
  * @author      Ruud Jonk <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -65,15 +65,13 @@ class Cancel extends \Magento\Framework\App\Action\Action
     protected $_requestHttp;
 
     public function __construct(
-    Context $context,
-    Registry $coreRegistry,
-    Session $session,
-    Order $order,
-    CartRepositoryInterface $cartRepositoryInterface,
-    Data $data
-
-    )
-    {
+        Context $context,
+        Registry $coreRegistry,
+        Session $session,
+        Order $order,
+        CartRepositoryInterface $cartRepositoryInterface,
+        Data $data
+    ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
@@ -113,7 +111,6 @@ class Cancel extends \Magento\Framework\App\Action\Action
                     $quote->setIsActive(1)->setReservedOrderId(null);
                     $quoteRepository->save($quote);
                 } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-                    
                 }
                 //Cancel the order so a new one can created
                 $order->registerCancellation('Order cancelled by customer')->save();
@@ -127,5 +124,4 @@ class Cancel extends \Magento\Framework\App\Action\Action
         $this->_redirect('checkout/cart');
         return;
     }
-
 }

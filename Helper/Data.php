@@ -385,11 +385,9 @@ class Data
                 'live_api_key',
                 $order->getPayment()->getMethodInstance()->getCode(),
                 $order->getStoreId()
-
             ));
             $mspClient->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
-
     }
 
     public function getMainConfigData($field, $storeId = null)
@@ -400,12 +398,16 @@ class Data
 
 
         $path = "multisafepay/connect/{$field}";
-        return $this->getConfig()->getValue($path,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+        return $this->getConfig()->getValue(
+            $path,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
 
-    public function getConfigData($field, $code, $storeId = null){
+    public function getConfigData($field, $code, $storeId = null)
+    {
 
         if (null === $storeId) {
             $storeId = $this->getStoreId();
@@ -428,16 +430,14 @@ class Data
 
     public function isMspGateway($gateway)
     {
-        if(in_array($gateway, $this->gateways))
-        {
+        if (in_array($gateway, $this->gateways)) {
             return true;
         }
         return false;
     }
     public function isMspGiftcard($giftcard)
     {
-        if(in_array($giftcard, $this->giftcards))
-        {
+        if (in_array($giftcard, $this->giftcards)) {
             return true;
         }
         return false;

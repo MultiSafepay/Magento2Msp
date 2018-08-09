@@ -13,8 +13,7 @@ class FastcheckoutConfigProvider implements \Magento\Checkout\Model\ConfigProvid
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         Repository $assetRepo
-    )
-    {
+    ) {
         $this->_scopeConfig = $scopeConfig;
         $this->_assetRepo = $assetRepo;
     }
@@ -43,5 +42,4 @@ class FastcheckoutConfigProvider implements \Magento\Checkout\Model\ConfigProvid
         ]);
         return $config;
     }
-
 }

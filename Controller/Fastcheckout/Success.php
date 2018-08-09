@@ -76,8 +76,7 @@ class Success extends \Magento\Framework\App\Action\Action
         Data $data,
         Connect $connect,
         Fastcheckout $fastcheckout
-    )
-    {
+    ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
@@ -123,5 +122,4 @@ class Success extends \Magento\Framework\App\Action\Action
         $this->_redirect('checkout/onepage/success?utm_nooverride=1');
         return;
     }
-
 }

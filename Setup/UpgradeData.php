@@ -64,13 +64,14 @@ class UpgradeData implements UpgradeDataInterface
         );
 
         if ($installer->getConnection()->isTableExists($tableName)) {
-
             $salesSetup = $this->salesSetupFactory->create(
                 ['resourceName' => 'sales_setup', 'setup' => $installer]
             );
 
             $salesSetup->addAttribute(
-                Order::ENTITY, 'multisafepay_status', [
+                Order::ENTITY,
+                'multisafepay_status',
+                [
                     'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'length'   => 255,
                     'visible'  => false,

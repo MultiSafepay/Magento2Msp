@@ -80,8 +80,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
         Session $session,
         CartRepositoryInterface $cartRepository,
         Data $helperData
-    )
-    {
+    ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
@@ -121,7 +120,6 @@ class Cancel extends \Magento\Framework\App\Action\Action
                     $quote->setIsActive(1)->setReservedOrderId(null);
                     $this->_cartRepository->save($quote);
                 } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-
                 }
                 //Cancel the order so a new one can created
                 //You can disable the line below if you are using a fulfillment system that does not expect the order to be cancelled,
@@ -149,5 +147,4 @@ class Cancel extends \Magento\Framework\App\Action\Action
         $this->_redirect('checkout/cart');
         return;
     }
-
 }

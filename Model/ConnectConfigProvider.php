@@ -39,35 +39,36 @@ class ConnectConfigProvider implements
         $config = array();
 
         $config = array_merge_recursive(
-            $config, [
+            $config,
+            [
             'payment' => [
                 'connect' => [
-                    'issuers'       => $this->GetIssuers(),
-                    'creditcards'   => $this->GetCreditcards(),
-                    'years'         => $this->GetYears(),
+                    'issuers'       => $this->getIssuers(),
+                    'creditcards'   => $this->getCreditcards(),
+                    'years'         => $this->getYears(),
                     'active_method' => $this->getActiveMethod(),
                     'images'        => $this->getImageURLs()
                 ],
             ],
-        ]
+            ]
         );
 
         return $config;
     }
 
-    public function GetIssuers()
+    public function getIssuers()
     {
         return $this->_connect->getIssuers();
     }
 
-    public function GetCreditcards()
+    public function getCreditcards()
     {
         $cards = $this->_creditcards;
         $creditcards = $cards->toOptionArray();
         return $creditcards;
     }
 
-    public function GetYears()
+    public function getYears()
     {
         $years = [];
         for ($i = date("Y") - 17; $i > date("Y") - 125; $i--) {

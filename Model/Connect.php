@@ -265,15 +265,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         OrderNotifier $orderNotifier,
         MspClient $mspClient,
         HelperData $helperData,
-
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
-
         array $data = []
-    )
-    {
+    ) {
         parent::__construct(
-            $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger
+            $context,
+            $registry,
+            $extensionFactory,
+            $customAttributeFactory,
+            $paymentData,
+            $scopeConfig,
+            $logger
         );
         $this->_client = $mspClient;
         $this->_checkoutSession = $checkoutSession;
@@ -533,7 +536,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "partner" => "MultiSafepay",
                 ),
                 "gateway_info" => array(
-                    "issuer_id" => !empty($this->issuer_id) ? $this->issuer_id : NULL,
+                    "issuer_id" => !empty($this->issuer_id) ? $this->issuer_id : null,
                 ),
                 "shopping_cart" => $shoppingCart,
                 "checkout_options" => $checkoutData,
@@ -564,11 +567,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if ($isValid) {
             return $isValid;
         } else {
-            return NULL;
+            return null;
         }
     }
 
-    function getIssuers()
+    public function getIssuers()
     {
         $environment = $this->getMainConfigData('msp_env');
 
@@ -603,7 +606,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $transactionRepository = $this->_transactionRepositoryInterface;
         $transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(), $order->getId());
 
-        if ($transaction == NULL) {
+        if ($transaction == null) {
             return true;
         }
 
@@ -645,7 +648,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "carrier" => $order->getShippingDescription(),
                 "ship_date" => date('Y-m-d H:i:s'),
                 "reason" => 'Shipped'
-            ), $endpoint);
+            ),
+            $endpoint
+        );
 
         if (!empty($this->_client->orders->success)) {
             $msporder = $this->_client->orders->get($endpoint = 'orders', $id, $body = array(), $query_string = false);
@@ -727,12 +732,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $product_tier_prices = (object) $tierprices;
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
-                            if ($quantity >= $value->price_qty)
+                            if ($quantity >= $value->price_qty) {
                                 if ($ndata['base_price'] < $value->price) {
                                     $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
                                 } else {
                                     $price = $value->price - ($item->getBaseDiscountAmount() / $quantity);
                                 }
+                            }
                             $price = $price;
                         }
                     }
@@ -751,12 +757,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $product_tier_prices = (object) $tierprices;
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
-                            if ($quantity >= $value->price_qty)
+                            if ($quantity >= $value->price_qty) {
                                 if ($ndata['price'] < $value->price) {
                                     $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                                 } else {
                                     $price = $value->price - ($item->getDiscountAmount() / $quantity);
                                 }
+                            }
                             $price = $price;
                         }
                     }
@@ -1093,14 +1100,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 //We don't process this callback as the status would be the same as the new order status configured.
                 break;
             case \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED:
-
                 $order_email = $this->getMainConfigData('send_order_email');
 
                 if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
                     $this->_orderNotifier->notify($order);
                 }
 
-            $this->_registerPaymentCapture(true, $transactionid, $order, $msporder);
+                $this->_registerPaymentCapture(true, $transactionid, $order, $msporder);
 
                 if ($fetch) {
                     return true;
@@ -1188,7 +1194,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function _registerPaymentPending($transactionid, $order, $msporder)
     {
-        if($order->getPayment()->getMethodInstance()->_gatewayCode != 'SANTANDER') {
+        if ($order->getPayment()->getMethodInstance()->_gatewayCode != 'SANTANDER') {
             $order->addStatusToHistory($order->getStatus(), "<b>Uncleared Transaction you can accept the transaction manually within MultiSafepay Control</b><br />", false)->save();
         }
     }
@@ -1199,7 +1205,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param bool $skipFraudDetection
      * @return void
      */
-    protected function _registerPaymentCapture($skipFraudDetection = false, $transactionid, $order, $msporder)
+    protected function _registerPaymentCapture($skipFraudDetection, $transactionid, $order, $msporder)
     {
         if (($order->canInvoice() || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) {
             $payment = $order->getPayment();
@@ -1246,7 +1252,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $neworder = $this->_client->orders->patch(
                             array(
                                 "invoice_id" => $invoice->getIncrementId(),
-                            ), $endpoint);
+                            ),
+                            $endpoint
+                        );
 
                         if (!empty($this->_client->orders->result->error_code)) {
                             throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
@@ -1309,8 +1317,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         return parent::isAvailable($quote) && $this->isCarrierAllowed(
-                $quote->getShippingAddress()->getShippingMethod()
-            );
+            $quote->getShippingAddress()->getShippingMethod()
+        );
     }
 
     /**
@@ -1636,7 +1644,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    function parseCustomerAddress($street_address)
+    public function parseCustomerAddress($street_address)
     {
         list($address, $apartment) = $this->parseAddress($street_address);
         $customer['address'] = $address;
@@ -1648,7 +1656,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * Parses and splits up an address in street and housenumber
      */
 
-    function parseAddress($street_address)
+    public function parseAddress($street_address)
     {
         $address = $street_address;
         $apartment = "";
@@ -1676,7 +1684,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     }
 
     // From http://www.php.net/manual/en/function.strrpos.php#78556
-    function rstrpos($haystack, $needle, $offset = null)
+    public function rstrpos($haystack, $needle, $offset = null)
     {
         $size = strlen($haystack);
 
@@ -1692,5 +1700,4 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         return $size - $pos - strlen($needle);
     }
-
 }

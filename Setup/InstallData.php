@@ -53,7 +53,8 @@ class InstallData implements InstallDataInterface
     }
 
     public function install(
-        ModuleDataSetupInterface $setup, ModuleContextInterface $context
+        ModuleDataSetupInterface $setup,
+        ModuleContextInterface $context
     ) {
         $installer = $setup;
 
@@ -64,13 +65,14 @@ class InstallData implements InstallDataInterface
         );
 
         if ($installer->getConnection()->isTableExists($tableName)) {
-
             $salesSetup = $this->salesSetupFactory->create(
                 ['resourceName' => 'sales_setup', 'setup' => $installer]
             );
 
             $salesSetup->addAttribute(
-                Order::ENTITY, 'multisafepay_status', [
+                Order::ENTITY,
+                'multisafepay_status',
+                [
                     'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'length'   => 255,
                     'visible'  => false,

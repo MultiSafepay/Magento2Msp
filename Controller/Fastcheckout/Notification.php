@@ -31,7 +31,6 @@
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
 
-
 use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Registry;
@@ -42,7 +41,6 @@ use Magento\Sales\Model\Order;
 use MultiSafepay\Connect\Helper\Data;
 use MultiSafepay\Connect\Model\Connect;
 use MultiSafepay\Connect\Model\Fastcheckout;
-
 
 /**
  * Responsible for loading page content.
@@ -128,12 +126,10 @@ class Notification extends \Magento\Framework\App\Action\Action
         $order_information = $order->load($order_id);
 
         if (!is_null($order_information->getId())) {
-
             $gateway = $order_information->getPayment()->getMethod();
             if ($this->_mspHelper->isMspGateway($gateway)
                 || $this->_mspHelper->isMspGiftcard($gateway)
             ) {
-
                 $updated = $paymentMethod->notification($order_information);
                 $this->_mspHelper->unlockProcess(
                     'multisafepay-' . $params['transactionid']
@@ -157,7 +153,7 @@ class Notification extends \Magento\Framework\App\Action\Action
                         'There was an error updating the order'
                     );
                 }
-            }else{
+            } else {
                 $this->getResponse()->setContent(
                     'Non Msp order'
                 );

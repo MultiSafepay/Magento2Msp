@@ -63,8 +63,7 @@ class Order implements ObserverInterface
         Product $product,
         Connect $connect,
         Data $data
-    )
-    {
+    ) {
         $this->_messageManager = $messageManager;
         $this->_mspConnect = $connect;
         $this->_mspData = $data;
@@ -119,5 +118,4 @@ class Order implements ObserverInterface
         }
         return $this;
     }
-
 }
