@@ -2,11 +2,14 @@
 
 namespace MultiSafepay\Connect\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Locale\ResolverInterface;
+use Magento\Framework\View\Asset\Repository;
 use MultiSafepay\Connect\Helper\Data;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
-use Magento\Framework\View\Asset\Repository;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+use Magento\Customer\Model\Session;
+
 
 class ConnectConfigProvider implements
     \Magento\Checkout\Model\ConfigProviderInterface
@@ -15,6 +18,8 @@ class ConnectConfigProvider implements
     protected $_mspHelper;
     protected $_connect;
     protected $_creditcards;
+    protected $_mspToken;
+    protected $_customerSession;
     private $_scopeConfig;
     private $localeResolver;
 
@@ -24,7 +29,9 @@ class ConnectConfigProvider implements
         ResolverInterface $localeResolver,
         Data $helperData,
         Connect $connect,
-        Creditcards $creditcards
+        Session $customerSession,
+        Creditcards $creditcards,
+        MultisafepayTokenizationFactory $multisafepayTokenizationFactory
     ) {
         $this->_scopeConfig = $scopeConfig;
         $this->_assetRepo = $assetRepo;
@@ -32,6 +39,11 @@ class ConnectConfigProvider implements
         $this->_mspHelper = $helperData;
         $this->_connect = $connect;
         $this->_creditcards = $creditcards;
+        $this->_mspToken = $multisafepayTokenizationFactory;
+
+        $this->_customerSession = $customerSession;
+
+
     }
 
     public function getConfig()
@@ -43,6 +55,23 @@ class ConnectConfigProvider implements
             [
             'payment' => [
                 'connect' => [
+                    'recurrings' => [
+                        'enabled' => $this->_mspHelper->isEnabled('tokenization'),
+                        'visa' => [
+                            'hasRecurrings' => $this->hasRecurrings('VISA'),
+                            'recurrings'    => $this->getRecurrings('VISA'),
+                        ],
+                        'mastercard' => [
+                            'hasRecurrings' => $this->hasRecurrings('MASTERCARD'),
+                            'recurrings'    => $this->getRecurrings('MASTERCARD'),
+                        ],
+                        'americanexpress' => [
+                            'hasRecurrings' => $this->hasRecurrings('AMEX'),
+                            'recurrings'    => $this->getRecurrings('AMEX'),
+                        ],
+
+
+                    ],
                     'issuers'       => $this->getIssuers(),
                     'creditcards'   => $this->getCreditcards(),
                     'years'         => $this->getYears(),
@@ -59,6 +88,30 @@ class ConnectConfigProvider implements
     public function getIssuers()
     {
         return $this->_connect->getIssuers();
+    }
+
+    public function getRecurrings($gateway)
+    {
+        $recurrings = [];
+        $customerID = $this->_customerSession->getCustomer()->getId();
+        $recurringIds = $this->_mspHelper->getRecurringIdsByCustomerId(
+            $customerID
+        );
+
+        $recurringIds = $this->_mspHelper->hideRecurringExpiredIds($recurringIds);
+
+        foreach ($recurringIds as $id) {
+
+            $data = $this->_mspToken->create()->load($id);
+
+            if (strtolower($data['cc_type']) == strtolower($gateway)) {
+                array_push($recurrings, $this->_mspToken->create()->load($id));
+            }
+
+        }
+        $recurrings = $this->_mspToken->create()->toOptionArray($recurrings);
+
+        return $recurrings;
     }
 
     public function getCreditcards()
@@ -136,5 +189,24 @@ class ConnectConfigProvider implements
             }
         }
         return $images;
+    }
+
+    public function hasRecurrings($gateway, $array = null){
+
+        if(empty($array) || is_null($array)){
+            $array = [];
+            $customerID = $this->_customerSession->getCustomer()->getId();
+            $recurringIds = $this->_mspHelper->getRecurringIdsByCustomerId($customerID);
+            foreach ($recurringIds as $id) {
+                array_push($array, $this->_mspToken->create()->load($id));
+            }
+        }
+
+        foreach ($array as $item){
+            if(strtolower($item['cc_type']) === strtolower($gateway)){
+                return true;
+            }
+        }
+        return false;
     }
 }

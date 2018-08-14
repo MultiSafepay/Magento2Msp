@@ -35,6 +35,7 @@ use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Sales\Model\Order;
+use Magento\Framework\DB\Ddl\Table;
 
 class InstallData implements InstallDataInterface
 {
@@ -63,7 +64,7 @@ class InstallData implements InstallDataInterface
         $tableName = $installer->getConnection()->getTableName(
             'sales_order_grid'
         );
-        $columnName = "multisafepay_status";
+        $columnName = 'multisafepay_status';
 
         if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
             $salesSetup = $this->salesSetupFactory->create(
@@ -74,13 +75,14 @@ class InstallData implements InstallDataInterface
                 Order::ENTITY,
                 $columnName,
                 [
-                    'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'type'     => Table::TYPE_TEXT,
                     'length'   => 255,
                     'visible'  => false,
                     'nullable' => true
                 ]
             );
         }
+
         $installer->endSetup();
     }
 }

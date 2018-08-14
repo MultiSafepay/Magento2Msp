@@ -44,6 +44,11 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <comment>When set to Yes, the base currency will be used for the transaction request, else the store view currency will be active</comment>
         </field>
+        <field id="tokenization" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Tokenization</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <comment>Select whether or not tokenization should be available.</comment>
+        </field>
         <!--<field id="order_update_email" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Send order update e-mail to customer</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

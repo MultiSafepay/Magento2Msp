@@ -59,6 +59,7 @@ use Magento\Sales\Model\OrderNotifier;
 use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
+use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -195,6 +196,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_requestHttp;
     protected $_client;
     protected $_mspHelper;
+    protected $_mspToken;
     protected $_gatewayCode;
     protected $_product;
     protected $_productMetadataInterface;
@@ -259,8 +261,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         Resolver $localeResolver,
         OrderRepositoryInterface $orderRepositoryInterface,
         OrderNotifier $orderNotifier,
+
+        MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
         HelperData $helperData,
+        \Magento\Customer\Model\Session $customerSession,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -272,14 +277,21 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $customAttributeFactory,
             $paymentData,
             $scopeConfig,
-            $logger
+            $logger,
+            $resource,
+            $resourceCollection,
+            $data
         );
+        $this->_customerSession = $customerSession;
         $this->_client = $mspClient;
         $this->_checkoutSession = $checkoutSession;
         $this->_storeManager = $storeManager;
         $this->_urlBuilder = $urlBuilder;
         $this->_requestHttp = $requestHttp;
+
         $this->_mspHelper = $helperData;
+        $this->_mspToken = $multisafepayTokenizationFactory;
+
         $this->_minAmount = $this->getConfigData('min_order_total');
         $this->_maxAmount = $this->getConfigData('max_order_total');
 
@@ -350,6 +362,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if (isset($params['creditcard'])) {
             $this->_gatewayCode = $params['creditcard'];
+        }
+
+        if (isset($params['recurring_hash']) && $params['recurring_hash'] != "" && $this->_mspHelper->isEnabled('tokenization')) {
+            $recurringId = $this->_mspHelper->getRecurringIdByHash($params['recurring_hash']);
+            $recurring = $this->_mspToken->create()->load($recurringId);
+            if($recurring['customer_id'] !== $this->_customerSession->getCustomer()->getId()){
+                $recurring = null;
+            }
+        }else{
+            $recurring = null;
         }
 
         $environment = $this->getMainConfigData('msp_env');
@@ -455,7 +477,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS" || $this->_gatewayCode == "EINVOICE") {
+        if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS"
+            || $this->_gatewayCode == "EINVOICE" || !is_null($recurring)
+        ) {
             $type = 'direct';
         } else {
             $type = 'redirect';
@@ -483,6 +507,28 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId();
         }
 
+        $customerID = $this->_customerSession->getCustomer()->getId();
+
+        if (!is_null($customerID)
+            && $this->_mspHelper->isEnabled('tokenization')
+            && isset($params['save'])
+            && filter_var($params['save'], FILTER_VALIDATE_BOOLEAN)
+            && empty($params['recurring_hash'])
+        ) {
+
+            $model = $this->_mspToken->create();
+            $model->addData(
+                [
+                    "customer_id"    => $customerID,
+                    "recurring_hash" => $this->_mspHelper->getUniqueHash(),
+                    "order_id" => $order->getIncrementId(),
+                    "cc_type" => $this->_gatewayCode,
+                    "name" => (!empty($params['name']) && $params['name'] != "") ? $params['name'] : null,
+                ]
+            );
+            $saveData = $model->save();
+        }
+
         $ip_address = $this->validateIP($order->getRemoteIp());
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
@@ -490,6 +536,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $msporder = $this->_client->orders->post(array(
                 "type" => $type,
                 "order_id" => $order->getIncrementId(),
+                "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
                 "currency" => $currency,
                 "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
                 "description" => __('Order')." #{$order->getIncrementId()} ". __('@') ." {$this->_mspHelper->getStoreName()}",
@@ -1015,6 +1062,62 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $status = $msporder->status;
+
+        $customerID = $this->_customerSession->getCustomer()->getId();
+
+        if (!is_null($customerID)
+            && $this->_mspHelper->isEnabled('tokenization')
+            && isset($msporder->payment_details->recurring_id)
+            && isset($msporder->payment_details->last4)
+            && isset($msporder->payment_details->card_expiry_date)
+        ) {
+            $id = $this->_mspHelper->getRecurringIdByOrderId(
+                $order->getIncrementId()
+            );
+            if (!empty($id)) {
+
+                $customerRecurringIds
+                    = $this->_mspHelper->getRecurringIdsByCustomerId(
+                    $customerID, true
+                );
+
+                $lastElm = end($customerRecurringIds);
+
+                foreach ($customerRecurringIds as $customerRecurringId) {
+
+                    $recurring = $this->_mspToken->create()->load(
+                        $customerRecurringId
+                    );
+
+                    if ($this->_mspHelper->decrypt($recurring['recurring_id'])
+                        !==
+                        $msporder->payment_details->recurring_id
+                    ) {
+                        if ($customerRecurringId === $lastElm) {
+                            $model = $this->_mspToken->create()->load($id);
+
+                            $model->setData(
+                                "recurring_id", $this->_mspHelper->encrypt(
+                                $msporder->payment_details->recurring_id
+                            )
+                            );
+                            $model->setData(
+                                "last_4", $msporder->payment_details->last4
+                            );
+                            $model->setData(
+                                "expiry_date",
+                                $msporder->payment_details->card_expiry_date
+                            );
+
+
+                            $model->save();
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
 
         $order->setData('multisafepay_status', ucfirst($status))->save();
 

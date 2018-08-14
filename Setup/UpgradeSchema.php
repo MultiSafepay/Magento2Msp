@@ -46,10 +46,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer->startSetup();
 
         $tableName = $installer->getConnection()->getTableName(
-            "sales_order_grid"
+            'sales_order_grid'
         );
 
-        $columnName = "multisafepay_status";
+        $columnName = 'multisafepay_status';
         if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
             if (!$installer->getConnection()->tableColumnExists(
                 $installer->getTable($tableName), $columnName
@@ -65,6 +65,89 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     ]
                 );
             }
+        }
+
+        // Get multisafepay_tokenization table
+        $tableName = $installer->getTable('multisafepay_tokenization');
+        // Check if the table already exists
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $table = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary'  => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'customer_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Customer ID'
+                )
+                ->addColumn(
+                    'order_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Order Id'
+                )
+                ->addColumn(
+                    'recurring_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => true,],
+                    'Token - Recurring ID'
+                )
+                ->addColumn(
+                    'recurring_hash',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Recurring hash'
+                )
+                ->addColumn(
+                    'cc_type',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false],
+                    'Payment method'
+                )
+                ->addColumn(
+                    'last_4',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => true],
+                    'Last 4'
+                )
+                ->addColumn(
+                    'expiry_date',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => true],
+                    'Expiry Date'
+                )
+                ->addColumn(
+                    'name',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => true],
+                    'Custom name'
+                )->setComment("MultiSafepay Tokenization Table");
+            $installer->getConnection()->createTable($table);
         }
 
         $installer->endSetup();

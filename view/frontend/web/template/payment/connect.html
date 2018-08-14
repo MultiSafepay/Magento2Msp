@@ -29,11 +29,44 @@
  */
 -->
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <style>
+        .luma{
+            font-family: 'luma-icons'
+        }
+        .luma.info:before{
+            content: '\e623';
+        }
+        .luma.trash:before{
+            content: '\e604';
+        }
+        .float-right{
+            float:right;
+        }
+        .msp-d-flex{
+            display: flex;
+        }
+        #mspRecurringDelete{
+            font-size: 23px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        #mspMoreInformation{
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 3px;
+        }
+
+    </style>
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
                class="radio"
-               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible(),
+                        event: {change: function(data, event){return clearSelectedRecurring()}}"/>
         <label data-bind="attr: {'for': getCode()}" class="label">
             <img data-bind="attr: {src: getGatewayImage()}" class="payment-icon"/>
             <span data-bind="text: getTitle()"></span></label>
@@ -68,6 +101,39 @@
         </select>
         <br /><br />
         <!-- /ko -->
+
+        <!-- ko if: showRecurring() -->
+        <div class="msp-d-flex">
+        <select  name="recurring" class="select creditcard"
+                 data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-type' : getCode() ,'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
+			enable: true,
+			options: getRecurrings(),
+			optionsValue: 'value',
+			optionsText: 'label',
+			optionsCaption: $t('Choose your creditcard...'),
+			event: {change: function(data, event){return setSelectedRecurring(data, event)}}
+            ">
+        </select>
+        <a ><span class="float-right luma trash float-right" id="mspRecurringDelete" data-bind="visible: selectedRecurring, click: deleteRecurring"></span>
+        </a>
+        </div>
+        <br /><br />
+        <!-- /ko -->
+        <!-- ko if: showAddRecurringData() -->
+        <!-- ko ifnot: selectedRecurring -->
+        <input type="checkbox" name="saveCreditCard" id="saveCreditCard" data-bind="attr: {value:true}, checked: useCustomName">&nbsp;<label for="saveCreditCard">
+        <span><b><!-- ko i18n: 'Save your credit card details for a next purchase.' --><!-- /ko --> </b><!-- ko i18n: 'It is safe and easy' --><!-- /ko --></span></label>
+        <a>
+        <span class="luma info" id="mspMoreInformation" data-bind="click: showRecurringModal"></span>
+        </a>
+        <br />
+        <div data-bind="if:useCustomName">
+            <input type="text" name="custom_name" placeholder="Name" data-bind="attr:{'data-type' : getCode()}">
+        </div>
+        <br />
+        <!-- /ko -->
+        <!-- /ko -->
+
 
         <div class="payment-method-billing-address">
             <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->

@@ -31,14 +31,17 @@
 
 namespace MultiSafepay\Connect\Helper;
 
-use Magento\Framework\Filesystem;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
-use MultiSafepay\Connect\Model\Api\MspClient;
+use Magento\Framework\Math\Random;
 use Magento\Sales\Model\ResourceModel\Order\Status\Collection as orderStatusCollection;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use MultiSafepay\Connect\Model\Api\MspClient;
+use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
 
 class Data
 {
@@ -195,13 +198,22 @@ class Data
      */
     protected $_orderStatusCollection;
     protected $_ScopeConfigInterface;
+    protected $_random;
+    protected $_encryptor;
 
     public function __construct(
         StoreManagerInterface $storeManagerInterface,
         orderStatusCollection $orderStatusCollection,
         Filesystem $filesystem,
-        ScopeConfigInterface $scopeConfigInterface
+        ScopeConfigInterface $scopeConfigInterface,
+        Random $random,
+        MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
+        EncryptorInterface $encryptor
+
+
+
     ) {
+        $this->_random = $random;
         $this->_storeManagerInterface = $storeManagerInterface;
         $this->filesystem = $filesystem;
         $this->_orderStatusCollection = $orderStatusCollection;
@@ -210,6 +222,9 @@ class Data
         $this->tmpDirectory = $this->filesystem->getDirectoryWrite(
             DirectoryList::VAR_DIR
         );
+
+        $this->_encryptor = $encryptor;
+        $this->_mspToken = $multisafepayTokenizationFactory;
     }
 
     /**
@@ -435,6 +450,7 @@ class Data
         }
         return false;
     }
+
     public function isMspGiftcard($giftcard)
     {
         if (in_array($giftcard, $this->giftcards)) {
@@ -442,4 +458,83 @@ class Data
         }
         return false;
     }
+
+    /**
+     * @param         $customerId
+     * @param boolean $showNull
+     *
+     * @return integer
+     */
+    public function getRecurringIdsByCustomerId($customerId, $showNull = false)
+    {
+        return $this->_mspToken->create()->getIdsByCustomerId(
+            $customerId, $showNull
+        );
+    }
+
+    /**
+     * @param $hash
+     *
+     * @return integer
+     */
+    public function getRecurringIdByHash($hash)
+    {
+        return $this->_mspToken->create()->getIdByHash(
+            $hash
+        );
+    }
+
+    /**
+     * @param integer $orderId
+     *
+     * @return integer
+     */
+    public function getRecurringIdByOrderId($orderId){
+        return $this->_mspToken->create()->getIdByOrderId($orderId);
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    public function hideRecurringExpiredIds($array)
+    {
+        return $this->_mspToken->create()->hideRecurringExpiredIds(
+            $array
+        );
+    }
+
+    public function isEnabled($configData)
+    {
+        return boolval($this->getMainConfigData($configData));
+    }
+
+    /**
+     * @return string
+     */
+    public function getUniqueHash()
+    {
+        return $this->_random->getUniqueHash();
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public function encrypt($string)
+    {
+        return $this->_encryptor->encrypt($string);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public function decrypt($string){
+        return $this->_encryptor->decrypt($string);
+    }
+
 }
