@@ -1620,10 +1620,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     public function initializeClient($environment, $order)
     {
         if ($environment == true) {
-            $this->_client->setApiKey($this->getConfigData('test_api_key', $order->getStoreId(), $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('test_api_key', $order->getStoreId(), $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConfigData('live_api_key', $order->getStoreId(), $order->getPayment()->getMethodInstance()->_code));
+            $this->_client->setApiKey($this->getConfigData('live_api_key', $order->getStoreId(), $order->getPayment()->getMethodInstance()->getCode()));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
     }
