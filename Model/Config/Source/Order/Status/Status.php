@@ -18,14 +18,14 @@
  * @category    MultiSafepay
  * @package     Connect
  * @author      Ruud Jonk <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -70,7 +70,7 @@ class Status implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         /*
-         * The $statuses used are predefined with values that are tested and confirmed working. However 
+         * The $statuses used are predefined with values that are tested and confirmed working. However
          * in some circumstances you might want to use a different status then enabled by default.
          * In this case you can disable the line below mentioned by #1 and enable the line mentioned with #2.
          * Keep in mind that this is done at your own risk.
@@ -88,5 +88,4 @@ class Status implements \Magento\Framework\Option\ArrayInterface
         }
         return $options;
     }
-
 }

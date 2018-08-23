@@ -16,35 +16,35 @@
  * @category    MultiSafepay
  * @package     Connect
  * @author      Ruud Jonk <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 /*browser:true*/
 /*global define*/
 define(
-        [
+    [
             'uiComponent',
             'Magento_Checkout/js/model/payment/renderer-list'
         ],
-        function (
-                Component,
-                rendererList
-                ) {
+    function (
+        Component,
+        rendererList
+    ) {
             'use strict';
             rendererList.push(
-                    {
-                        type: 'nationaleverwencadeaubon',
-                        component: 'MultiSafepay_Connect/js/view/payment/method-renderer/connect-method'
+                {
+                    type: 'nationaleverwencadeaubon',
+                    component: 'MultiSafepay_Connect/js/view/payment/method-renderer/connect-method'
                     }
             );
             /** Add view logic here if needed */
             return Component.extend({});
-        }
+    }
 );

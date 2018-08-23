@@ -18,18 +18,24 @@
  * @category    MultiSafepay
  * @package     Connect
  * @author      Ruud Jonk <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
+
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Registry;
+use Magento\Checkout\Model\Session;
+use Magento\Sales\Model\Order;
+use Magento\Quote\Api\CartRepositoryInterface;
 
 use MultiSafepay\Connect\Helper\Data;
 
@@ -49,6 +55,9 @@ class Cancel extends \Magento\Framework\App\Action\Action
      */
     protected $_coreRegistry = null;
     protected $_mspHelper;
+    protected $_session;
+    protected $_order;
+    protected $_cartRepositoryInterface;
 
     /**
      * @var \Magento\Framework\App\RequestInterface
@@ -56,13 +65,21 @@ class Cancel extends \Magento\Framework\App\Action\Action
     protected $_requestHttp;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context, \Magento\Framework\Registry $coreRegistry
-    )
-    {
+        Context $context,
+        Registry $coreRegistry,
+        Session $session,
+        Order $order,
+        CartRepositoryInterface $cartRepositoryInterface,
+        Data $data
+    ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
-        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
+        $this->_order = $order;
+        $this->_session = $session;
+        $this->_cartRepositoryInterface = $cartRepositoryInterface;
+
+        $this->_mspHelper = $data;
     }
 
     public function execute()
@@ -75,26 +92,25 @@ class Cancel extends \Magento\Framework\App\Action\Action
         } else {
             $incrementId = null;
         }
-        $session = $this->_objectManager->get('Magento\Checkout\Model\Session');
+        $session = $this->_session;
         $session->restoreQuote();
 
 
         if ($incrementId) {
             /* @var $order \Magento\Sales\Model\Order */
-            $order = $this->_objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($incrementId);
+            $order = $this->_order->loadByIncrementId($incrementId);
 
             if ($order->getId()) {
                 try {
 
                     /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */
-                    $quoteRepository = $this->_objectManager->create('Magento\Quote\Api\CartRepositoryInterface');
+                    $quoteRepository = $this->_cartRepositoryInterface;
                     /** @var \Magento\Quote\Model\Quote $quote */
                     $quote = $quoteRepository->get($order->getQuoteId());
 
                     $quote->setIsActive(1)->setReservedOrderId(null);
                     $quoteRepository->save($quote);
                 } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-                    
                 }
                 //Cancel the order so a new one can created
                 $order->registerCancellation('Order cancelled by customer')->save();
@@ -108,5 +124,4 @@ class Cancel extends \Magento\Framework\App\Action\Action
         $this->_redirect('checkout/cart');
         return;
     }
-
 }

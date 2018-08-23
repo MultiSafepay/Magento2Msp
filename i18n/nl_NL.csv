@@ -1,0 +1,116 @@
+"The transaction was cancelled or declined and the order was closed, please try again.","The transaction was cancelled or declined and the order was closed, please try again."
+"There was an error processing your transaction request, please try again with another payment method.","There was an error processing your transaction request, please try again with another payment method."
+Guests,Guests
+"-- Please Select --","-- Please Select --"
+"<b>Klarna Invoice:</b> ","<b>Klarna Invoice:</b> "
+"Error: Refund not processed online as it did not match the complete shipping cost.  ","Error: Refund not processed online as it did not match the complete shipping cost.  "
+"Your shipment has been processed. Your transaction has also been updated at MultiSafepay","Your shipment has been processed. Your transaction has also been updated at MultiSafepay"
+"Your shipment has been processed, but the transaction could not be updated at MultiSafepay. If needed you need to update your transaction manually using MultiSafepay Control","Your shipment has been processed, but the transaction could not be updated at MultiSafepay. If needed you need to update your transaction manually using MultiSafepay Control"
+"Proceed to FastCheckout","Proceed to FastCheckout"
+"Place Order","Place Order"
+"MultiSafepay Settings","MultiSafepay Settings"
+"Test or Live","Test or Live"
+"Live Api Key","Live Api Key"
+"Test Api Key","Test Api Key"
+"When send the order confirmation e-mail","When send the order confirmation e-mail"
+"E-mail invoice to customer","E-mail invoice to customer"
+"Default selected method","Default selected method"
+"Use base currency?","Use base currency?"
+"New Order Status","New Order Status"
+"Declined Order Status","Declined Order Status"
+"Cancelled Order Status","Cancelled Order Status"
+"Expired Order Status","Expired Order Status"
+"Chargeback Order Status","Chargeback Order Status"
+"Create Payment link","Create Payment link"
+"Reset Gateway","Reset Gateway"
+"Keep cart alive","Keep cart alive"
+"Enable debug mode","Enable debug mode"
+"MultiSafepay Gateways","MultiSafepay Gateways"
+iDEAL,iDEAL
+Enabled,Enabled
+Title,Title
+"Enable Shipping Method Restriction","Enable Shipping Method Restriction"
+"Allowed Shipping Methods","Allowed Shipping Methods"
+"Allowed Currencies","Allowed Currencies"
+"Allowed Groups","Allowed Groups"
+"Payment from Applicable Countries","Payment from Applicable Countries"
+"Payment from Specific Countries","Payment from Specific Countries"
+"Minimum Order Total","Minimum Order Total"
+"Maximum Order Total","Maximum Order Total"
+"Days active","Days active"
+"Seconds active","Seconds active"
+Instructions,Instructions
+"Sort Order","Sort Order"
+Creditcard,Creditcard
+"Allowed Creditcards","Allowed Creditcards"
+Visa,Visa
+Mastercard,Mastercard
+Giropay,Giropay
+Banktransfer,Banktransfer
+Sofort,Sofort
+Maestro,Maestro
+Bancontact,Bancontact
+"American Express","American Express"
+"Direct Debit","Direct Debit"
+"Betaal na Ontvangst","Betaal na Ontvangst"
+E-Invoicing,E-Invoicing
+"Klarna Factuur","Klarna Factuur"
+"Santander Betaalplan","Santander Betaalplan"
+PayPal,PayPal
+TrustPay,TrustPay
+KBC,KBC
+AliPay,AliPay
+Belfius,Belfius
+"ING Homepay","ING Homepay"
+Ferbuy,Ferbuy
+Eps,Eps
+Dotpay,Dotpay
+Paysafecard,Paysafecard
+AfterPay,AfterPay
+Trustly,Trustly
+"iDEAL QR","iDEAL QR"
+"MultiSafepay Giftcards","MultiSafepay Giftcards"
+Wijncadeau,Wijncadeau
+Fashiongiftcard,Fashiongiftcard
+Podium,Podium
+"VVV Bon","VVV Bon"
+"Sport en Fit","Sport en Fit"
+Yourgift,Yourgift
+Givacard,Givacard
+Goodcard,Goodcard
+"Nationale Tuinbon","Nationale Tuinbon"
+"Nationale Verwencadeaubon","Nationale Verwencadeaubon"
+Gezondheidsbon,Gezondheidsbon
+Babygiftcard,Babygiftcard
+Boekenbon,Boekenbon
+Erotiekbon,Erotiekbon
+Fashioncheque,Fashioncheque
+Parfumcadeaukaart,Parfumcadeaukaart
+Webshopgiftcard,Webshopgiftcard
+"Beauty and Wellness","Beauty and Wellness"
+Fietsenbon,Fietsenbon
+"Wellness Giftcard","Wellness Giftcard"
+"Winkel Cheque","Winkel Cheque"
+Fastcheckout,Fastcheckout
+"Fastcheckout Settings","Fastcheckout Settings"
+"Enable Fastcheckout","Enable Fastcheckout"
+"Send account e-mail","Send account e-mail"
+"Send invoice ID to MultiSafepay","Send invoice ID to MultiSafepay"
+"Fastcheckout - Custom Fields","Fastcheckout - Custom Fields"
+"Force accept agreements","Force accept agreements"
+"Alternate Agreements URL","Alternate Agreements URL"
+"Company name","Company name"
+Birthday,Birthday
+Phonenumber,Phonenumber
+"Chamber of Commerce (CoC/KvK)","Chamber of Commerce (CoC/KvK)"
+"VAT number","VAT number"
+"Passport number","Passport number"
+"Drivers license","Drivers license"
+Sex,Sex
+Salutation,Salutation
+Comment,Comment
+Newsletter,Newsletter
+"Choose your bank...","Kies uw bank..."
+"Choose your creditcard...","Kies uw creditcard..."
+"Order", "Bestelling"
+"@","@"

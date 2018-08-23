@@ -18,7 +18,7 @@
  * @category    MultiSafepay
  * @package     Connect
  * @author      Ruud Jonk <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -31,13 +31,35 @@
 
 namespace MultiSafepay\Connect\Model;
 
-use Magento\Quote\Api\Data\PaymentInterface;
-use Magento\Sales\Model\Order\Payment;
-use MultiSafepay\Connect\Model\Api\MspClient;
-use MultiSafepay\Connect\Helper\Data;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\Api\AttributeValueFactory;
+use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\State;
 use Magento\Framework\AppInterface;
+use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Locale\Resolver;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Module\ModuleListInterface;
+use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\UrlInterface;
+use Magento\Payment\Helper\Data;
+use Magento\Payment\Model\Method\Logger;
+use Magento\Quote\Api\Data\PaymentInterface;
+use Magento\Sales\Api\InvoiceRepositoryInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
-use \Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\OrderNotifier;
+use Magento\Store\Model\StoreManagerInterface;
+use MultiSafepay\Connect\Helper\Data as HelperData;
+use MultiSafepay\Connect\Model\Api\MspClient;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -176,6 +198,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_mspHelper;
     protected $_gatewayCode;
     protected $_product;
+    protected $_productMetadataInterface;
+    protected $_transactionRepositoryInterface;
+    protected $_localeResolver;
+    protected $_orderRepositoryInterface;
+    protected $_appState;
+    protected $_orderNotifier;
     public $_invoiceSender;
     public $banktransurl;
     protected $logger;
@@ -183,41 +211,85 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     public $_isAdmin = false;
 
     /**
-     * @param \Magento\Framework\Model\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
-     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
-     * @param \Magento\Payment\Helper\Data $paymentData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Payment\Model\Method\Logger $logger
-     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\UrlInterface $urlBuilder
-     * @param \Magento\Framework\App\RequestInterface $requestHttp
+     * @param \Magento\Framework\Model\Context                        $context
+     * @param \Magento\Framework\Registry                             $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory       $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory            $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data                            $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface      $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger                    $logger
+     * @param \Magento\Framework\Module\ModuleListInterface           $moduleList
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface    $localeDate
+     * @param \Magento\Store\Model\StoreManagerInterface              $storeManager
+     * @param \Magento\Checkout\Model\Session                         $checkoutSession
+     * @param \Magento\CatalogInventory\Api\StockRegistryInterface    $stockRegistry
+     * @param \Magento\Framework\UrlInterface                         $urlBuilder
+     * @param \Magento\Framework\App\RequestInterface                 $requestHttp
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender   $invoiceSender
+     * @param \Magento\Framework\App\ProductMetadataInterface         $productMetadataInterface
+     * @param \Magento\Sales\Api\InvoiceRepositoryInterface           $invoiceRepositoryInterface
+     * @param \Magento\Framework\App\State                            $state
+     * @param \Magento\Sales\Api\TransactionRepositoryInterface       $transactionRepositoryInterface
+     * @param \Magento\Framework\Locale\Resolver                      $localeResolver
+     * @param \Magento\Sales\Api\OrderRepositoryInterface             $orderRepositoryInterface
+     * @param \Magento\Sales\Model\OrderNotifier                      $orderNotifier
+     * @param \MultiSafepay\Connect\Model\Api\MspClient               $mspClient
+     * @param \MultiSafepay\Connect\Helper\Data as HelperData         $helperData
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
-     * @param array $data
+     * @param \Magento\Framework\Data\Collection\AbstractDb           $resourceCollection
+     * @param array                                                   $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-    \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Module\ModuleListInterface $moduleList, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder, \Magento\Framework\App\RequestInterface $requestHttp, StockRegistryInterface $stockRegistry, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = []
-    )
-    {
+        Context $context,
+        Registry $registry,
+        ExtensionAttributesFactory $extensionFactory,
+        AttributeValueFactory $customAttributeFactory,
+        Data $paymentData,
+        ScopeConfigInterface $scopeConfig,
+        Logger $logger,
+        ModuleListInterface $moduleList,
+        TimezoneInterface $localeDate,
+        StoreManagerInterface $storeManager,
+        Session $checkoutSession,
+        UrlInterface $urlBuilder,
+        RequestInterface $requestHttp,
+        StockRegistryInterface $stockRegistry,
+        InvoiceSender $invoiceSender,
+        ProductMetadataInterface $productMetadataInterface,
+        InvoiceRepositoryInterface $invoiceRepositoryInterface,
+        State $state,
+        TransactionRepositoryInterface $transactionRepositoryInterface,
+        Resolver $localeResolver,
+        OrderRepositoryInterface $orderRepositoryInterface,
+        OrderNotifier $orderNotifier,
+        MspClient $mspClient,
+        HelperData $helperData,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
         parent::__construct(
-                $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger
+            $context,
+            $registry,
+            $extensionFactory,
+            $customAttributeFactory,
+            $paymentData,
+            $scopeConfig,
+            $logger
         );
+        $this->_client = $mspClient;
         $this->_checkoutSession = $checkoutSession;
         $this->_storeManager = $storeManager;
         $this->_urlBuilder = $urlBuilder;
-        $this->_client = new MspClient();
         $this->_requestHttp = $requestHttp;
-        $this->_mspHelper = new \MultiSafepay\Connect\Helper\Data;
+        $this->_mspHelper = $helperData;
         $this->_minAmount = $this->getConfigData('min_order_total');
         $this->_maxAmount = $this->getConfigData('max_order_total');
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->_invoiceSender = $objectManager->get('\Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
+
+        $this->_invoiceSender = $invoiceSender;
         $this->stockRegistry = $stockRegistry;
+        $this->_transactionRepositoryInterface = $transactionRepositoryInterface;
 
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/multisafepay.log');
         $this->logger = new \Zend\Log\Logger();
@@ -225,12 +297,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_client->logger = $this->logger;
         $this->_client->debug = ($this->getMainConfigData('msp_debug')) ? true : false;
 
-        $app_state = $objectManager->get('\Magento\Framework\App\State');
+        $this->_appState = $state;
+        $app_state = $state;
         $area_code = $app_state->getAreaCode();
+
+        $this->_productMetadataInterface = $productMetadataInterface;
+        $this->_localeResolver = $localeResolver;
+        $this->_orderRepositoryInterface = $orderRepositoryInterface;
+        $this->_orderNotifier = $orderNotifier;
 
         $invoiceId = $requestHttp->getParam('invoice_id');
         if ($invoiceId && $app_state->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
-            $invoice = $objectManager->create('Magento\Sales\Api\InvoiceRepositoryInterface')->get($invoiceId);
+            $invoice = $invoiceRepositoryInterface->get($invoiceId);
             if ($invoice) {
                 //the invoice is loaded so we can check the invoice currencies.
                 $base_currency_code = $invoice->getBaseCurrencyCode();
@@ -241,7 +319,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
 
                 /*
-                 * Refunding from the Magento backend is disabled when the order processed a Fooman Surcharge                
+                 * Refunding from the Magento backend is disabled when the order processed a Fooman Surcharge
                  * This is done because the Fooman extension has an issue with partial refunds, causing wrong amounts refunded online at MultiSafepay
                  * Issue has been reported at Fooman, once resolved this functionality will be supported again.
                  */
@@ -284,8 +362,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         /* With Magento update 2.1 the line below no longer works */
         //$magentoInfo = new \Magento\Framework\App\ProductMetadata;
         /* above code has changed to two lines below to get it compatible with 2.1 again */
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $magentoInfo = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
+        $magentoInfo = $this->_productMetadataInterface;
 
         $this->initializeClient($environment, $order);
 
@@ -311,7 +388,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         /**
-         * Qwindo using Fastcheckout and fastcheckout using cart data so from now we also need to add cart 
+         * Qwindo using Fastcheckout and fastcheckout using cart data so from now we also need to add cart
          * data to normal transactions to avoid problems with online refunds. Also this will show a more detailed payment page at MultiSafepay
          * */
         /* if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA' || $this->_gatewayCode == 'EINVOICE') {
@@ -371,7 +448,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "address1" => $shipping_street,
                 "address2" => $shipping->getStreetLine(2),
                 "house_number" => $shipping_housenumber,
-                "zip_code" => $shipping->getPostcode(),
+                "zip_code" => trim($shipping->getPostcode()),
                 "city" => $shipping->getCity(),
                 "state" => $shipping->getRegionCode(),
                 "country" => $shipping->getCountryId(),
@@ -383,15 +460,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS") {
+        if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS" || $this->_gatewayCode == "EINVOICE") {
             $type = 'direct';
         } else {
             $type = 'redirect';
         }
 
-        $om = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Framework\Locale\Resolver $resolver */
-        $resolver = $om->get('Magento\Framework\Locale\Resolver');
+        $resolver =$this->_localeResolver;
 
         if ($this->_manualGateway != null) {
             $this->_gatewayCode = $this->_manualGateway;
@@ -421,7 +497,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "order_id" => $order->getIncrementId(),
                 "currency" => $currency,
                 "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
-                "description" => $order->getIncrementId(),
+                "description" => __('Order')." #{$order->getIncrementId()} ". __('@') ." {$this->_mspHelper->getStoreName()}",
                 "var1" => "",
                 "var2" => "",
                 "var3" => "",
@@ -445,7 +521,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "address1" => $street,
                     "address2" => $billing->getStreetLine(2),
                     "house_number" => $housenumber,
-                    "zip_code" => $billing->getPostcode(),
+                    "zip_code" => trim($billing->getPostcode()),
                     "city" => $billing->getCity(),
                     "state" => $billing->getRegionCode(),
                     "country" => $billing->getCountryId(),
@@ -456,11 +532,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => array(
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.5.0',
+                    "plugin_version" => ' - Plugin 1.5.1',
                     "partner" => "MultiSafepay",
                 ),
                 "gateway_info" => array(
-                    "issuer_id" => !empty($this->issuer_id) ? $this->issuer_id : NULL,
+                    "issuer_id" => !empty($this->issuer_id) ? $this->issuer_id : null,
                 ),
                 "shopping_cart" => $shoppingCart,
                 "checkout_options" => $checkoutData,
@@ -491,11 +567,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if ($isValid) {
             return $isValid;
         } else {
-            return NULL;
+            return null;
         }
     }
 
-    function getIssuers()
+    public function getIssuers()
     {
         $environment = $this->getMainConfigData('msp_env');
 
@@ -527,11 +603,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $payment = $order->getPayment();
         $transaction_id = $payment->getLastTransId();
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+        $transactionRepository = $this->_transactionRepositoryInterface;
         $transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(), $order->getId());
 
-        if ($transaction == NULL) {
+        if ($transaction == null) {
             return true;
         }
 
@@ -568,12 +643,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $endpoint = 'orders/' . $id;
         $msporder = $this->_client->orders->patch(
-                array(
-            "tracktrace_code" => $tracking_number,
-            "carrier" => $order->getShippingDescription(),
-            "ship_date" => date('Y-m-d H:i:s'),
-            "reason" => 'Shipped'
-                ), $endpoint);
+            array(
+                "tracktrace_code" => $tracking_number,
+                "carrier" => $order->getShippingDescription(),
+                "ship_date" => date('Y-m-d H:i:s'),
+                "reason" => 'Shipped'
+            ),
+            $endpoint
+        );
 
         if (!empty($this->_client->orders->success)) {
             $msporder = $this->_client->orders->get($endpoint = 'orders', $id, $body = array(), $query_string = false);
@@ -602,7 +679,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             foreach ($order->getAllItems() as $order_item) {
                 $order_product_id = $order_item->getProductId();
                 if ($order_product_id == $product_id) {
-                    $quantity = $item->getQtyOrdered();
+                    $quantity = (string)floatval($item->getQtyOrdered());
                 }
             }
 
@@ -655,12 +732,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $product_tier_prices = (object) $tierprices;
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
-                            if ($quantity >= $value->price_qty)
+                            if ($quantity >= $value->price_qty) {
                                 if ($ndata['base_price'] < $value->price) {
                                     $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
                                 } else {
                                     $price = $value->price - ($item->getBaseDiscountAmount() / $quantity);
                                 }
+                            }
                             $price = $price;
                         }
                     }
@@ -679,12 +757,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $product_tier_prices = (object) $tierprices;
                         foreach ($product_tier_prices as $key => $value) {
                             $value = (object) $value;
-                            if ($quantity >= $value->price_qty)
+                            if ($quantity >= $value->price_qty) {
                                 if ($ndata['price'] < $value->price) {
                                     $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
                                 } else {
                                     $price = $value->price - ($item->getDiscountAmount() / $quantity);
                                 }
+                            }
                             $price = $price;
                         }
                     }
@@ -846,14 +925,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             );
         } else {
             /*
-             * Start Fooman Surcharge support         
+             * Start Fooman Surcharge support
              */
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             /* We don't process fooman fee's for backend created orders */
-            $app_state = $objectManager->get('\Magento\Framework\App\State');
+            $app_state = $this->_appState;
             $area_code = $app_state->getAreaCode();
             if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
-                $orderRepository = $objectManager->get('\Magento\Sales\Api\OrderRepositoryInterface');
+                $orderRepository = $this->_orderRepositoryInterface;
                 $order = $orderRepository->get($order->getId());
 
                 $extensionAttributes = $order->getExtensionAttributes();
@@ -919,8 +997,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if (empty($transactionid)) {
             $payment = $order->getPayment();
             $int_transaction_id = $payment->getLastTransId();
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+            $transactionRepository = $this->_transactionRepositoryInterface;
             $transaction = $transactionRepository->getByTransactionId($int_transaction_id, $payment->getId(), $order->getId());
             $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
 
@@ -943,6 +1020,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $status = $msporder->status;
+
+        $order->setData('multisafepay_status', ucfirst($status))->save();
 
         /**
          *    Start undo cancel function
@@ -968,15 +1047,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
             $order->setBaseDiscountCanceled(0)
-                    ->setBaseShippingCanceled(0)
-                    ->setBaseSubtotalCanceled(0)
-                    ->setBaseTaxCanceled(0)
-                    ->setBaseTotalCanceled(0)
-                    ->setDiscountCanceled(0)
-                    ->setShippingCanceled(0)
-                    ->setSubtotalCanceled(0)
-                    ->setTaxCanceled(0)
-                    ->setTotalCanceled(0);
+                ->setBaseShippingCanceled(0)
+                ->setBaseSubtotalCanceled(0)
+                ->setBaseTaxCanceled(0)
+                ->setBaseTotalCanceled(0)
+                ->setDiscountCanceled(0)
+                ->setShippingCanceled(0)
+                ->setSubtotalCanceled(0)
+                ->setTaxCanceled(0)
+                ->setTotalCanceled(0);
 
             $state = 'new';
             $new_status = 'pending';
@@ -1007,11 +1086,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $order_email = $this->getMainConfigData('send_order_email');
         if (($order_email == "after_transaction" && $status != "initialized" && $status != "expired" && !$order->getEmailSent()) ||
-                ($payment->getMethodInstance()->getCode() == 'mspbanktransfer' && !$order->getEmailSent())
-        /* || ($status == "expired" && isset($this->_client->orders->data->transaction_id)) *///PLGMAGTWO-106.
+            ($payment->getMethodInstance()->getCode() == 'mspbanktransfer' && !$order->getEmailSent())
+            /* || ($status == "expired" && isset($this->_client->orders->data->transaction_id)) *///PLGMAGTWO-106.
         ) {
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
+            $this->_orderNotifier->notify($order);
         }
 
         /**
@@ -1022,12 +1100,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 //We don't process this callback as the status would be the same as the new order status configured.
                 break;
             case \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED:
-
                 $order_email = $this->getMainConfigData('send_order_email');
 
                 if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
-                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                    $objectManager->create('Magento\Sales\Model\OrderNotifier')->notify($order);
+                    $this->_orderNotifier->notify($order);
                 }
 
                 $this->_registerPaymentCapture(true, $transactionid, $order, $msporder);
@@ -1118,7 +1194,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function _registerPaymentPending($transactionid, $order, $msporder)
     {
-        if($order->getPayment()->getMethodInstance()->_gatewayCode != 'SANTANDER') {
+        if ($order->getPayment()->getMethodInstance()->_gatewayCode != 'SANTANDER') {
             $order->addStatusToHistory($order->getStatus(), "<b>Uncleared Transaction you can accept the transaction manually within MultiSafepay Control</b><br />", false)->save();
         }
     }
@@ -1129,7 +1205,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param bool $skipFraudDetection
      * @return void
      */
-    protected function _registerPaymentCapture($skipFraudDetection = false, $transactionid, $order, $msporder)
+    protected function _registerPaymentCapture($skipFraudDetection, $transactionid, $order, $msporder)
     {
         if (($order->canInvoice() || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) {
             $payment = $order->getPayment();
@@ -1174,9 +1250,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
                     try {
                         $neworder = $this->_client->orders->patch(
-                                array(
-                            "invoice_id" => $invoice->getIncrementId(),
-                                ), $endpoint);
+                            array(
+                                "invoice_id" => $invoice->getIncrementId(),
+                            ),
+                            $endpoint
+                        );
 
                         if (!empty($this->_client->orders->result->error_code)) {
                             throw new \Magento\Framework\Exception\LocalizedException(__("Error " . htmlspecialchars($this->_client->orders->result->error_code)));
@@ -1239,7 +1317,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         return parent::isAvailable($quote) && $this->isCarrierAllowed(
-                        $quote->getShippingAddress()->getShippingMethod()
+            $quote->getShippingAddress()->getShippingMethod()
         );
     }
 
@@ -1255,8 +1333,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $transaction_id = $payment->getParentTransactionId();
         $order = $payment->getOrder();
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $transactionRepository = $objectManager->get('\Magento\Sales\Api\TransactionRepositoryInterface');
+        $transactionRepository = $this->_transactionRepositoryInterface;
         $transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(), $order->getId());
         $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
 
@@ -1350,6 +1427,22 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         }
                     }
                 }
+
+                if ($item->merchant_item_id == 'FPT') {
+                    $refundItem = new \stdclass();
+                    $refundItem->name = $item->name;
+                    $refundItem->description = $item->description;
+                    if ($this->hasMinusSign($item->unit_price)) {
+                        $refundItem->unit_price = $item->unit_price;
+                    } else {
+                        $refundItem->unit_price = 0 - $item->unit_price;
+                    }
+                    $refundItem->quantity = '1';
+                    $refundItem->merchant_item_id = $item->merchant_item_id;
+                    $refundItem->tax_table_selector = $item->tax_table_selector;
+                    $refundData['checkout_data']['items'][] = $refundItem;
+                }
+
                 if ($item->name == $order->getShippingDescription() && $item->unit_price < 0) {
                     $refundItem = new \stdclass();
                     $refundItem->name = $item->name;
@@ -1514,14 +1607,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $path = $mspType . '/' . $code . '/' . $field;
 
 
-        if ($mspType != 'giftcards' && ($field == "test_api_key" || $field == "live_api_key")) {
+        if ($field == "test_api_key" || $field == "live_api_key") {
             return $this->getMainConfigData($field, $storeId);
-        } elseif ($mspType == 'giftcards' && ($field == "test_api_key" || $field == "live_api_key")) {
-            if (!empty($this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId))) {
-                return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
-            } else {
-                return $this->getMainConfigData($field, $storeId);
-            }
         }
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
@@ -1557,7 +1644,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    function parseCustomerAddress($street_address)
+    public function parseCustomerAddress($street_address)
     {
         list($address, $apartment) = $this->parseAddress($street_address);
         $customer['address'] = $address;
@@ -1569,7 +1656,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * Parses and splits up an address in street and housenumber
      */
 
-    function parseAddress($street_address)
+    public function parseAddress($street_address)
     {
         $address = $street_address;
         $apartment = "";
@@ -1597,7 +1684,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     }
 
     // From http://www.php.net/manual/en/function.strrpos.php#78556
-    function rstrpos($haystack, $needle, $offset = null)
+    public function rstrpos($haystack, $needle, $offset = null)
     {
         $size = strlen($haystack);
 
@@ -1613,5 +1700,4 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         return $size - $pos - strlen($needle);
     }
-
 }

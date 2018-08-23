@@ -16,20 +16,20 @@
  * @category    MultiSafepay
  * @package     Connect
  * @author      Ruud Jonk <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 /*browser:true*/
 /*global define*/
 define(
-        [
+    [
             'jquery',
             'Magento_Checkout/js/view/payment/default',
             'Magento_Checkout/js/action/place-order',
@@ -39,15 +39,16 @@ define(
             'Magento_Checkout/js/model/payment/additional-validators',
             'mage/url',
         ],
-        function (
-                $,
-                Component,
-                placeOrderAction,
-                selectPaymentMethodAction,
-                customer,
-                checkoutData,
-                additionalValidators,
-                url) {
+    function (
+        $,
+        Component,
+        placeOrderAction,
+        selectPaymentMethodAction,
+        customer,
+        checkoutData,
+        additionalValidators,
+        url
+    ) {
             var configConnect = window.checkoutConfig.payment.connect;
             'use strict';
 
@@ -148,5 +149,5 @@ define(
                     return configConnect.creditcards;
                 }
             });
-        }
+    }
 );

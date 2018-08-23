@@ -2,16 +2,18 @@
 
 namespace MultiSafepay\Connect\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\View\Asset\Repository;
+
 class FastcheckoutConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
 {
 
     protected $_assetRepo;
 
     public function __construct(
-    \Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Framework\View\Asset\Repository $assetRepo
-    )
-    {
-        $this->_objectManager = $objectManager;
+        ScopeConfigInterface $scopeConfig,
+        Repository $assetRepo
+    ) {
         $this->_scopeConfig = $scopeConfig;
         $this->_assetRepo = $assetRepo;
     }
@@ -40,5 +42,4 @@ class FastcheckoutConfigProvider implements \Magento\Checkout\Model\ConfigProvid
         ]);
         return $config;
     }
-
 }

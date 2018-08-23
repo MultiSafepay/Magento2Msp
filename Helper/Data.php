@@ -18,14 +18,14 @@
  * @category    MultiSafepay
  * @package     Connect
  * @author      Ruud Jonk <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2015 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -35,8 +35,10 @@ use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
-use Magento\Framework\App\State;
-use Magento\Framework\App\ObjectManager;
+use MultiSafepay\Connect\Model\Api\MspClient;
+use Magento\Sales\Model\ResourceModel\Order\Status\Collection as orderStatusCollection;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Data
 {
@@ -134,6 +136,28 @@ class Data
         'AFTERPAY' => 'afterpaymsp',
         'IDEALQR' => 'idealqr',
         'TRUSTLY' => 'trustly',
+
+        'BABYGIFTCARD' => 'babygiftcard',
+        'BEAUTYANDWELLNESS' => 'beautyandwellness',
+        'BOEKENBON' => 'boekenbon',
+        'EROTIEKBON' => 'erotiekbon',
+        'FASHIONCHEQUE' => 'fashioncheque',
+        'FASHIONGIFTCARD' => 'fashiongiftcard',
+        'FIETSENBON' => 'fietsenbon',
+        'GEZONDHEIDSBON' => 'gezondheidsbon',
+        'GIVACARD' => 'givacard',
+        'GOODCARD' =>'goodcard',
+        'NATIONALETUINBON' => 'nationaletuinbon',
+        'NATIONALEVERWENCADEAUBON' => 'nationaleverwencadeaubon',
+        'PARFUMCADEAUKAART' => 'parfumcadeaukaart',
+        'PODIUM' => 'podium',
+        'SPORTENFIT'=>'sportenfit',
+        'VVVBON' =>'vvvbon',
+        'WEBSHOPGIFTCARD' => 'webshopgiftcard',
+        'WELLNESSGIFTCARD' => 'wellnessgiftcard',
+        'WIJNCADEAU' => 'wijncadeau',
+        'WINKELCHEQUE' => 'winkelcheque',
+        'YOURGIFT' => 'yourgift',
     );
 
     /**
@@ -162,21 +186,30 @@ class Data
     private $tmpDirectory;
 
     /**
-     * @var State
+     * @var StoreManagerInterface
      */
-    private $state;
+    protected $_storeManagerInterface;
 
     /**
-     * Constructor
-     *
-     * @param Filesystem $filesystem
+     * @var orderStatusCollection;
      */
-    public function __construct()
-    {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $filessystem = $objectManager->create('Magento\Framework\Filesystem');
-        $this->filesystem = $filessystem;
-        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+    protected $_orderStatusCollection;
+    protected $_ScopeConfigInterface;
+
+    public function __construct(
+        StoreManagerInterface $storeManagerInterface,
+        orderStatusCollection $orderStatusCollection,
+        Filesystem $filesystem,
+        ScopeConfigInterface $scopeConfigInterface
+    ) {
+        $this->_storeManagerInterface = $storeManagerInterface;
+        $this->filesystem = $filesystem;
+        $this->_orderStatusCollection = $orderStatusCollection;
+        $this->_scopeConfigInterface = $scopeConfigInterface;
+
+        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(
+            DirectoryList::VAR_DIR
+        );
     }
 
     /**
@@ -233,18 +266,6 @@ class Data
     private function getFilePath($name)
     {
         return DirectoryList::TMP . DIRECTORY_SEPARATOR . $name . self::LOCK_EXTENSION;
-    }
-
-    /**
-     * @return State
-     * @deprecated
-     */
-    private function getState()
-    {
-        if (null === $this->state) {
-            $this->state = ObjectManager::getInstance()->get(State::class);
-        }
-        return $this->state;
     }
 
     public function getAmountInCents($order, $use_base_currency)
@@ -323,18 +344,102 @@ class Data
 
     /**
      * Returns assigned state for status
-     * 
+     *
      * @param string status
      * @return string
      */
     public function getAssignedState($status)
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $item = $objectManager->get('\Magento\Sales\Model\ResourceModel\Order\Status\Collection')
-                ->joinStates()
-                ->addFieldToFilter('main_table.status', $status)
-                ->getFirstItem();
+        $item = $this->_orderStatusCollection
+            ->joinStates()
+            ->addFieldToFilter('main_table.status', $status)
+            ->getFirstItem();
         return $item->getState();
     }
 
+
+    public function getStoreId()
+    {
+        $storeManager = $this->_storeManagerInterface;
+
+        return $storeManager->getStore()->getId();
+    }
+
+    public function getConfig()
+    {
+
+        return $this->_scopeConfigInterface;
+    }
+
+    public function initializeClient($environment, $order, MspClient $mspClient)
+    {
+        if ($environment == true) {
+            $mspClient->setApiKey($this->getConfigData(
+                'test_api_key',
+                $order->getPayment()->getMethodInstance()->getCode(),
+                $order->getStoreId()
+            ));
+            $mspClient->setApiUrl('https://testapi.multisafepay.com/v1/json/');
+        } else {
+            $mspClient->setApiKey($this->getConfigData(
+                'live_api_key',
+                $order->getPayment()->getMethodInstance()->getCode(),
+                $order->getStoreId()
+            ));
+            $mspClient->setApiUrl('https://api.multisafepay.com/v1/json/');
+        }
+    }
+
+    public function getMainConfigData($field, $storeId = null)
+    {
+        if (null === $storeId) {
+            $this->getStoreId();
+        }
+
+
+        $path = "multisafepay/connect/{$field}";
+        return $this->getConfig()->getValue(
+            $path,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+
+    public function getConfigData($field, $code, $storeId = null)
+    {
+
+        if (null === $storeId) {
+            $storeId = $this->getStoreId();
+        }
+        $mspType = $this->getPaymentType($code);
+
+
+        $path = $mspType . '/' . $code . '/' . $field;
+
+        if ($field == "test_api_key" || $field == "live_api_key") {
+            return $this->getMainConfigData($field, $storeId);
+        }
+        return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getStoreName()
+    {
+        return $this->_storeManagerInterface->getStore()->getFrontendName();
+    }
+
+    public function isMspGateway($gateway)
+    {
+        if (in_array($gateway, $this->gateways)) {
+            return true;
+        }
+        return false;
+    }
+    public function isMspGiftcard($giftcard)
+    {
+        if (in_array($giftcard, $this->giftcards)) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,3 +1,26 @@
+# Release Notes - Magento 2 MultiSafepay plug-in 1.5.1 (Aug 24, 2018) #
+
+## Added ##
++ PLGMAGTWOS-189: Add order status of MSP transaction
++ PLGMAGTWOS-224: Add refund support for FPT in Klarna/PAD.
++ PLGMAGTWOS-243: Add reason of declined payment to cancel page
++ PLGMAGTWOS-260: Add default translations
+
+## Changed ##
++ PLGMAGTWOS-144: Check usage of the object manager and replace by usage of DI
++ PLGMAGTWOS-262: Expand order description
++ PLGMAGTWOS-274: Direct transaction for E-Invoicing
++ PLGMAGTWOS-273: Update payment method logos for different languages
++ PLGMAGTWOS-286: Resolve Magento2 CodeSniffer results
+
+## Fixed ##
++ PLGMAGTWOS-240: Round quantity when possible
++ PLGMAGTWOS-249: Orders not being updated when giftcard order contains different api key.
++ PLGMAGTWOS-250: Updating payment method doesn't show giftcard code within order notes
++ PLGMAGTWOS-278: Prevent error in log when notification is called for non existing order
++ PLGMAGTWOS-232: Trim whitespace from specific consumer fields
++ PLGMAGTWOS-230: Correct line endings
+
 # Release Notes - Magento 2 MultiSafepay plug-in 1.5.0 (May 25th, 2018) #
 
 ## Changes ##

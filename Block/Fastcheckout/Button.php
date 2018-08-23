@@ -7,10 +7,10 @@
 
 namespace MultiSafepay\Connect\Block\Fastcheckout;
 
-use Magento\Checkout\Model\Session;
 use Magento\Catalog\Block\ShortcutInterface;
-use Magento\Framework\View\Element\Template;
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Locale\ResolverInterface;
+use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 
 /**
@@ -43,9 +43,11 @@ class Button extends Template implements ShortcutInterface
      * @param array $data
      */
     public function __construct(
-    Context $context, ResolverInterface $localeResolver, Session $checkoutSession, array $data = []
-    )
-    {
+        Context $context,
+        ResolverInterface $localeResolver,
+        Session $checkoutSession,
+        array $data = []
+    ) {
         parent::__construct($context, $data);
 
         $this->localeResolver = $localeResolver;
@@ -123,5 +125,4 @@ class Button extends Template implements ShortcutInterface
 
         return $this->_scopeConfig->getValue('fastcheckout/fastcheckout/fastcheckout_active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
-
 }

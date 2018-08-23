@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <tab id="multisafepay" translate="label" sortOrder="400">
-      <label>MultiSafepay (1.5.0)</label>
+      <label>MultiSafepay (1.5.1)</label>
     </tab>
     <section id="multisafepay" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
@@ -2047,12 +2047,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2118,12 +2112,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -2191,12 +2179,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2263,12 +2245,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2334,12 +2310,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -2408,12 +2378,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2479,12 +2443,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -2552,12 +2510,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2623,12 +2575,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -2696,12 +2642,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2767,12 +2707,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -2840,12 +2774,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2911,12 +2839,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -2984,12 +2906,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -3055,12 +2971,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -3128,12 +3038,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -3196,12 +3100,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -3268,12 +3166,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
@@ -3342,12 +3234,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -3414,12 +3300,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -3485,12 +3365,6 @@
         </field>
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
-        </field>
-        <field id="live_api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Live Api Key</label>
-        </field>
-        <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Test Api Key</label>
         </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
