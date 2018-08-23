@@ -14,7 +14,6 @@
 + PLGMAGTWOS-286: Resolve Magento2 CodeSniffer results
 
 ## Fixed ##
-+ PLGMAGTWOS-290: Remove undefined order label from order statuses
 + PLGMAGTWOS-240: Round quantity when possible
 + PLGMAGTWOS-249: Orders not being updated when giftcard order contains different api key.
 + PLGMAGTWOS-250: Updating payment method doesn't show giftcard code within order notes
