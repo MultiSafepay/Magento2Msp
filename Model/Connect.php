@@ -38,7 +38,6 @@ use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\App\State;
 use Magento\Framework\AppInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Locale\Resolver;
@@ -202,7 +201,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_transactionRepositoryInterface;
     protected $_localeResolver;
     protected $_orderRepositoryInterface;
-    protected $_appState;
     protected $_orderNotifier;
     public $_invoiceSender;
     public $banktransurl;
@@ -228,7 +226,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender   $invoiceSender
      * @param \Magento\Framework\App\ProductMetadataInterface         $productMetadataInterface
      * @param \Magento\Sales\Api\InvoiceRepositoryInterface           $invoiceRepositoryInterface
-     * @param \Magento\Framework\App\State                            $state
      * @param \Magento\Sales\Api\TransactionRepositoryInterface       $transactionRepositoryInterface
      * @param \Magento\Framework\Locale\Resolver                      $localeResolver
      * @param \Magento\Sales\Api\OrderRepositoryInterface             $orderRepositoryInterface
@@ -258,7 +255,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         InvoiceSender $invoiceSender,
         ProductMetadataInterface $productMetadataInterface,
         InvoiceRepositoryInterface $invoiceRepositoryInterface,
-        State $state,
         TransactionRepositoryInterface $transactionRepositoryInterface,
         Resolver $localeResolver,
         OrderRepositoryInterface $orderRepositoryInterface,
@@ -297,8 +293,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_client->logger = $this->logger;
         $this->_client->debug = ($this->getMainConfigData('msp_debug')) ? true : false;
 
-        $this->_appState = $state;
-        $app_state = $state;
+        $app_state = $this->_appState;
         $area_code = $app_state->getAreaCode();
 
         $this->_productMetadataInterface = $productMetadataInterface;
