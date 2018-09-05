@@ -31,55 +31,43 @@
 namespace MultiSafepay\Connect\Setup;
 
 use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Framework\Setup\UpgradeDataInterface;
-use Magento\Sales\Model\Order;
+use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\Setup\UpgradeSchemaInterface;
+use Magento\Framework\DB\Ddl\Table;
 
-class UpgradeData implements UpgradeDataInterface
+class UpgradeSchema implements UpgradeSchemaInterface
 {
-    /**
-     * @var \Magento\Sales\Setup\SalesSetupFactory
-     */
-    protected $salesSetupFactory;
-
-    /**
-     * @param \Magento\Sales\Setup\SalesSetupFactory $salesSetupFactory
-     */
-    public function __construct(
-        \Magento\Sales\Setup\SalesSetupFactory $salesSetupFactory
-    ) {
-        $this->salesSetupFactory = $salesSetupFactory;
-    }
 
     public function upgrade(
-        ModuleDataSetupInterface $setup,
+        SchemaSetupInterface $setup,
         ModuleContextInterface $context
     ) {
         $installer = $setup;
-
         $installer->startSetup();
 
         $tableName = $installer->getConnection()->getTableName(
-            'sales_order_grid'
+            "sales_order_grid"
         );
+
         $columnName = "multisafepay_status";
-
         if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
-            $salesSetup = $this->salesSetupFactory->create(
-                ['resourceName' => 'sales_setup', 'setup' => $installer]
-            );
-
-            $salesSetup->addAttribute(
-                Order::ENTITY,
-                $columnName,
-                [
-                    'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                    'length'   => 255,
-                    'visible'  => false,
-                    'nullable' => true
-                ]
-            );
+            if (!$installer->getConnection()->tableColumnExists(
+                $installer->getTable($tableName), $columnName
+            )
+            ) {
+                $installer->getConnection()->addColumn(
+                    $installer->getTable($tableName),
+                    $columnName,
+                    [
+                        'type'    => Table::TYPE_TEXT,
+                        'length'  => 255,
+                        'comment' => 'MultiSafepay status'
+                    ]
+                );
+            }
         }
+
         $installer->endSetup();
     }
+
 }

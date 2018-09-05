@@ -63,6 +63,7 @@ class InstallData implements InstallDataInterface
         $tableName = $installer->getConnection()->getTableName(
             'sales_order_grid'
         );
+        $columnName = "multisafepay_status";
 
         if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
             $salesSetup = $this->salesSetupFactory->create(
@@ -71,22 +72,12 @@ class InstallData implements InstallDataInterface
 
             $salesSetup->addAttribute(
                 Order::ENTITY,
-                'multisafepay_status',
+                $columnName,
                 [
                     'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'length'   => 255,
                     'visible'  => false,
                     'nullable' => true
-                ]
-            );
-
-            $installer->getConnection()->addColumn(
-                $installer->getTable($tableName),
-                'multisafepay_status',
-                [
-                    'type'    => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                    'length'  => 255,
-                    'comment' => 'MultiSafepay status'
                 ]
             );
         }
