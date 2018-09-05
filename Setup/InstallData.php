@@ -64,7 +64,7 @@ class InstallData implements InstallDataInterface
             'sales_order_grid'
         );
 
-        if ($installer->getConnection()->isTableExists($tableName)) {
+        if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
             $salesSetup = $this->salesSetupFactory->create(
                 ['resourceName' => 'sales_setup', 'setup' => $installer]
             );
