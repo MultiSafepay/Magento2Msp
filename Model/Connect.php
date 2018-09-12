@@ -1063,7 +1063,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $status = $msporder->status;
 
-        $customerID = $this->_customerSession->getCustomer()->getId();
+        $customerID = $order->getCustomerId();
 
         if (!is_null($customerID)
             && $this->_mspHelper->isEnabled('tokenization')
