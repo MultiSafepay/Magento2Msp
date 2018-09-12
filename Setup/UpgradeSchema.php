@@ -96,7 +96,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 )
                 ->addColumn(
                     'order_id',
-                    Table::TYPE_INTEGER,
+                    Table::TYPE_TEXT,
                     null,
                     [
                         'nullable' => false,

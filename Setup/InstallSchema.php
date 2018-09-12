@@ -93,7 +93,7 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'order_id',
-                    Table::TYPE_INTEGER,
+                    Table::TYPE_TEXT,
                     null,
                     [
                         'nullable' => false,
