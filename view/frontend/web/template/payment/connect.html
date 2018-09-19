@@ -122,10 +122,7 @@
         <!-- ko if: showAddRecurringData() -->
         <!-- ko ifnot: selectedRecurring -->
         <input type="checkbox" name="saveCreditCard" id="saveCreditCard" data-bind="attr: {value:true}, checked: useCustomName">&nbsp;<label for="saveCreditCard">
-        <span><b><!-- ko i18n: 'Save your credit card details for a next purchase.' --><!-- /ko --> </b><!-- ko i18n: 'It is safe and easy' --><!-- /ko --></span></label>
-        <a>
-        <span class="luma info" id="mspMoreInformation" data-bind="click: showRecurringModal"></span>
-        </a>
+        <span><b><!-- ko i18n: 'Save your credit card details for a next purchase.' --><!-- /ko --> </b></span></label>
         <br />
         <div data-bind="if:useCustomName">
             <input type="text" name="custom_name" placeholder="Name" data-bind="attr:{'data-type' : getCode()}">
