@@ -1,3 +1,15 @@
+# Release Notes - Magento 2 MultiSafepay plug-in 1.6.0 (Sep 21, 2018) #
+
+## Added ##
++ PLGMAGTWOS-295: Add Tokenization
+
+## Changed ##
++ PLGMAGTWOS-306: Refactor UpgradeData according to Magento2 standard
+
+## Fixed ##
++ PLGMAGTWOS-303: Fix compilation error on Magento 2.1 with context object
++ PLGMAGTWOS-305: Take table prefix into account when adding multisafepay_status
+
 # Release Notes - Magento 2 MultiSafepay plug-in 1.5.1 (Aug 24, 2018) #
 
 ## Added ##

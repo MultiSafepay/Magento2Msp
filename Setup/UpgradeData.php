@@ -34,6 +34,7 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Sales\Model\Order;
+use Magento\Framework\DB\Ddl\Table;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -62,30 +63,21 @@ class UpgradeData implements UpgradeDataInterface
         $tableName = $installer->getConnection()->getTableName(
             'sales_order_grid'
         );
+        $columnName = 'multisafepay_status';
 
-        if ($installer->getConnection()->isTableExists($tableName)) {
+        if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
             $salesSetup = $this->salesSetupFactory->create(
                 ['resourceName' => 'sales_setup', 'setup' => $installer]
             );
 
             $salesSetup->addAttribute(
                 Order::ENTITY,
-                'multisafepay_status',
+                $columnName,
                 [
-                    'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'type'     => Table::TYPE_TEXT,
                     'length'   => 255,
                     'visible'  => false,
                     'nullable' => true
-                ]
-            );
-
-            $installer->getConnection()->addColumn(
-                $installer->getTable($tableName),
-                'multisafepay_status',
-                [
-                    'type'    => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                    'length'  => 255,
-                    'comment' => 'MultiSafepay Status'
                 ]
             );
         }

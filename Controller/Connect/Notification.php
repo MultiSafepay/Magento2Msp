@@ -41,6 +41,8 @@ use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 
 use MultiSafepay\Connect\Helper\Data;
 use MultiSafepay\Connect\Model\Connect;
+use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+
 
 /**
  * Responsible for loading page content.
@@ -70,6 +72,8 @@ class Notification extends \Magento\Framework\App\Action\Action
      */
     protected $_requestHttp;
 
+    public $_mspToken;
+
     public function __construct(
         Context $context,
         Registry $coreRegistry,
@@ -79,7 +83,8 @@ class Notification extends \Magento\Framework\App\Action\Action
         Connect $connect,
         InvoiceSender $invoiceSender,
         StoreManagerInterface $storeManager,
-        StockRegistryProviderInterface $stockRegistryProvider
+        StockRegistryProviderInterface $stockRegistryProvider,
+        MultisafepayTokenizationFactory $tokenizationFactory
     ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
@@ -91,11 +96,19 @@ class Notification extends \Magento\Framework\App\Action\Action
         $this->_mspHelper = $data;
         $this->_mspConnect = $connect;
         $this->_stockRegistryProvider = $stockRegistryProvider;
+
+        $this->_mspToken = $tokenizationFactory;
     }
 
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
+
+        if(isset($params['hash'])){
+            $recurringId = $this->_mspHelper->getRecurringIdByHash($params['hash']);
+            $this->_mspToken->create()->load($recurringId)->delete();
+            return true;
+        }
         $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
         if (!isset($params['timestamp'])) {
             $this->getResponse()->setContent('No timestamp is set so we are stopping the callback');

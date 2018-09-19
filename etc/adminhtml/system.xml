@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <tab id="multisafepay" translate="label" sortOrder="400">
-      <label>MultiSafepay (1.5.1)</label>
+      <label>MultiSafepay (1.6.0)</label>
     </tab>
     <section id="multisafepay" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
@@ -43,6 +43,11 @@
             <label>Use base currency?</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <comment>When set to Yes, the base currency will be used for the transaction request, else the store view currency will be active</comment>
+        </field>
+        <field id="tokenization" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Tokenization</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <comment>Select whether or not tokenization should be available.</comment>
         </field>
         <!--<field id="order_update_email" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Send order update e-mail to customer</label>
