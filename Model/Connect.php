@@ -53,6 +53,7 @@ use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\OrderNotifier;
@@ -1301,7 +1302,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * Process completed payment (either full or partial)
      *
      * @param bool $skipFraudDetection
+     * @param string$transactionid
+     * @param  Order $order
+     * @param \stdClass $msporder
      * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function _registerPaymentCapture($skipFraudDetection, $transactionid, $order, $msporder)
     {
@@ -1336,7 +1341,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
             }
 
-            $order->save();
+            // Force order status/state processing
+            $order->setState(Order::STATE_PROCESSING);
+            $order->setStatus(Order::STATE_PROCESSING);
+            $this->_orderRepositoryInterface->save($order);
 
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
             $environment = $this->getMainConfigData('msp_env');
