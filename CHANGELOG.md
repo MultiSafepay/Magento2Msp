@@ -1,3 +1,8 @@
+# Release Notes - Magento 2 MultiSafepay plug-in 1.6.1 (Oct 16, 2018) #
+
+## Fixed ##
++ PLGMAGTWOS-323: Fix [Magento 2.2.6 issue](https://github.com/magento/magento2/issues/18148) where paid orders were stuck to Pending. Thanks to [Tjitse-E](https://github.com/Tjitse-E) for the patch.
+
 # Release Notes - Magento 2 MultiSafepay plug-in 1.6.0 (Sep 21, 2018) #
 
 ## Added ##
