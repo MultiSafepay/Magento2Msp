@@ -53,8 +53,10 @@ use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order\StatusResolver;
 use Magento\Sales\Model\OrderNotifier;
 use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\Data as HelperData;
@@ -204,6 +206,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_localeResolver;
     protected $_orderRepositoryInterface;
     protected $_orderNotifier;
+    protected $_statusResolver;
     public $_invoiceSender;
     public $banktransurl;
     protected $logger;
@@ -232,6 +235,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \Magento\Framework\Locale\Resolver                      $localeResolver
      * @param \Magento\Sales\Api\OrderRepositoryInterface             $orderRepositoryInterface
      * @param \Magento\Sales\Model\OrderNotifier                      $orderNotifier
+     * @param \Magento\Sales\Model\Order\StatusResolver               $statusResolver
      * @param \MultiSafepay\Connect\Model\Api\MspClient               $mspClient
      * @param \MultiSafepay\Connect\Helper\Data as HelperData         $helperData
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
@@ -261,6 +265,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         Resolver $localeResolver,
         OrderRepositoryInterface $orderRepositoryInterface,
         OrderNotifier $orderNotifier,
+        StatusResolver $statusResolver,
 
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
@@ -312,6 +317,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_localeResolver = $localeResolver;
         $this->_orderRepositoryInterface = $orderRepositoryInterface;
         $this->_orderNotifier = $orderNotifier;
+        $this->_statusResolver = $statusResolver;
 
         $invoiceId = $requestHttp->getParam('invoice_id');
         if ($invoiceId && $app_state->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
@@ -1301,7 +1307,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * Process completed payment (either full or partial)
      *
      * @param bool $skipFraudDetection
+     * @param string $transactionid
+     * @param Order $order
+     * @param \stdClass $msporder
      * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function _registerPaymentCapture($skipFraudDetection, $transactionid, $order, $msporder)
     {
@@ -1336,7 +1346,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
             }
 
-            $order->save();
+            // Force order to Processing to solve https://github.com/magento/magento2/issues/18148
+            $state = Order::STATE_PROCESSING;            
+            $status = $this->_statusResolver->getOrderStatusByState($order, $state);
+            $order->setState($state);
+            $order->setStatus($status);
+            
+            $this->_orderRepositoryInterface->save($order);
 
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
             $environment = $this->getMainConfigData('msp_env');
