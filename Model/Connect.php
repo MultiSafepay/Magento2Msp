@@ -1125,7 +1125,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
         }
 
-        $order->setData('multisafepay_status', ucfirst($status))->save();
+        $order->setMultisafepayStatus(ucfirst($status));
 
         /**
          *    Start undo cancel function
