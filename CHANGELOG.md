@@ -1,3 +1,13 @@
+# Release Notes - Magento 2 MultiSafepay plug-in 1.6.2 (Oct 24, 2018) #
+
+## Changed ##
++ PLGMAGTWOS-328: Update Dutch translations. Thanks to [jeroenalewijns](https://github.com/jeroenalewijns)
+
+## Fixed ##
++ PLGMAGTWOS-324: Fix expected identifier error in checkout with Internet Explorer 11. Thanks to [lexbeelen](https://github.com/lexbeelen)
++ PLGMAGTWOS-322: Fix reopened paid orders which didn't get an invoice
++ PLGMAGTWOS-231: Enable refund shipping amount when shipping includes tax
+
 # Release Notes - Magento 2 MultiSafepay plug-in 1.6.1 (Oct 16, 2018) #
 
 ## Fixed ##

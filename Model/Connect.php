@@ -580,7 +580,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => array(
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.6.1',
+                    "plugin_version" => ' - Plugin 1.6.2',
                     "partner" => "MultiSafepay",
                 ),
                 "gateway_info" => array(
@@ -1125,7 +1125,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
         }
 
-        $order->setData('multisafepay_status', ucfirst($status))->save();
+        $order->setMultisafepayStatus(ucfirst($status));
 
         /**
          *    Start undo cancel function
@@ -1519,7 +1519,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
                 //The complete shipping cost is refunded also so we can remove it from the checkout data and refund it
                 if ($item->merchant_item_id == 'msp-shipping') {
-                    if ($data['shipping_amount'] == $order->getShippingAmount()) {
+                    $storeId = $this->getStore();
+                    $taxSalesDisplayShipping = $this->_scopeConfig->getValue('tax/sales_display/shipping', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+                    if ($data['shipping_amount'] == $order->getShippingAmount() || ($taxSalesDisplayShipping == \Magento\Tax\Model\Config::DISPLAY_TYPE_INCLUDING_TAX && $data['shipping_amount'] == $order->getShippingInclTax())) {
                         $refundItem = new \stdclass();
                         $refundItem->name = $item->name;
                         $refundItem->description = $item->description;

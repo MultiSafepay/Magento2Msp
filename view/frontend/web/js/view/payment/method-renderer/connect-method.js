@@ -54,7 +54,7 @@ define(
         url,
         ui,
         modal,
-        ko,
+        ko
     ) {
         var configConnect = window.checkoutConfig.payment.connect;
         'use strict';
