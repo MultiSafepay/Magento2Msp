@@ -595,7 +595,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         //$this->logger->info(print_r($msporder, true));
         if ($this->_gatewayCode != "BANKTRANS") {
-            $order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . $this->_client->orders->getPaymentLink(), false);
+            $order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . htmlspecialchars($this->_client->orders->getPaymentLink()), false);
             $order->save();
         } else {
             $order->addStatusToHistory($order->getStatus(), "Banktransfer transaction started, waiting for payment", false);
