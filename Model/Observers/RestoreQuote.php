@@ -95,7 +95,7 @@ class RestoreQuote implements ObserverInterface
 
             if ($lastRealOrder->getState() == $state) {
                 $payment = $lastRealOrder->getPayment()->getMethodInstance();
-                if (is_object($payment) && in_array($payment->getCode(), $helper->gateways) && $payment->getCode() != "mspbanktransfer") {
+                if (is_object($payment) && $helper->isMspGateway($payment->getCode()) && $payment->getCode() != "mspbanktransfer") {
                     $session->restoreQuote();
                 }
             }

@@ -761,7 +761,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $used_method = $this->_mspHelper->getPaymentCode($msp_gateway);
         $method_activated = false;
 
-        if (in_array($used_method, $this->_mspHelper->gateways)) {
+        if ($this->_mspHelper->isMspGateway($used_method)) {
             $is_method_active = $this->getGlobalConfig('gateways/' . $used_method . '/active');
             $type = 'gateways';
         } else {
