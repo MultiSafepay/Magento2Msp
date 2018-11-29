@@ -1,3 +1,8 @@
+# Release Notes - Magento 2 MultiSafepay plug-in 1.6.3 (Nov 29, 2018) #
+
+## Fixed ##
++ PLGMAGTWOS-222: Remove PHP requirement from composer.json to fix incompatible issue with Magento 2.3.0 and PHP 7.2 requirement
+
 # Release Notes - Magento 2 MultiSafepay plug-in 1.6.2 (Oct 24, 2018) #
 
 ## Changed ##
