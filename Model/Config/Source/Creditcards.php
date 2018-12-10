@@ -40,6 +40,14 @@ class Creditcards
     /**
      * @return array
      */
+    public function tokenizationSupported()
+    {
+        return array("VISA", "MASTERCARD", "AMEX");
+    }
+
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
         return array(
