@@ -146,46 +146,50 @@ class ConnectConfigProvider implements
     {
         //gateways
         $images = array();
-        foreach ($this->_mspHelper->gateways as $key => $value) {
-            $asset = $this->_assetRepo->createAsset(
-                "MultiSafepay_Connect::images/" . strtolower(
-                    $this->localeResolver->getLocale()
-                ) . '/' . $value . ".png"
-            );
-            try {
-                if ($asset->getSourceFile()) {
-                    $images[$value] = $this->_assetRepo->getUrl(
-                        "MultiSafepay_Connect::images/" . strtolower(
-                            $this->localeResolver->getLocale()
-                        ) . '/' . $value . ".png"
+        foreach ($this->_mspHelper->gateways as $gatewayCode => $value) {
+            if($this->_mspHelper->isMspGateway($gatewayCode)) {
+                $asset = $this->_assetRepo->createAsset(
+                    "MultiSafepay_Connect::images/" . strtolower(
+                        $this->localeResolver->getLocale()
+                    ) . '/' . $gatewayCode . ".png"
+                );
+                try {
+                    if ($asset->getSourceFile()) {
+                        $images[$gatewayCode] = $this->_assetRepo->getUrl(
+                            "MultiSafepay_Connect::images/" . strtolower(
+                                $this->localeResolver->getLocale()
+                            ) . '/' . $gatewayCode . ".png"
+                        );
+                    }
+                } catch (\Exception $e) {
+                    $images[$gatewayCode] = $this->_assetRepo->getUrl(
+                        "MultiSafepay_Connect::images/nl_nl/" . $gatewayCode . ".png"
                     );
                 }
-            } catch (\Exception $e) {
-                $images[$value] = $this->_assetRepo->getUrl(
-                    "MultiSafepay_Connect::images/nl_nl/" . $value . ".png"
-                );
             }
         }
 
         //giftcards
-        foreach ($this->_mspHelper->giftcards as $key => $value) {
-            $asset = $this->_assetRepo->createAsset(
-                "MultiSafepay_Connect::images/" . strtolower(
-                    $this->localeResolver->getLocale()
-                ) . '/' . $value . ".png"
-            );
-            try {
-                if ($asset->getSourceFile()) {
-                    $images[$value] = $this->_assetRepo->getUrl(
-                        "MultiSafepay_Connect::images/" . strtolower(
-                            $this->localeResolver->getLocale()
-                        ) . '/' . $value . ".png"
+        foreach ($this->_mspHelper->gateways as $giftcardCode => $value) {
+            if($this->_mspHelper->isMspGiftcard($giftcardCode)) {
+                $asset = $this->_assetRepo->createAsset(
+                    "MultiSafepay_Connect::images/" . strtolower(
+                        $this->localeResolver->getLocale()
+                    ) . '/' . $giftcardCode . ".png"
+                );
+                try {
+                    if ($asset->getSourceFile()) {
+                        $images[$giftcardCode] = $this->_assetRepo->getUrl(
+                            "MultiSafepay_Connect::images/" . strtolower(
+                                $this->localeResolver->getLocale()
+                            ) . '/' . $giftcardCode . ".png"
+                        );
+                    }
+                } catch (\Exception $e) {
+                    $images[$giftcardCode] = $this->_assetRepo->getUrl(
+                        "MultiSafepay_Connect::images/nl_nl/" . $giftcardCode . ".png"
                     );
                 }
-            } catch (\Exception $e) {
-                $images[$value] = $this->_assetRepo->getUrl(
-                    "MultiSafepay_Connect::images/nl_nl/" . $value . ".png"
-                );
             }
         }
         return $images;

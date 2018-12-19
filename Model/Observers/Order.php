@@ -97,7 +97,7 @@ class Order implements ObserverInterface
 
         $payment = $order->getPayment()->getMethodInstance();
 
-        if (!in_array($payment->getCode(), $this->_mspData->gateways)) {
+        if(!$this->_mspData->isMspGateway($payment->getCode())) {
             return $this;
         }
 
