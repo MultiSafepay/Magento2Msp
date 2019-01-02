@@ -94,6 +94,9 @@
         <method name="trustly">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="multisafepay">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>        
         <method name="idealqr">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
