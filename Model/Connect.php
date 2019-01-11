@@ -61,6 +61,7 @@ use Magento\Sales\Model\OrderNotifier;
 use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
+use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
@@ -207,6 +208,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_orderRepositoryInterface;
     protected $_orderNotifier;
     protected $_statusResolver;
+    protected $_creditcards;
     public $_invoiceSender;
     public $banktransurl;
     protected $logger;
@@ -238,6 +240,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \Magento\Sales\Model\Order\StatusResolver               $statusResolver
      * @param \MultiSafepay\Connect\Model\Api\MspClient               $mspClient
      * @param \MultiSafepay\Connect\Helper\Data as HelperData         $helperData
+     * @param Creditcards                                             $creditcards
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb           $resourceCollection
      * @param array                                                   $data
@@ -270,6 +273,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
         HelperData $helperData,
+        Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
@@ -296,6 +300,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
+        $this->_creditcards = $creditcards;
 
         $this->_minAmount = $this->getConfigData('min_order_total');
         $this->_maxAmount = $this->getConfigData('max_order_total');
@@ -368,16 +373,29 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if (isset($params['creditcard'])) {
             $this->_gatewayCode = $params['creditcard'];
+        } elseif (in_array(
+            $params['recurring_hash'],
+            $this->_creditcards->tokenizationSupported()
+        )
+        ) {
+            $this->_gatewayCode = $params['recurring_hash'];
         }
 
-        if (isset($params['recurring_hash']) && $params['recurring_hash'] != "" && $this->_mspHelper->isEnabled('tokenization')) {
-            $recurringId = $this->_mspHelper->getRecurringIdByHash($params['recurring_hash']);
+        $recurring = null;
+
+        if (isset($params['recurring_hash']) &&
+            $params['recurring_hash'] != "" &&
+            $this->_mspHelper->isEnabled('tokenization') &&
+            !in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported())
+        ) {
+
+            $recurringId = $this->_mspHelper->getRecurringIdByHash(
+                $params['recurring_hash']
+            );
             $recurring = $this->_mspToken->create()->load($recurringId);
-            if($recurring['customer_id'] !== $this->_customerSession->getCustomer()->getId()){
+            if ($recurring['customer_id'] !== $this->_customerSession->getCustomer()->getId()) {
                 $recurring = null;
             }
-        }else{
-            $recurring = null;
         }
 
         $environment = $this->getMainConfigData('msp_env');
@@ -519,7 +537,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             && $this->_mspHelper->isEnabled('tokenization')
             && isset($params['save'])
             && filter_var($params['save'], FILTER_VALIDATE_BOOLEAN)
-            && empty($params['recurring_hash'])
+            && (in_array($params['recurring_hash'],$this->_creditcards->tokenizationSupported()) || empty($params['recurring_hash']))
         ) {
 
             $model = $this->_mspToken->create();

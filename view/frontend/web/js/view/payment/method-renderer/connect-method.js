@@ -66,7 +66,8 @@ define(
                 creditcard: '',
                 active_method: 'ideal',
                 recurring: '',
-                showInput: false
+                showInput: false,
+                supportedTokenization: ['visa','americanexpress','mastercard']
             },
             useCustomName: ko.observable(false),
             initialize: function () {
@@ -127,11 +128,28 @@ define(
                 return true;
             },
             afterPlaceOrder: function () {
+                var $self = this;
                 if (this.item.method == 'ideal') {
                     window.location.replace(url.build('multisafepay/connect/redirect/?issuer=' + $('[name="issuerid"]').val()));
-                } else if (this.item.method == 'creditcard') {
+                } else if (
+                    this.item.method == 'creditcard' &&
+                    $("#creditcard_expiration").val() != "" &&
+                    $self.selectedRecurring() != "MAESTRO"
+                ) {
+                    var active = this.item.method;
+                    var hash = $("#creditcard_expiration").val();
+                    var name = $('[name="custom_name"][data-type="' + active + '"]').val();
+                    var save = this.useCustomName();
+                    if (hash === undefined) {
+                        hash = "";
+                    }
+                    if (name === undefined) {
+                        name = "";
+                    }
+                    window.location.replace(url.build('multisafepay/connect/redirect/?recurring_hash=' + hash + '&name=' + name + '&save=' + save));
+                    } else if (this.item.method == 'creditcard') {
                     window.location.replace(url.build('multisafepay/connect/redirect/?creditcard=' + $('[name="creditcard"]').val()));
-                } else if (this.item.method == 'visa' || this.item.method == 'mastercard' || this.item.method == 'americanexpress') {
+                } else if (this.supportedTokenization.includes(this.item.method)) {
                     var active = this.item.method;
                     var hash = $('[name="recurring"][data-type="' + active + '"]').val();
                     var name = $('[name="custom_name"][data-type="' + active + '"]').val();
@@ -167,10 +185,9 @@ define(
             },
             showRecurring: function () {
                 if (configConnect.recurrings.enabled) {
-                    if (this.item.method == 'visa' || this.item.method == 'mastercard' || this.item.method == 'americanexpress') {
+                    if (this.supportedTokenization.includes(this.item.method)) {
                         var active = this.item.method;
                         if (configConnect.recurrings[active].hasRecurrings) {
-
                             return true;
                         }
                     }
@@ -180,7 +197,7 @@ define(
             },
             showAddRecurringData: function () {
                 if (configConnect.recurrings.enabled && customer.isLoggedIn()) {
-                    if (this.item.method == 'visa' || this.item.method == 'mastercard' || this.item.method == 'americanexpress') {
+                    if (this.supportedTokenization.includes(this.item.method) || this.item.method == 'creditcard') {
                         return true;
                     }
                 }
@@ -191,7 +208,11 @@ define(
                 if (confirm($.mage.__('Are you sure you want to delete this creditcard?'))) {
                     var active = this.item.method;
                     var target = $("select[name='recurring'][data-type='"+ active + "']");
+                    if(target.length < 1){
+                        target = $("#creditcard_expiration");
+                    }
                     var value = $(target).val();
+
                     //AJAX CALL
                     $.ajax({
                         url: url.build('multisafepay/connect/notification/'),
@@ -202,24 +223,37 @@ define(
                         },
                         complete: function(response){
                             $(target).find("option:selected").remove();
-                            $self.recurringMethods[active].remove(function (item){
-                                return item.value === value
-                            });
-                            $self.selectedRecurring(null);
+                            $self.selectedRecurring(false);
                         }
                     })
                 }
             },
+            allTokens: {},
             selectedRecurring: ko.observable(),
+            showTokenSave: ko.observable(),
             recurringMethods: Array(),
             clearSelectedRecurring: function(){
                 $("select[name='recurring']").val("");
+                $("#creditcard_expiration").val("");
+                this.showSaveToken();
                 this.useCustomName(false);
                 return this.selectedRecurring(null);
             },
             setSelectedRecurring: function(data, event){
+                var creditcards = ['VISA','AMEX','MASTERCARD']; //MAESTRO not included because it has no tokenization support
+
                 var target = event.currentTarget;
                 var value = $(target).val();
+
+                //Check if save data should be shown
+                this.showSaveToken();
+
+                if($(target).attr('id') === 'creditcard_expiration') {
+                    if (creditcards.includes(value)) {
+                        return this.selectedRecurring(false);
+                    }
+                }
+
                 return this.selectedRecurring(value)
             },
 
@@ -227,12 +261,45 @@ define(
                 return configConnect.issuers;
             },
             getCreditcards: function () {
-                return configConnect.creditcards;
+                var data = configConnect.creditcards;
+
+                //Get all tokens
+                var allTokens = this.getAllTokens();
+                
+                allTokens.forEach(function (value, index, array) {
+                    data.push(value);
+                });
+
+                return data;
+            },
+            getAllTokens: function () {
+                var tokens = [];
+
+                if(!configConnect.recurrings.enabled){
+                    return;
+                }
+
+                this.supportedTokenization.forEach(function (creditcard){
+                    configConnect.recurrings[creditcard].recurrings.forEach(function (value){
+                        tokens.push(value);
+                    });
+                });
+
+                return tokens;
+
             },
             getRecurrings: function () {
                 var active = this.item.method;
                 this.recurringMethods[active] = ko.observableArray(configConnect.recurrings[active].recurrings);
                 return ko.observableArray(configConnect.recurrings[active].recurrings);
+            },
+            showSaveToken: function (){
+                if (
+                    $("#creditcard_expiration").val() == "" && this.item.method == "creditcard"
+                ) {
+                    return this.showTokenSave(false);
+                }
+                return this.showTokenSave(true);
             },
             showRecurringModal: function () {
                 $('<div />').html('<ol>' +
