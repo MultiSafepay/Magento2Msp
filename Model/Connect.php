@@ -50,6 +50,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
@@ -1125,7 +1126,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
         }
 
-        $order->setMultisafepayStatus(ucfirst($status));
+        $this->setMultisafepayStatus($order, $status);
 
         /**
          *    Start undo cancel function
@@ -1347,11 +1348,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
 
             // Force order to Processing to solve https://github.com/magento/magento2/issues/18148
-            $state = Order::STATE_PROCESSING;            
+            $state = Order::STATE_PROCESSING;
             $status = $this->_statusResolver->getOrderStatusByState($order, $state);
             $order->setState($state);
             $order->setStatus($status);
-            
+
             $this->_orderRepositoryInterface->save($order);
 
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
@@ -1815,5 +1816,21 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         return $size - $pos - strlen($needle);
+    }
+
+    /**
+     * You can use this method to communicate the multisafepay status to other systems by using a plugin
+     * @param OrderInterface $order
+     * @param string $status
+     * @return array
+     */
+    public function setMultisafepayStatus(OrderInterface $order, string $status)
+    {
+        $formatStatus = ucfirst($status);
+        $order->setMultisafepayStatus($formatStatus);
+        return [
+            'orderId' => $order->getEntityId(),
+            'mspStatus' => $formatStatus
+        ];
     }
 }
