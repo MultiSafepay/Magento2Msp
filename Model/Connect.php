@@ -373,11 +373,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if (isset($params['creditcard'])) {
             $this->_gatewayCode = $params['creditcard'];
-        } elseif (in_array(
-            $params['recurring_hash'],
-            $this->_creditcards->tokenizationSupported()
-        )
-        ) {
+        } elseif ( isset($params['recurring_hash'])
+            && in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported()))
+        {
             $this->_gatewayCode = $params['recurring_hash'];
         }
 
