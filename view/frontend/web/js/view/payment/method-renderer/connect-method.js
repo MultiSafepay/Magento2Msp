@@ -276,7 +276,7 @@ define(
                 var tokens = [];
 
                 if(!configConnect.recurrings.enabled){
-                    return;
+                    return [];
                 }
 
                 this.supportedTokenization.forEach(function (creditcard){
