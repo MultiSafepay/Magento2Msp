@@ -376,7 +376,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, null));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConnectConfigData('ive_api_key', null, null));
+            $this->_client->setApiKey($this->getConnectConfigData('live_api_key', null, null));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
