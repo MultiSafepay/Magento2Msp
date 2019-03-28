@@ -444,15 +444,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $currency = $this->_mspHelper->getCurrencyCode($order, $use_base_currency);
 
-        $addressData = $this->parseCustomerAddress($billing->getStreetLine(1));
-
-        if (isset($addressData['housenumber']) && !empty($addressData['housenumber'])) {
-            $street = $addressData['address'];
-            $housenumber = $addressData['housenumber'];
-        } else {
-            $street = $billing->getStreetLine(1);
-            $housenumber = $billing->getStreetLine(2);
-        }
+        $addressData = $this->parseCustomerAddress($billing->getStreetLine(1), $billing->getStreetLine(2));
+        $street = $addressData['address'];
+        $housenumber = $addressData['housenumber'];
 
         if ($billing->getTelephone() == '-') {
             $phone = '';
@@ -464,14 +458,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         //Shipping
         if ($order->canShip()) {
-            $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1));
-            if (isset($shippingaddressData['housenumber']) && !empty($shippingaddressData['housenumber'])) {
-                $shipping_street = $shippingaddressData['address'];
-                $shipping_housenumber = $shippingaddressData['housenumber'];
-            } else {
-                $shipping_street = $shipping->getStreetLine(1);
-                $shipping_housenumber = $shipping->getStreetLine(2);
-            }
+            $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1), $shipping->getStreetLine(2));
+            $shipping_street = $shippingaddressData['address'];
+            $shipping_housenumber = $shippingaddressData['housenumber'];
 
             if ($shipping->getTelephone() == '-') {
                 $shipping_phone = '';
@@ -1778,43 +1767,48 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         return $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    public function parseCustomerAddress($street_address)
+    public function parseCustomerAddress($street_address1, $street_address2)
     {
-        list($address, $apartment) = $this->parseAddress($street_address);
+        list($address, $apartment) = $this->parseAddress($street_address1, $street_address2);
         $customer['address'] = $address;
         $customer['housenumber'] = $apartment;
         return $customer;
     }
 
-    /*
+    /**
      * Parses and splits up an address in street and housenumber
+     *
+     * @param string $address1
+     * @param string $address2
+     *
+     * @return array
      */
-
-    public function parseAddress($street_address)
+    public function parseAddress($address1, $address2)
     {
-        $address = $street_address;
-        $apartment = "";
+        // Trim the addresses
+        $address1 = trim($address1);
+        $address2 = trim($address2);
+        $fullAddress = trim("{$address1} {$address2}");
+        $fullAddress = preg_replace("/[[:blank:]]+/"," ",$fullAddress);
 
-        $offset = strlen($street_address);
+        // Make array of all regex matches
+        $matches = [];
 
-        while (($offset = $this->rstrpos($street_address, ' ', $offset)) !== false) {
-            if ($offset < strlen($street_address) - 1 && is_numeric($street_address[$offset + 1])) {
-                $address = trim(substr($street_address, 0, $offset));
-                $apartment = trim(substr($street_address, $offset + 1));
-                break;
-            }
-        }
+        /**
+         * Regex part one: Add all before number.
+         * If number contains whitespace, Add it also to street.
+         * All after that will be added to apartment
+         */
+        $pattern = '/(.+?)\s?([\d]+[\S]*)$/';
+        preg_match($pattern, $fullAddress, $matches);
 
-        if (empty($apartment) && strlen($street_address) > 0 && is_numeric($street_address[0])) {
-            $pos = strpos($street_address, ' ');
+        //Save the street and apartment and trim the result
+        $street = isset($matches[1]) ? $matches[1] : '';
+        $apartment = isset($matches[2]) ? $matches[2] : '';
+        $street = trim($street);
+        $apartment = trim($apartment);
 
-            if ($pos !== false) {
-                $apartment = trim(substr($street_address, 0, $pos), ", \t\n\r\0\x0B");
-                $address = trim(substr($street_address, $pos + 1));
-            }
-        }
-
-        return array($address, $apartment);
+        return [$street, $apartment];
     }
 
     // From http://www.php.net/manual/en/function.strrpos.php#78556
