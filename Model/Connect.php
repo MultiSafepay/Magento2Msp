@@ -369,6 +369,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         if ($order->canShip()) {
             $shipping = $order->getShippingAddress();
         }
+
+        if (is_null($order->getPayment())) {
+            return false;
+        }
         $this->_gatewayCode = $order->getPayment()->getMethodInstance()->_gatewayCode;
 
         if (isset($params['creditcard'])) {
