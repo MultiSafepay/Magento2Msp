@@ -96,55 +96,58 @@ class Cancel extends \Magento\Framework\App\Action\Action
     {
         $params = $this->_requestHttp->getParams();
 
-        if (isset($params['transactionid'])) {
-            $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
-            $incrementId = $params['transactionid'];
-        } else {
-            $incrementId = null;
+        if(!$this->validateParams($params) || !$this->_mspHelper->validateOrderHash($params['transactionid'], $params['hash']))
+        {
+            $this->_redirect('checkout/cart');
+            return;
         }
+
+        $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
+        $incrementId = $params['transactionid'];
         $this->_session->restoreQuote();
 
-        if ($incrementId) {
-            /* @var $order \Magento\Sales\Model\Order */
-            $order = $this->_order->loadByIncrementId($incrementId);
+        /* @var $order \Magento\Sales\Model\Order */
+        $order = $this->_order->loadByIncrementId($incrementId);
 
-            if ($order->getId()) {
-                try {
-                    $environment = $this->_mspHelper->getMainConfigData('msp_env');
-                    $this->_mspHelper->initializeClient($environment, $order, $this->_client);
-                    $orderDetails = $this->_client->orders->get('orders', $incrementId);
+        if ($order->getId()) {
+            try {
+                $environment = $this->_mspHelper->getMainConfigData('msp_env');
+                $this->_mspHelper->initializeClient($environment, $order, $this->_client);
+                $orderDetails = $this->_client->orders->get('orders', $incrementId);
 
-                    /** @var \Magento\Quote\Model\Quote $quote */
-                    $quote = $this->_cartRepository->get($order->getQuoteId());
+                /** @var \Magento\Quote\Model\Quote $quote */
+                $quote = $this->_cartRepository->get($order->getQuoteId());
 
-                    $quote->setIsActive(1)->setReservedOrderId(null);
-                    $this->_cartRepository->save($quote);
-                } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-                }
-                //Cancel the order so a new one can created
-                //You can disable the line below if you are using a fulfillment system that does not expect the order to be cancelled,
-                //but reopened again by second chance. Removing the line will keep the order pending. (PLGMAGTWOS-196)
-                $order->registerCancellation('Order cancelled by customer')->save();
-
-                $message = "The transaction was cancelled or declined and the order was closed, please try again.";
-
-                $reason_code = empty($orderDetails->reason_code) ? '' : ":{$orderDetails->reason_code}";
-
-                $reason = empty($orderDetails->reason) ? '' : "<br><ul><li>{$orderDetails->reason}{$reason_code}</li></ul>";
-
-                $this->messageManager->addError(
-                    __(
-                        $message . $reason
-                    )
-                );
+                $quote->setIsActive(1)->setReservedOrderId(null);
+                $this->_cartRepository->save($quote);
+            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             }
+            //Cancel the order so a new one can created
+            //You can disable the line below if you are using a fulfillment system that does not expect the order to be cancelled,
+            //but reopened again by second chance. Removing the line will keep the order pending. (PLGMAGTWOS-196)
+            $order->registerCancellation('Order cancelled by customer')->save();
+
+            $message = "The transaction was cancelled or declined and the order was closed, please try again.";
+
+            $reason_code = empty($orderDetails->reason_code) ? '' : ":{$orderDetails->reason_code}";
+
+            $reason = empty($orderDetails->reason) ? '' : "<br><ul><li>{$orderDetails->reason}{$reason_code}</li></ul>";
+
+            $this->messageManager->addError(
+                __(
+                    $message . $reason
+                )
+            );
         }
 
-        if (isset($params['transactionid'])) {
-            $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
-        }
+        $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
 
         $this->_redirect('checkout/cart');
         return;
+    }
+
+    private function validateParams($params)
+    {
+        return isset($params['hash']) && isset($params['transactionid']);
     }
 }

@@ -388,7 +388,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         $notification = $this->_urlBuilder->getUrl('multisafepay/fastcheckout/notification/&type=initial', ['_nosid' => true]);
         $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/fastcheckout/success', ['_nosid' => true]), 0, -1);
-        $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/fastcheckout/cancel', ['_nosid' => true]), 0, -1) . '?transactionid=' . $quoteId;
+        $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/fastcheckout/cancel', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($quoteId);
 
         $msporder = $this->_client->orders->post(array(
             "type" => $type,
@@ -418,8 +418,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             "shopping_cart" => $shoppingCart,
             "checkout_options" => $checkoutData,
         ));
-
-        //$this->logger->info(print_r($msporder, true));
 
         return $this->_client->orders;
     }

@@ -439,18 +439,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $secondsActive = "";
         }
 
-        /**
-         * Qwindo using Fastcheckout and fastcheckout using cart data so from now we also need to add cart
-         * data to normal transactions to avoid problems with online refunds. Also this will show a more detailed payment page at MultiSafepay
-         * */
-        /* if ($this->_gatewayCode == 'PAYAFTER' || $this->_gatewayCode == 'KLARNA' || $this->_gatewayCode == 'EINVOICE') {
-          $checkoutData = $this->getCheckoutData($order, $productRepo);
-          $shoppingCart = $checkoutData["shopping_cart"];
-          $checkoutData = $checkoutData["checkout_options"];
-          } else {
-          $shoppingCart = '';
-          $checkoutData = '';
-          } */
         $use_base_currency = $this->getMainConfigData('transaction_currency');
 
         $checkoutData = $this->getCheckoutData($order, $productRepo, $use_base_currency);
@@ -531,15 +519,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_gatewayCode = "";
         }
 
+        $notification = $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]);
+        $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1);
+        $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
+
         if ($this->_isAdmin) {
             $store_id = $order->getStoreId();
             $notification = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/notification/&type=initial';
             $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/success';
-            $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/cancel' . '?transactionid=' . $order->getIncrementId();
-        } else {
-            $notification = $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]);
-            $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1);
-            $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId();
+            $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/cancel' . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
         }
 
         $customerID = $this->_customerSession->getCustomer()->getId();
