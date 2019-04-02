@@ -33,6 +33,7 @@ namespace MultiSafepay\Connect\Model;
 
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session;
+use Magento\Directory\Model\CurrencyFactory;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -197,6 +198,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_requestHttp;
+    protected $_currencyFactory;
     protected $_client;
     protected $_mspHelper;
     protected $_mspToken;
@@ -216,34 +218,39 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     public $_isAdmin = false;
 
     /**
-     * @param \Magento\Framework\Model\Context                        $context
-     * @param \Magento\Framework\Registry                             $registry
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory       $extensionFactory
-     * @param \Magento\Framework\Api\AttributeValueFactory            $customAttributeFactory
-     * @param \Magento\Payment\Helper\Data                            $paymentData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface      $scopeConfig
-     * @param \Magento\Payment\Model\Method\Logger                    $logger
-     * @param \Magento\Framework\Module\ModuleListInterface           $moduleList
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface    $localeDate
-     * @param \Magento\Store\Model\StoreManagerInterface              $storeManager
-     * @param \Magento\Checkout\Model\Session                         $checkoutSession
-     * @param \Magento\CatalogInventory\Api\StockRegistryInterface    $stockRegistry
-     * @param \Magento\Framework\UrlInterface                         $urlBuilder
-     * @param \Magento\Framework\App\RequestInterface                 $requestHttp
-     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender   $invoiceSender
-     * @param \Magento\Framework\App\ProductMetadataInterface         $productMetadataInterface
-     * @param \Magento\Sales\Api\InvoiceRepositoryInterface           $invoiceRepositoryInterface
-     * @param \Magento\Sales\Api\TransactionRepositoryInterface       $transactionRepositoryInterface
-     * @param \Magento\Framework\Locale\Resolver                      $localeResolver
-     * @param \Magento\Sales\Api\OrderRepositoryInterface             $orderRepositoryInterface
-     * @param \Magento\Sales\Model\OrderNotifier                      $orderNotifier
-     * @param \Magento\Sales\Model\Order\StatusResolver               $statusResolver
-     * @param \MultiSafepay\Connect\Model\Api\MspClient               $mspClient
-     * @param \MultiSafepay\Connect\Helper\Data as HelperData         $helperData
-     * @param Creditcards                                             $creditcards
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb           $resourceCollection
-     * @param array                                                   $data
+     * Connect constructor.
+     *
+     * @param \Magento\Framework\Model\Context                             $context
+     * @param \Magento\Framework\Registry                                  $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory            $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory                 $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data                                 $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface           $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger                         $logger
+     * @param \Magento\Framework\Module\ModuleListInterface                $moduleList
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface         $localeDate
+     * @param \Magento\Store\Model\StoreManagerInterface                   $storeManager
+     * @param \Magento\Checkout\Model\Session                              $checkoutSession
+     * @param \Magento\Framework\UrlInterface                              $urlBuilder
+     * @param \Magento\Framework\App\RequestInterface                      $requestHttp
+     * @param \Magento\CatalogInventory\Api\StockRegistryInterface         $stockRegistry
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender        $invoiceSender
+     * @param \Magento\Framework\App\ProductMetadataInterface              $productMetadataInterface
+     * @param \Magento\Sales\Api\InvoiceRepositoryInterface                $invoiceRepositoryInterface
+     * @param \Magento\Sales\Api\TransactionRepositoryInterface            $transactionRepositoryInterface
+     * @param \Magento\Framework\Locale\Resolver                           $localeResolver
+     * @param \Magento\Sales\Api\OrderRepositoryInterface                  $orderRepositoryInterface
+     * @param \Magento\Sales\Model\OrderNotifier                           $orderNotifier
+     * @param \Magento\Sales\Model\Order\StatusResolver                    $statusResolver
+     * @param \Magento\Directory\Model\CurrencyFactory                     $currencyFactory
+     * @param \MultiSafepay\Connect\Model\MultisafepayTokenizationFactory  $multisafepayTokenizationFactory
+     * @param \MultiSafepay\Connect\Model\Api\MspClient                    $mspClient
+     * @param \MultiSafepay\Connect\Helper\Data                            $helperData
+     * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
+     * @param \Magento\Customer\Model\Session                              $customerSession
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
+     * @param array                                                        $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -269,6 +276,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         OrderRepositoryInterface $orderRepositoryInterface,
         OrderNotifier $orderNotifier,
         StatusResolver $statusResolver,
+        CurrencyFactory $currencyFactory,
 
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
@@ -297,6 +305,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_storeManager = $storeManager;
         $this->_urlBuilder = $urlBuilder;
         $this->_requestHttp = $requestHttp;
+        $this->_currencyFactory = $currencyFactory;
 
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
@@ -1352,6 +1361,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $payment->setIsTransactionApproved(true);
             $payment->save();
 
+            if((float)$order->getBaseGrandTotal() != ($msporder->amount / 100)) {
+                $MspCurrency  = $this->_currencyFactory->create()->load($msporder->currency);
+                $order->addStatusToHistory(
+                    $order->getStatus(),
+                    __("Notice: Captured amount %1 differs from MultiSafepay amount %2",
+                        $order->getBaseCurrency()->formatTxt($order->getBaseGrandTotal()),
+                        $MspCurrency->formatTxt((float)$msporder->amount / 100)
+                    ),
+                    false
+                );
+            }
 
             $transdetails = array();
             $transdetails['Fastcheckout'] = $msporder->fastcheckout;
