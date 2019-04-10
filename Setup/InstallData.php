@@ -31,11 +31,13 @@
 
 namespace MultiSafepay\Connect\Setup;
 
+use Magento\Framework\DB\Ddl\Table;
+use Magento\Framework\Notification\NotifierInterface;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Sales\Model\Order;
-use Magento\Framework\DB\Ddl\Table;
+use Magento\Sales\Setup\SalesSetupFactory;
 
 class InstallData implements InstallDataInterface
 {
@@ -45,12 +47,21 @@ class InstallData implements InstallDataInterface
     protected $salesSetupFactory;
 
     /**
-     * @param \Magento\Sales\Setup\SalesSetupFactory $salesSetupFactory
+     * @var \Magento\Framework\Notification\NotifierInterface
+     */
+    protected $notifier;
+
+    /**
+     * @param \Magento\Sales\Setup\SalesSetupFactory            $salesSetupFactory
+     * @param \Magento\Framework\Notification\NotifierInterface $notifier
      */
     public function __construct(
-        \Magento\Sales\Setup\SalesSetupFactory $salesSetupFactory
+        SalesSetupFactory $salesSetupFactory,
+        NotifierInterface $notifier
+
     ) {
         $this->salesSetupFactory = $salesSetupFactory;
+        $this->notifier = $notifier;
     }
 
     public function install(
@@ -60,6 +71,8 @@ class InstallData implements InstallDataInterface
         $installer = $setup;
 
         $installer->startSetup();
+
+        $this->notifier->addNotice('MultiSafepay install', 'MultiSafepay: Check out our documentation page to setup your webshop');
 
         $tableName = $installer->getConnection()->getTableName(
             'sales_order_grid'

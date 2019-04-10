@@ -71,3 +71,16 @@ Set [yoursiteurl]/multisafepay/connect/notification as Notification URL in the M
 If the url is not configured then the notification_url added to the transaction request will be used to process the callback.
 
 
+#### Installation of payment link in Order confirmation mail for backend orders
+
+1. Go to Marketing -> Email Templates
+2. Add a template (import from "new order")
+3. Add this part to code the HTML
+````html
+{{depend order.getPayment().getAdditionalInformation('payment_link')}}
+    <a href="{{var order.getPayment().getAdditionalInformation('payment_link')}}">Pay now with {{var order.getPayment().getAdditionalInformation('method_title')}}</a>
+{{/depend}}
+````
+4. Go to Stores -> Configuration -> Sales -> Sales Emails
+5. Change the "New Order Confirmation Template" with your template
+6. It should work
