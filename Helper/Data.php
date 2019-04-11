@@ -479,4 +479,46 @@ class Data
         return $this->_encryptor->decrypt($string);
     }
 
+    /**
+     * @param string $orderIncrementId
+     * @param string $hash
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function validateOrderHash($orderIncrementId ,$hash)
+    {
+        return $this->encryptOrder($orderIncrementId) === $hash;
+    }
+
+    /**
+     * @param string $orderIncrementId
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function encryptOrder($orderIncrementId)
+    {
+        $api_key = $this->getMainConfigData('live_api_key');
+
+        if ($this->isTestEnvironment()) {
+            $api_key = $this->getMainConfigData('test_api_key');
+        }
+
+        if (empty($api_key)) {
+            throw new \Exception('Please configure your MultiSafepay API Key.');
+        }
+
+        return hash_hmac('sha512', $orderIncrementId, $api_key);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTestEnvironment()
+    {
+        return $this->getMainConfigData('msp_env');
+    }
+
+
 }
