@@ -488,7 +488,7 @@ class Data
      */
     public function validateOrderHash($orderIncrementId ,$hash)
     {
-        return $this->encryptOrder($orderIncrementId) === $hash;
+        return hash_equals($this->encryptOrder($orderIncrementId), $hash);
     }
 
     /**
