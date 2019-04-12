@@ -96,14 +96,17 @@ class Notification extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
+
+        if(!$this->validateParams($params)){
+            return false;
+        }
+
         $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
         $paymentMethod = $this->_mspFastcheckout;
 
-        $isInitial = false;
         $isShipping = false;
 
         if (isset($params['type'])) {
-            $isInitial = ($params['type'] == 'initial') ? true : false;
             $isShipping = ($params['type'] == 'shipping') ? true : false;
         }
 
@@ -164,4 +167,15 @@ class Notification extends \Magento\Framework\App\Action\Action
             );
         }
     }
+
+    /**
+     * @param array $params
+     *
+     * @return bool
+     */
+    private function validateParams($params)
+    {
+        return isset($params['transactionid']) && is_numeric($params['transactionid']);
+    }
+
 }

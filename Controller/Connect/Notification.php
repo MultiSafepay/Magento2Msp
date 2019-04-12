@@ -104,6 +104,10 @@ class Notification extends \Magento\Framework\App\Action\Action
     {
         $params = $this->_requestHttp->getParams();
 
+        if(!$this->validateParams($params)){
+            return false;
+        }
+
         if(isset($params['hash'])){
             $recurringId = $this->_mspHelper->getRecurringIdByHash($params['hash']);
             $this->_mspToken->create()->load($recurringId)->delete();
@@ -126,7 +130,6 @@ class Notification extends \Magento\Framework\App\Action\Action
                 $paymentMethod->_invoiceSender = $this->_invoiceSender;
                 $storeManager = $this->_storeManager;
                 $paymentMethod->_stockInterface = $this->_stockRegistryProvider;
-
 
                 $updated = $paymentMethod->notification($order);
                 $this->_mspHelper->unlockProcess(
@@ -158,4 +161,15 @@ class Notification extends \Magento\Framework\App\Action\Action
             $this->getResponse()->setContent('Order not found');
         }
     }
+
+    /**
+     * @param array $params
+     *
+     * @return bool
+     */
+    private function validateParams($params)
+    {
+        return isset($params['transactionid']) && is_numeric($params['transactionid']);
+    }
+
 }
