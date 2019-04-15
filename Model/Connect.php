@@ -707,7 +707,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $endpoint = 'orders/' . $id;
-        $msporder = $this->_client->orders->patch(
+        $this->_client->orders->patch(
             array(
                 "tracktrace_code" => $tracking_number,
                 "carrier" => $order->getShippingDescription(),
@@ -718,18 +718,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         );
 
         if (!empty($this->_client->orders->success)) {
-            $msporder = $this->_client->orders->get($endpoint = 'orders', $id, $body = array(), $query_string = false);
-
-            if ($payment->getCode() == 'klarnainvoice') {
-                $order->addStatusToHistory($order->getStatus(), __('<b>Klarna Invoice:</b> ') . '<br /><a href="https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $this->_client->orders->data->payment_details->external_transaction_id . '.pdf</a>');
-                $order->save();
-            }
             $shipped['success'] = true;
-            return $shipped;
         } else {
             $shipped['error'] = true;
-            return $shipped;
         }
+        return $shipped;
     }
 
     public function getCheckoutData($order, $productRepo, $use_base_currency)
