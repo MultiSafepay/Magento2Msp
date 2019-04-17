@@ -10,7 +10,7 @@ Paymentmethods:
 2. Klarna Invoice
 3. Dotpay
 4. EPS
-5. ING Homepay
+5. ING Home'Pay
 6. Belfius
 7. AliPay
 8. KBC
