@@ -180,7 +180,7 @@ class Data
      */
     public function lockProcess($lockName)
     {
-        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::TMP);
         $this->lockFilePath = $this->getFilePath($lockName);
         while ($this->isProcessLocked()) {
             usleep(1000);
@@ -228,7 +228,7 @@ class Data
      */
     private function getFilePath($name)
     {
-        return DirectoryList::TMP . DIRECTORY_SEPARATOR . $name . self::LOCK_EXTENSION;
+        return $name . self::LOCK_EXTENSION;
     }
 
     public function getAmountInCents($order, $use_base_currency)

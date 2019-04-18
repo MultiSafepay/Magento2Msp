@@ -411,9 +411,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $environment = $this->getMainConfigData('msp_env');
 
-        /* With Magento update 2.1 the line below no longer works */
-        //$magentoInfo = new \Magento\Framework\App\ProductMetadata;
-        /* above code has changed to two lines below to get it compatible with 2.1 again */
         $magentoInfo = $this->_productMetadataInterface;
 
         $this->initializeClient($environment, $order);
@@ -520,13 +517,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $notification = $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]);
-        $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1);
+        $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
         $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
 
         if ($this->_isAdmin) {
             $store_id = $order->getStoreId();
             $notification = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/notification/&type=initial';
-            $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/success';
+            $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/success' . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
             $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/cancel' . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
         }
 
@@ -556,7 +553,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
         try {
-            $msporder = $this->_client->orders->post(array(
+            $this->_client->orders->post(array(
                 "type" => $type,
                 "order_id" => $order->getIncrementId(),
                 "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
