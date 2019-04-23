@@ -75,7 +75,7 @@
 + PLGMAGTWOS-237, Prevent call to getMethodInstance in RestoreQuote when API returns an error.
 + PLGMAGTWOS-229, Add SOAP event handler for shipping.
 + PLGMAGTWOS-236, Add support for new payment method Betaalplan (Santander).
-+ PLGMAGTWOS-233, Correct ING Homepay gateway code.
++ PLGMAGTWOS-233, Correct ING Home'Pay gateway code.
 
 # Release Notes - Magento 2 MultiSafepay plug-in 1.4.8 (Jan 4th, 2018) # 
 
@@ -225,7 +225,7 @@
 + Added support for KBC
 + Added support for AliPay
 + Added support for Belfius
-+ Added support for ING Homepay
++ Added support for ING Home'Pay
 
 # Release Notes - Magento 2 MultiSafepay plug-in 1.3.0 (Jan 25th, 2017** 
 
