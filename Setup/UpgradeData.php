@@ -30,11 +30,13 @@
 
 namespace MultiSafepay\Connect\Setup;
 
+use Magento\Framework\DB\Ddl\Table;
+use Magento\Framework\Notification\NotifierInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Sales\Model\Order;
-use Magento\Framework\DB\Ddl\Table;
+use Magento\Sales\Setup\SalesSetupFactory;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -44,12 +46,20 @@ class UpgradeData implements UpgradeDataInterface
     protected $salesSetupFactory;
 
     /**
-     * @param \Magento\Sales\Setup\SalesSetupFactory $salesSetupFactory
+     * @var \Magento\Framework\Notification\NotifierInterface
+     */
+    protected $notifier;
+
+    /**
+     * @param \Magento\Sales\Setup\SalesSetupFactory            $salesSetupFactory
+     * @param \Magento\Framework\Notification\NotifierInterface $notifier
      */
     public function __construct(
-        \Magento\Sales\Setup\SalesSetupFactory $salesSetupFactory
+        SalesSetupFactory $salesSetupFactory,
+        NotifierInterface $notifier
     ) {
         $this->salesSetupFactory = $salesSetupFactory;
+        $this->notifier = $notifier;
     }
 
     public function upgrade(
@@ -57,6 +67,8 @@ class UpgradeData implements UpgradeDataInterface
         ModuleContextInterface $context
     ) {
         $installer = $setup;
+
+        $this->notifier->addNotice('MultiSafepay upgrade', 'MultiSafepay: Check out our documentation page for new features');
 
         $installer->startSetup();
 

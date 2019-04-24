@@ -535,7 +535,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "name" => (!empty($params['name']) && $params['name'] != "") ? $params['name'] : null,
                 ]
             );
-            $saveData = $model->save();
+            $model->save();
         }
 
         $ip_address = $this->validateIP($order->getRemoteIp());
@@ -596,9 +596,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
 
-        //$this->logger->info(print_r($msporder, true));
         if ($this->_gatewayCode != "BANKTRANS") {
             $order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . htmlspecialchars($this->_client->orders->getPaymentLink()), false);
+            $order->getPayment()->setAdditionalInformation('payment_link',$this->_client->orders->getPaymentLink());
             $order->save();
         } else {
             $order->addStatusToHistory($order->getStatus(), "Banktransfer transaction started, waiting for payment", false);
