@@ -1,3 +1,30 @@
+# Release Notes - Magento 2 MultiSafepay plug-in 1.7.0 (Apr 26, 2019) #
+
+## Added ##
++ PLGMAGTWOS-282: Added MultiSafepay payment method
++ PLGMAGTWOS-308: Added tokenization for the creditcard gateway
++ PLGMAGTWOS-404: Added payment link to order confirmation email.
++ PLGMAGTWOS-350: Added order log record if MultiSafepay amount is not identical to order amount.
++ PLGMAGTWOS-375: Added validation on cancel URL (Thanks to [Luciferiix](https://github.com/Luciferiix)).
++ PLGMAGTWOS-376: Added validation input on redirect and notification url (Thanks to [Luciferiix](https://github.com/Luciferiix)).
++ PLGMAGTWOS-365: Added globally observe shipment and order placement.
+
+## Changed ##
++ PLGMAGTWOS-390: Changed parsing of address fields into street and apartment.
++ PLGMAGTWOS-315: Corrected spelling for ING Home'Pay.
++ PLGMAGTWOS-298: Corrected spelling for default selected method
+
+## Fixed ##
++ PLGMAGTWOS-381: Fixed incorrect amount for shipping cost in combination with tax and discount
++ PLGMAGTWOS-370: Fixed getMethodInstance error after checkout.
++ PLGMAGTWOS-339: Fixed Api key not found for Fastcheckout on the live environment
++ PLGMAGTWOS-346: Fixed module.xml missing sequence breaking filters in sales_order view (Thanks to [HeadlineInteractive](https://github.com/HeadlineInteractive))
++ PLGMAGTWOS-277: Prevented protected propery error in rare cases
++ PLGMAGTWOS-331: Prevent htmlParseEntityRef in exception.log when viewing orders (Thanks to [teun-loonen](https://github.com/teun-loonen)).
+
+## Removed ##
++ PLGMAGTWOS-287: Remove Klarna invoice link.
+
 # Release Notes - Magento 2 MultiSafepay plug-in 1.6.3 (Nov 29, 2018) #
 
 ## Fixed ##
