@@ -603,7 +603,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             $order->addStatusToHistory($order->getStatus(), "Banktransfer transaction started, waiting for payment", false);
             $order->save();
-            $this->banktransurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1) . '?transactionid=' . $order->getIncrementId();
+            $this->banktransurl = $this->_urlBuilder->getUrl('multisafepay/connect/success', [
+                '_nosid' => true,
+                '_query' => [
+                    'transactionid' => $order->getIncrementId(),
+                    'hash' => $this->_mspHelper->encryptOrder($order->getIncrementId())
+                ]
+            ]);
         }
 
         return $this->_client->orders;
