@@ -557,6 +557,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "gateway" => $this->_gatewayCode,
                 "days_active" => $daysActive,
                 "seconds_active" => $secondsActive,
+                "second_chance" => [
+                    "send_email" => $this->_isAdmin ? false : true
+                ],
                 "payment_options" => array(
                     "notification_url" => $notification,
                     "redirect_url" => $redirecturl,
