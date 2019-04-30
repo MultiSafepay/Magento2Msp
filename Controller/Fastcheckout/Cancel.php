@@ -115,8 +115,8 @@ class Cancel extends \Magento\Framework\App\Action\Action
             } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             }
             //Cancel the order so a new one can created
-            $order->registerCancellation('Order cancelled by customer')->save();
-            $this->messageManager->addError(__('The transaction was cancelled or declined and the order was closed, please try again.'));
+            $order->registerCancellation('Order canceled by customer')->save();
+            $this->messageManager->addError(__('The transaction was canceled or declined and the order was closed, please try again.'));
         }
 
         $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);

@@ -53,7 +53,7 @@
           <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Declined</source_model>
         </field>
         <field id="cancelled_order_status" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Cancelled Order Status</label>
+          <label>Canceled Order Status</label>
           <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Cancelled</source_model>
         </field>
         <field id="expired_order_status" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">

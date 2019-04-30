@@ -62,7 +62,7 @@ Next to the above it has support for
 3. Mageplaza one-step-checkout
 4. Refunds from within Magento 
 5. Auto update transaction to shipped for Pay After Delivery, Klarna and E-invoice
-6. Cart is active on cancelled transaction
+6. Cart is active on canceled transaction
 7. iDEAL issuer selection within Magento
 8. Creditcard gateway, this one is optional and can be used to offer a grouped CreditCard payment method with a card dropdown.
  
