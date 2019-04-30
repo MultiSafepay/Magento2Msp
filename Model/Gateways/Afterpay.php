@@ -36,4 +36,5 @@ class Afterpay extends \MultiSafepay\Connect\Model\Connect
 
     protected $_code = 'afterpaymsp';
     public $_gatewayCode = 'AFTERPAY';
+    protected $_canUseInternal = false;
 }

@@ -36,4 +36,5 @@ class Betaalnaontvangst extends \MultiSafepay\Connect\Model\Connect
 
     protected $_code = 'betaalnaontvangst';
     public $_gatewayCode = 'PAYAFTER';
+    protected $_canUseInternal = false;
 }
