@@ -36,4 +36,5 @@ class Betaalplan extends \MultiSafepay\Connect\Model\Connect
 
     protected $_code = 'betaalplan';
     public $_gatewayCode = 'SANTANDER';
+    protected $_canUseInternal = false;
 }
