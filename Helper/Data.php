@@ -38,6 +38,7 @@ use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Math\Random;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\ResourceModel\Order\Status\Collection as orderStatusCollection;
 use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Model\Api\MspClient;
@@ -520,5 +521,21 @@ class Data
         return $this->getMainConfigData('msp_env');
     }
 
+    /**
+     * You can use this method to communicate the MultiSafepay status to other systems by using a plugin
+     *
+     * @param OrderInterface $order
+     * @param string $status
+     * @return array
+     */
+    public function setMultisafepayStatus(OrderInterface $order, string $status)
+    {
+        $formatStatus = ucfirst($status);
+        $order->setMultisafepayStatus($formatStatus);
+        return [
+            'orderId' => $order->getEntityId(),
+            'mspStatus' => $formatStatus
+        ];
+    }
 
 }
