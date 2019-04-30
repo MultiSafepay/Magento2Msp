@@ -1,4 +1,4 @@
-"The transaction was cancelled or declined and the order was closed, please try again.","The transaction was cancelled or declined and the order was closed, please try again."
+"The transaction was canceled or declined and the order was closed, please try again.","The transaction was canceled or declined and the order was closed, please try again."
 "There was an error processing your transaction request, please try again with another payment method.","There was an error processing your transaction request, please try again with another payment method."
 Guests,Guests
 "-- Please Select --","-- Please Select --"
@@ -18,7 +18,7 @@ Guests,Guests
 "Use base currency?","Use base currency?"
 "New Order Status","New Order Status"
 "Declined Order Status","Declined Order Status"
-"Cancelled Order Status","Cancelled Order Status"
+"Canceled Order Status","Canceled Order Status"
 "Expired Order Status","Expired Order Status"
 "Chargeback Order Status","Chargeback Order Status"
 "Create Payment link","Create Payment link"

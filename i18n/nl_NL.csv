@@ -1,4 +1,4 @@
-"The transaction was cancelled or declined and the order was closed, please try again.","De transactie is geannuleerd of geweigerd en de bestelling is niet doorgevoerd, probeer het opnieuw."
+"The transaction was canceled or declined and the order was closed, please try again.","De transactie is geannuleerd of geweigerd en de bestelling is niet doorgevoerd, probeer het opnieuw."
 "There was an error processing your transaction request, please try again with another payment method.","Er is een fout opgetreden met de betaling, probeer het opnieuw met een andere betaalmethode."
 Guests,Gasten
 "-- Please Select --","-- Maak een keuze --"
@@ -18,7 +18,7 @@ Guests,Gasten
 "Use base currency?","Gebruik standaardvaluta?"
 "New Order Status","Status nieuwe bestelling"
 "Declined Order Status","Status afgewezen bestelling"
-"Cancelled Order Status","Status geannuleerde bestelling"
+"Canceled Order Status","Status geannuleerde bestelling"
 "Expired Order Status","Status verlopen bestelling"
 "Chargeback Order Status","Status teruggevorderde bestelling"
 "Create Payment link","Maak betaallink aan"

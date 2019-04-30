@@ -102,7 +102,7 @@
 + PLGMAGTWOS-202 - Changed rounding to 10 in calculations
 + PLGMAGTWOS-201 - only use shipping address data if the order can be shipped and the addres is provided.
 + PLGMAGTWOS-203 - No cart restore on banktransfer by MultiSafepay
-+ PLGMAGTWOS-196 - Added a comment for the cancelled status in combination with Second Chance.
++ PLGMAGTWOS-196 - Added a comment for the canceled status in combination with Second Chance.
 + PLGMAGTWOS-198 - Improved code on Cancel url for unlocking of the lockfile.
 
 # Release Notes - Magento 2 MultiSafepay plug-in 1.4.6 (OCT 9th, 2017) # 
@@ -266,7 +266,7 @@
 + Added support for Ferbuy
 + We added an option to configure when the order confirmation email needs to be submitted. You can select "after order placing", "After a processed transaction" and "after a paid transaction"
 + Added official support for the "one-step-checkout" from MagePlaza
-+ Added configuration options for more transactions statuses. You can now configure the status for "Expired", "Cancelled", "Chargeback", "Declined" and "New Order"
++ Added configuration options for more transactions statuses. You can now configure the status for "Expired", "Canceled", "Chargeback", "Declined" and "New Order"
 + We added a multisafepay.log logger that will store all API requests
 + Added support for E-invoicing
 

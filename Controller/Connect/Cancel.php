@@ -123,11 +123,11 @@ class Cancel extends \Magento\Framework\App\Action\Action
             } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             }
             //Cancel the order so a new one can created
-            //You can disable the line below if you are using a fulfillment system that does not expect the order to be cancelled,
+            //You can disable the line below if you are using a fulfillment system that does not expect the order to be canceled,
             //but reopened again by second chance. Removing the line will keep the order pending. (PLGMAGTWOS-196)
-            $order->registerCancellation('Order cancelled by customer')->save();
+            $order->registerCancellation('Order canceled by customer')->save();
 
-            $message = "The transaction was cancelled or declined and the order was closed, please try again.";
+            $message = "The transaction was canceled or declined and the order was closed, please try again.";
 
             $reason_code = empty($orderDetails->reason_code) ? '' : ":{$orderDetails->reason_code}";
 
