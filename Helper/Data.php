@@ -104,7 +104,7 @@ class Data
         'parfumcadeaukaart' => array('code' => 'PARFUMCADEAUKAART', 'name' => 'Parfumcadeaukaart', 'type' => 'giftcards'),
         'podiumcadeaukaart' => array('code' => 'PODIUM', 'name' => 'Podium', 'type' => 'giftcards'),
         'sportenfit' => array('code' => 'SPORTENFIT', 'name' => 'Sportenfit', 'type' => 'giftcards'),
-        'vvvcadeaukaart' => array('code' => 'VVVGIFTCRD', 'name' => 'VVV Cadeaukaart', 'type' => 'giftcards'),
+        'vvvbon' => array('code' => 'VVVGIFTCRD', 'name' => 'VVV Cadeaukaart', 'type' => 'giftcards'),
         'webshopgiftcard' => array('code' => 'WEBSHOPGIFTCARD', 'name' => 'Webshop Giftcard', 'type' => 'giftcards'),
         'wellnessgiftcard' => array('code' => 'WELLNESSGIFTCARD', 'name' => 'Wellness Giftcards', 'type' => 'giftcards'),
         'wijncadeau' => array('code' => 'WIJNCADEAU', 'name' => 'Wijn Cadeau', 'type' => 'giftcards'),

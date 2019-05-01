@@ -2207,9 +2207,9 @@
         </field>
       </group>
             
-      <!--Start VVV Bon-->
+      <!--Start VVV Cadeaukaart-->
       <group id="vvvbon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>VVV Bon</label>
+        <label>VVV Cadeaukaart</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

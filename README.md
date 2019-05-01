@@ -52,7 +52,7 @@ The following giftcards are supported:
 16. Givacard
 17. Yourgift
 18. Sport en Fit
-19. VVV Bon
+19. VVV Cadeaukaart
 20. Podium
 21. Winkel Cheque
 

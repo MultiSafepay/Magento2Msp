@@ -428,10 +428,10 @@
                 <group>multisafepay_connect</group>
             </givacard>
             
-            <!-- Start VVV Bon-->
+            <!-- Start VVV Cadeaukaart-->
             <vvvbon>
                 <active>0</active>
-                <title>VVV Bon</title>
+                <title>VVV Cadeaukaart</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -1005,10 +1005,10 @@
                 <group>multisafepay_connect</group>
             </givacard>
             
-            <!-- Start VVV Bon-->
+            <!-- Start VVV Cadeaukaart-->
             <vvvbon>
                 <active>0</active>
-                <title>VVV Bon</title>
+                <title>VVV Cadeaukaart</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
