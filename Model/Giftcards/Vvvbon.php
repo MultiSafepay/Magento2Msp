@@ -35,5 +35,5 @@ class Vvvbon extends \MultiSafepay\Connect\Model\Connect
 {
 
     protected $_code = 'vvvbon';
-    public $_gatewayCode = 'VVVBON';
+    public $_gatewayCode = 'VVVGIFTCRD';
 }

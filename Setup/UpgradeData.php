@@ -30,6 +30,8 @@
 
 namespace MultiSafepay\Connect\Setup;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Notification\NotifierInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -51,15 +53,22 @@ class UpgradeData implements UpgradeDataInterface
     protected $notifier;
 
     /**
+     *  @var \Magento\Framework\App\Config\Storage\WriterInterface
+     */
+    protected $configWriter;
+
+    /**
      * @param \Magento\Sales\Setup\SalesSetupFactory            $salesSetupFactory
      * @param \Magento\Framework\Notification\NotifierInterface $notifier
      */
     public function __construct(
         SalesSetupFactory $salesSetupFactory,
-        NotifierInterface $notifier
+        NotifierInterface $notifier,
+        WriterInterface $configWriter
     ) {
         $this->salesSetupFactory = $salesSetupFactory;
         $this->notifier = $notifier;
+        $this->configWriter = $configWriter;
     }
 
     public function upgrade(
@@ -95,5 +104,9 @@ class UpgradeData implements UpgradeDataInterface
         }
 
         $installer->endSetup();
+
+        if (version_compare($context->getVersion(), '1.7.1', '<')) {
+            $this->configWriter->save('giftcards/vvvbon/title',  'VVV Cadeaukaart');
+        }
     }
 }
