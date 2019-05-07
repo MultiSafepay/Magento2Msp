@@ -31,6 +31,7 @@
 
 namespace MultiSafepay\Connect\Helper;
 
+use Magento\Directory\Model\CurrencyFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
@@ -149,6 +150,7 @@ class Data
     protected $_ScopeConfigInterface;
     protected $_random;
     protected $_encryptor;
+    protected $_currencyFactory;
 
     public function __construct(
         StoreManagerInterface $storeManagerInterface,
@@ -157,7 +159,8 @@ class Data
         ScopeConfigInterface $scopeConfigInterface,
         Random $random,
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        CurrencyFactory $currencyFactory
 
 
 
@@ -167,6 +170,7 @@ class Data
         $this->filesystem = $filesystem;
         $this->_orderStatusCollection = $orderStatusCollection;
         $this->_scopeConfigInterface = $scopeConfigInterface;
+        $this->_currencyFactory = $currencyFactory;
 
         $this->tmpDirectory = $this->filesystem->getDirectoryWrite(
             DirectoryList::VAR_DIR
@@ -538,4 +542,25 @@ class Data
         ];
     }
 
+    /**
+     * @param array $paymentMethods
+     *
+     * @return string
+     */
+    public function createMultiPaymentMethodsLine($paymentMethods = [])
+    {
+        if (empty($paymentMethods)) {
+            return "";
+        }
+        $translation = __('Payment methods specification');
+        $lineHeader = "<b>{$translation}:</b><br />";
+
+        foreach ($paymentMethods as $paymentMethod) {
+            $mspTotal = $this->_currencyFactory->create()->load(
+                $paymentMethod->currency
+            )->formatTxt((float)$paymentMethod->amount / 100);
+            $line[] = "{$paymentMethod->type} ({$mspTotal})";
+        }
+        return $lineHeader . implode(' / ', $line);
+    }
 }

@@ -1357,6 +1357,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $transaction->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS, $transdetails);
             $transaction->save();
 
+            if (isset($msporder->payment_methods[1])) {
+                $line = $this->_mspHelper->createMultiPaymentMethodsLine($msporder->payment_methods);
+                $order->addStatusToHistory($order->getStatus(), $line);
+            }
 
             if ($payment->getMethodInstance()->getCode() == 'klarnainvoice') {
                 $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
