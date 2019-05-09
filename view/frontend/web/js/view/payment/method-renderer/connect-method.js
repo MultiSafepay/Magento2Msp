@@ -304,7 +304,7 @@ define(
             showRecurringModal: function () {
                 $('<div />').html('<ol>' +
                     '<li><i class="fa fa-lock"></i> <strong>'+ $.mage.__('Guarantees from MultiSafepay') +'</strong><br>' +
-                    $.mage.__("Your creditcard credentials will be saved in our secure bankserver. The webshop has for your safety no access to this information and will not be saved in any way") +
+                    $.mage.__("Your credit card credentials will be saved in our secure bankserver. The webshop has for your safety no access to this information and will not be saved in any way") +
                     '<li><i class="fa fa-check-square-o"></i> <strong>'+ $.mage.__("Fast and easy") +'</strong><br>' +
                     $.mage.__("By registering your credentials, You can speed up your purchases. Because you don't need to fill in your credentials again") +
                     '<li><i class="fa fa-check-square-o"></i> <strong>'+ $.mage.__("Free of charge") +'</strong><br>' +

@@ -56,7 +56,7 @@
 # Release Notes - Magento 2 MultiSafepay plug-in 1.5.0 (May 25th, 2018) #
 
 ## Changes ##
-+ PLGMAGTWOS-256: Add support for Santander Betaalplan
++ PLGMAGTWOS-256: Add support for Betaalplan
 + PLGMAGTWOS-251: Add support for iDEAL QR payment method
 + PLGMAGTWOS-258: Add support for Afterpay payment method
 + PLGMAGTWOS-257: Add support for Trustly payment method
@@ -65,7 +65,7 @@
 + PLGMAGTWOS-264: Remove double defined payment_action in config.xml
 + PLGMAGTWOS-255: Improve state field to use 2 letters abbreviation
 + PLGMAGTWOS-269: Shipping/Countries hide when disabled in backend
-+ PLGMAGTWOS-266: Corrected ratio of Santander Betaalplan logo
++ PLGMAGTWOS-266: Corrected ratio of Betaalplan logo
 + PLGMAGTWOS-186: Improve FastCheckout logo localization
 + PLGMAGTWOS-252: Updated Klarna logo
 
@@ -97,11 +97,11 @@
 + PLGMAGTWOS-204 - Removed js on success page to prevent customer-data error
 + PLGMAGTWOS-203 - Refactored and fixed restorequote on backbutton
 + PLGMAGTWOS-212 - FCO division by zero when getting the quantity of quote_item
-+ PLGMAGTWOS-208 - Add order notes for banktransfer
++ PLGMAGTWOS-208 - Add order notes for bank transfer
 + PLGMAGTWOS-207 - create_paylink is now respecting store view
 + PLGMAGTWOS-202 - Changed rounding to 10 in calculations
 + PLGMAGTWOS-201 - only use shipping address data if the order can be shipped and the addres is provided.
-+ PLGMAGTWOS-203 - No cart restore on banktransfer by MultiSafepay
++ PLGMAGTWOS-203 - No cart restore on bank transfer by MultiSafepay
 + PLGMAGTWOS-196 - Added a comment for the canceled status in combination with Second Chance.
 + PLGMAGTWOS-198 - Improved code on Cancel url for unlocking of the lockfile.
 
@@ -123,7 +123,7 @@
 + PLGMAGTWOS-184 - Fatal error: Uncaught Error: Call to a member function getAdditionalInformation() on boolean
 + PLGMAGTWOS-185 - Add yourgift logo
 + PLGMAGTWOS-187 - Correct/remove payment images from localized folder
-+ PLGMAGTWOS-188 - Add creditcard logo
++ PLGMAGTWOS-188 - Add credit card logo
 + PLGMAGTWOS-190 - Add shipping data to transaction request
 + PLGMAGTWOS-191 - Add check if transaction exists before shipment
 + PLGMAGTWOS-192 - etc\config.xml contains wrong default value for transaction_currency
@@ -150,7 +150,7 @@
 + Fixes #PLGMAGTWOS-168. Update composer with PHP 7.1
 + Fixes #PLGMAGTWOS-169. Fastcheckout buttons only visible for quote currency EUR.
 + Fixes #PLGMAGTWOS-172 improved undo cancel function so it does not overwrite the $status variable.
-+ Fix PLGMAGTWOS-113 overwrite payment method with actual method. Affects banktransfer/2nd chance
++ Fix PLGMAGTWOS-113 overwrite payment method with actual method. Affects bank transfer/2nd chance
 + Added license/disclaimer
 + Updated default file permissions following PLGMAGTWOS-149
 + Fixes PLGMAGTWOS-175, updated version number for FCO transactions
@@ -209,7 +209,7 @@
 + Logging is now done within the Client and logs requests/responses to var/log/multisafepay.log.
 + Added process locking to solve double invoice and orders when processes start simultaneously
 + Added a check for the totalpaid amount. On some installations this is not updated, causing the order not to go to complete after shipment.
-+ Removed the banktransfer url from the order comment for manual created orders as there is no need to communicate the success url as normally it would be an url to the payment pages
++ Removed the bank transfer url from the order comment for manual created orders as there is no need to communicate the success url as normally it would be an url to the payment pages
 + The cart is now correctly active on cancel or when using the back button
 + When the transaction status is uncleared, a comment is added to the order about this. The order will not be set to payment_review and will go to completed once the transaction has been approved. (This now works like in the Magento 1 extension)
 + Added version to menu item
@@ -249,7 +249,7 @@
 ## Features ##
 + Added support for the Get Payment Update function
 + Added an option to allow payment link creation for manually created orders.
-+ Added a CreditCard gateway with a dropdown for CC brands. This allows for less options during the checkout overview.
++ Added a Credit Card gateway with a dropdown for CC brands. This allows for less options during the checkout overview.
 
 # Release Notes - Magento 2 MultiSafepay plug-in 1.1.0 (Okt 13th, 2016) # 
 
@@ -277,7 +277,7 @@
 + This fix sets the payment method to disabled by default so it only has to be enabled to show it on the frontend. This change was needed because of PLGMAGTWO-25. PLGMAGTWO-25 now sets the restrictions by default, causing all payment method to show on config save. PLGMAGTWO-24 prevents everything to show as it must be enabled first.
 + Check was nog complete as we checked if the housenumber was set, not if it had an empty value, causing the check to fail and no housenumber to be added to the transaction request. This caused a rejection for Pay after Delivery and Klarna.
 + Added gateway images in the same format as the default PayPal plugin. Restructured the folder so in is setup in a way it can be copied to the root of the Magento installation as it was not clear for merchants that the code folder needed to be created when it was not existing yet. Added all images.
-+ Changed the banktransfer payment method to a "direct" payment method. This will remove the MultiSafepay payment page and submit the payment details by e-mail to the consumer.
++ Changed the bank transfer payment method to a "direct" payment method. This will remove the MultiSafepay payment page and submit the payment details by e-mail to the consumer.
 
 # Release Notes - Magento 2 MultiSafepay plug-in 1.0.5 (Jne 29th, 2016) # 
 
@@ -313,6 +313,6 @@
 ## Fixes ##
 + Fixed an undefined notice and some issues with Klarna en PAD. Shipping percentage was calculated wrong resulted in wrong amounts (1027 error for PAD)/li> 
 + Fixes undefined index bug in magento caused by Magento not checking for missing data
-+ Fixed bug with banktransfer not showing
++ Fixed bug with bank transfer not showing
 + Added missing namespace declaration in unused gateways and issuers files in API wrapper
 + Removed beta version from composer file and update name

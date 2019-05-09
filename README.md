@@ -7,7 +7,7 @@ The MultiSafepay extension for Magento 2 has support for:
 
 Paymentmethods:
 1. iDEAL
-2. Klarna Invoice
+2. Klarna
 3. Dotpay
 4. EPS
 5. ING Home'Pay
@@ -21,8 +21,8 @@ Paymentmethods:
 13. American Express
 14. Bancontact
 15. Maestro
-16. Sofort
-17. Banktransfer
+16. SOFORT Banking
+17. Bank transfer
 18. Giropay
 19. Mastercard
 20. Visa
@@ -31,7 +31,7 @@ Paymentmethods:
 23. Paysafecard
 24. Trustly
 25. AfterPay
-26. Santander Betaalplan
+26. Betaalplan
 
 The following giftcards are supported:
 1. Wijncadeau
@@ -61,10 +61,10 @@ Next to the above it has support for
 2. Magestore one-step-checkout
 3. Mageplaza one-step-checkout
 4. Refunds from within Magento 
-5. Auto update transaction to shipped for Pay After Delivery, Klarna and E-invoice
+5. Auto update transaction to shipped for Pay After Delivery, Klarna and E-invoicing
 6. Cart is active on canceled transaction
 7. iDEAL issuer selection within Magento
-8. Creditcard gateway, this one is optional and can be used to offer a grouped CreditCard payment method with a card dropdown.
+8. Credit card gateway, this one is optional and can be used to offer a grouped Credit card payment method with a card dropdown.
  
 Your notification url can be set to the following: (within your MultiSafepay website profile)
 Set [yoursiteurl]/multisafepay/connect/notification as Notification URL in the MSP merchant center.

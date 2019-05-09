@@ -604,7 +604,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $order->getPayment()->setAdditionalInformation('payment_link',$this->_client->orders->getPaymentLink());
             $order->save();
         } else {
-            $order->addStatusToHistory($order->getStatus(), "Banktransfer transaction started, waiting for payment", false);
+            $order->addStatusToHistory($order->getStatus(), "Bank transfer transaction started, waiting for payment", false);
             $order->save();
             $this->banktransurl = $this->_urlBuilder->getUrl('multisafepay/connect/success', [
                 '_nosid' => true,
