@@ -157,6 +157,12 @@ class ConnectTest extends TestCase
                 'address2'  => "2",
                 'street'    => "1e Jan van Kraanspoor",
                 'apartment' => "2",
+            ],
+            [
+                'address1'  => "Neherkade 1 XI",
+                'address2'  => "",
+                'street'    => "Neherkade",
+                'apartment' => "1 XI",
             ]
         ];
     }

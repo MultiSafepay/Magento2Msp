@@ -1808,14 +1808,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
          * If number contains whitespace, Add it also to street.
          * All after that will be added to apartment
          */
-        $pattern = '/(.+?)\s?([\d]+[\S]*)$/';
+        $pattern = '/(.+?)\s?([\d]+[\S]*)(\s?[A-z]*?)$/';
         preg_match($pattern, $fullAddress, $matches);
 
         //Save the street and apartment and trim the result
         $street = isset($matches[1]) ? $matches[1] : '';
         $apartment = isset($matches[2]) ? $matches[2] : '';
+        $extension = isset($matches[3]) ? $matches[3] : '';
         $street = trim($street);
-        $apartment = trim($apartment);
+        $apartment = trim($apartment . $extension);
 
         return [$street, $apartment];
     }
