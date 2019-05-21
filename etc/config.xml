@@ -35,11 +35,11 @@
                 <group>multisafepay_connect</group>
             </ideal>
       
-            <!-- Start Creditcard -->
+            <!-- Start Credit Card -->
             <creditcard>
                 <active>0</active>
-                <title>Creditcard</title>
-                <instructions>Creditcard</instructions>
+                <title>Credit Card</title>
+                <instructions>Credit Card</instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -84,7 +84,7 @@
             <!-- Start Betaalplan -->
             <betaalplan>
                 <active>0</active>
-                <title>Santander Betaalplan</title>
+                <title>Betaalplan</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -95,10 +95,10 @@
                 <group>multisafepay_connect</group>
             </betaalplan>
       
-            <!-- Start Eps -->
+            <!-- Start EPS -->
             <eps>
                 <active>0</active>
-                <title>Eps</title>
+                <title>EPS</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -143,10 +143,10 @@
                 <group>multisafepay_connect</group>
             </giropay>
             
-            <!-- Start Banktransfer -->
+            <!-- Start Bank transfer -->
             <mspbanktransfer>
                 <active>0</active>
-                <title>Bankoverschrijving</title>
+                <title>Bank transfer</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -155,10 +155,10 @@
                 <group>multisafepay_connect</group>
             </mspbanktransfer>
             
-            <!-- Start Sofort -->
+            <!-- Start SOFORT Banking -->
             <sofort>
                 <active>0</active>
-                <title>Sofort</title>
+                <title>SOFORT Banking</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -218,10 +218,10 @@
     
             
             
-            <!-- Start Betaal na Ontvangst-->
+            <!-- Start Pay After Delivery -->
             <betaalnaontvangst>
                 <active>0</active>
-                <title>Betaal na ontvangst</title>
+                <title>Pay After Delivery</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -242,10 +242,10 @@
                 <group>multisafepay_connect</group>
             </einvoice>
       
-            <!-- Start Klarna Factuur-->
+            <!-- Start Klarna -->
             <klarnainvoice>
                 <active>0</active>
-                <title>Klarna Factuur</title>
+                <title>Klarna</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -291,7 +291,7 @@
                 <group>multisafepay_connect</group>
             </trustpay>
       
-            <!-- Start Kbc -->
+            <!-- Start KBC -->
             <kbc>
                 <active>0</active>
                 <title>KBC</title>
@@ -635,11 +635,11 @@
                 <group>multisafepay_connect</group>
             </ideal>
       
-            <!-- Start Creditcard -->
+            <!-- Start Credit Card -->
             <creditcard>
                 <active>0</active>
-                <title>Creditcard</title>
-                <instructions>Creditcard</instructions>
+                <title>Credit Card</title>
+                <instructions>Credit Card</instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
                 <payment_action>true</payment_action>
@@ -662,7 +662,7 @@
             <!-- Start Betaalplan -->
             <betaalplan>
                 <active>0</active>
-                <title>Santander Betaalplan</title>
+                <title>Betaalplan</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -673,10 +673,10 @@
                 <group>multisafepay_connect</group>
             </betaalplan>
       
-            <!-- Start Eps -->
+            <!-- Start EPS -->
             <eps>
                 <active>0</active>
-                <title>Eps</title>
+                <title>EPS</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -721,10 +721,10 @@
                 <group>multisafepay_connect</group>
             </giropay>
             
-            <!-- Start Banktransfer -->
+            <!-- Start Bank transfer -->
             <mspbanktransfer>
                 <active>0</active>
-                <title>Bankoverschrijving</title>
+                <title>Bank transfer</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -733,10 +733,10 @@
                 <group>multisafepay_connect</group>
             </mspbanktransfer>
             
-            <!-- Start Sofort -->
+            <!-- Start SOFORT Banking -->
             <sofort>
                 <active>0</active>
-                <title>Sofort</title>
+                <title>SOFORT Banking</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -796,10 +796,10 @@
             
     
             
-            <!-- Start Betaal na Ontvangst-->
+            <!-- Start Pay After Delivery -->
             <betaalnaontvangst>
                 <active>0</active>
-                <title>Betaal na ontvangst</title>
+                <title>Pay After Delivery</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -820,10 +820,10 @@
                 <group>multisafepay_connect</group>
             </einvoice>
       
-            <!-- Start Klarna Factuur-->
+            <!-- Start Klarna -->
             <klarnainvoice>
                 <active>0</active>
-                <title>Klarna Factuur</title>
+                <title>Klarna</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -870,7 +870,7 @@
                 <group>multisafepay_connect</group>
             </trustpay>
       
-            <!-- Start Kbc -->
+            <!-- Start KBC -->
             <kbc>
                 <active>0</active>
                 <title>KBC</title>

@@ -157,9 +157,9 @@
         </field>
       </group>
             
-      <!--Start Creditcard-->
+      <!--Start Credit Card-->
       <group id="creditcard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Creditcard</label>
+        <label>Credit Card</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -168,7 +168,7 @@
           <label>Title</label>
         </field>
         <field id="allowed_creditcards" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Allowed Creditcards</label>
+          <label>Allowed Credit cards</label>
           <source_model>MultiSafepay\Connect\Model\Config\Source\Creditcards</source_model>
           <can_be_empty>0</can_be_empty>
         </field>
@@ -426,9 +426,9 @@
         </field>
       </group>
             
-      <!--Start Banktransfer-->
+      <!--Start Bank transfer-->
       <group id="mspbanktransfer" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Banktransfer</label>
+        <label>Bank transfer</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -485,9 +485,9 @@
         </field>
       </group>
             
-      <!--Start Sofort-->
+      <!--Start SOFORT Banking-->
       <group id="sofort" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Sofort</label>
+        <label>SOFORT Banking</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -816,9 +816,9 @@
       </group>
             
       
-      <!--Start Betaal na Ontvangst-->
+      <!--Start Pay After Delivery -->
       <group id="betaalnaontvangst" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Betaal na Ontvangst</label>
+        <label>Pay After Delivery</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -948,9 +948,9 @@
         </field>
       </group>
       
-      <!--Start Betaal na Ontvangst-->
+      <!--Start Klarna -->
       <group id="klarnainvoice" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Klarna Factuur</label>
+        <label>Klarna</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -1014,9 +1014,9 @@
         </field>
       </group>
       
-      <!--Start Santander/betaalplan-->
+      <!--Start Betaalplan-->
       <group id="betaalplan" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Santander Betaalplan</label>
+        <label>Betaalplan</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -1544,7 +1544,7 @@
 
       <!--Start EPS-->
       <group id="eps" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Eps</label>
+        <label>EPS</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -1674,7 +1674,7 @@
         </field>
       </group>
 
-      <!--Start PAYSAFECARD-->
+      <!--Start paysafecard -->
       <group id="paysafecard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Paysafecard</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
