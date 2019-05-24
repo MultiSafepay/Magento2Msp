@@ -66,21 +66,21 @@ Next to the above it has support for
 7. iDEAL issuer selection within Magento
 8. Credit card gateway, this one is optional and can be used to offer a grouped Credit card payment method with a card dropdown.
  
-Your notification url can be set to the following: (within your MultiSafepay website profile)
-Set [yoursiteurl]/multisafepay/connect/notification as Notification URL in the MSP merchant center.
-If the url is not configured then the notification_url added to the transaction request will be used to process the callback.
-
-
-#### Installation of payment link in Order confirmation mail for backend orders
-
+#### Installation of payment link in order confirmation mail for backend orders
+As of version 1.7.0 we have added a feature to include the payment link in the order confirmation mail for orders created in the backend.
+This feature is customizable and can be changed to your liking.
+This feature can be implemented by the following steps
 1. Go to Marketing -> Email Templates
 2. Add a template (import from "new order")
-3. Add this part to code the HTML
-````html
-{{depend order.getPayment().getAdditionalInformation('payment_link')}}
-    <a href="{{var order.getPayment().getAdditionalInformation('payment_link')}}">Pay now with {{var order.getPayment().getAdditionalInformation('method_title')}}</a>
-{{/depend}}
-````
+3. Add this *sample* code the template
+    ````html
+    {{depend order.getPayment().getAdditionalInformation('payment_link')}}
+        <a href="{{var order.getPayment().getAdditionalInformation('payment_link')}}">Pay now with {{var order.getPayment().getAdditionalInformation('method_title')}}</a>
+    {{/depend}}
+    ````
 4. Go to Stores -> Configuration -> Sales -> Sales Emails
 5. Change the "New Order Confirmation Template" with your template
-6. It should work
+
+After these changes, the template should be tested to confirm it is working.
+
+*Note*: This can also be implemented directly in the email template files.
