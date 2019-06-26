@@ -1,5 +1,5 @@
 ## 1.7.0
-Release date: May 24th, 2019
+Release date: June 26th, 2019
 
 ### Added
 + PLGMAGTWOS-282: Added MultiSafepay payment method.
