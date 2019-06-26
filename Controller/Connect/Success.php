@@ -104,8 +104,10 @@ class Success extends \Magento\Framework\App\Action\Action
         $session->getQuote()->setIsActive(false)->save();
 
         // set some vars for the success page
-        $session->setLastSuccessQuoteId($params['transactionid']);
-        $session->setLastQuoteId($params['transactionid']);
+        $session->setLastSuccessQuoteId($order_information->getQuoteId());
+        $session->setLastQuoteId($order_information->getQuoteId());
+        $session->setLastOrderId($order_information->getEntityId());
+        $session->setLastRealOrderId($order_information->getIncrementId());
 
         //To a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
         $paymentMethod = $this->_mspConnect;
