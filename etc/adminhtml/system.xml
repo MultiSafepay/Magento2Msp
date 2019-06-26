@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <tab id="multisafepay" translate="label" sortOrder="400">
-      <label>MultiSafepay (1.6.3)</label>
+      <label>MultiSafepay (1.7.0)</label>
     </tab>
     <section id="multisafepay" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
@@ -21,11 +21,6 @@
         <field id="test_api_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Test Api Key</label>
         </field>
-        
-        <!--<field id="create_invoice" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Create invoice after payments</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>-->
         <field id="send_order_email" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>When send the order confirmation e-mail</label>
           <source_model>MultiSafepay\Connect\Model\Config\Source\Email</source_model>
@@ -49,16 +44,6 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <comment>Select whether or not tokenization should be available.</comment>
         </field>
-        <!--<field id="order_update_email" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Send order update e-mail to customer</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>-->
-        <!--<field id="sent_invoice_id" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Send invoice ID to MultiSafepay</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>-->
-        
-        
         <field id="order_status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>New Order Status</label>
           <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
@@ -68,7 +53,7 @@
           <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Declined</source_model>
         </field>
         <field id="cancelled_order_status" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Cancelled Order Status</label>
+          <label>Canceled Order Status</label>
           <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Cancelled</source_model>
         </field>
         <field id="expired_order_status" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -94,50 +79,6 @@
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
           <comment>This will restore the cart when processing the transaction. When a consumer uses the back button, the cart won't be empty.</comment>
         </field>
-        <!--<field id="order_status_initialized" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Initialized</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_completed" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Completed</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_uncleared" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Uncleared</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_reserved" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Reserved</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_void" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Void</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_declined" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Declined</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_refunded" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Refunded</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_partial_refunded" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Partially Refunded</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_banktransfer_initialized" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Initialized (Banktransfer)</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_expired" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Expired</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>
-        <field id="order_status_cancelled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>MultiSafepay Status: Cancelled</label>
-            <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\Status</source_model>
-        </field>-->
         <field id="msp_debug" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Enable debug mode</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -193,8 +134,6 @@
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
-
-
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -218,9 +157,9 @@
         </field>
       </group>
             
-      <!--Start Creditcard-->
+      <!--Start Credit Card-->
       <group id="creditcard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Creditcard</label>
+        <label>Credit Card</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -229,7 +168,7 @@
           <label>Title</label>
         </field>
         <field id="allowed_creditcards" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Allowed Creditcards</label>
+          <label>Allowed Credit cards</label>
           <source_model>MultiSafepay\Connect\Model\Config\Source\Creditcards</source_model>
           <can_be_empty>0</can_be_empty>
         </field>
@@ -266,8 +205,6 @@
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
-
-
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -489,9 +426,9 @@
         </field>
       </group>
             
-      <!--Start Banktransfer-->
+      <!--Start Bank transfer-->
       <group id="mspbanktransfer" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Banktransfer</label>
+        <label>Bank transfer</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -539,13 +476,6 @@
           <label>Maximum Order Total</label>
           <comment>Leave empty to disable limit</comment>
         </field>
-        <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Days active</label>
-        </field>
-        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Seconds active</label>
-          <comment>Days active will not be used when seconds active is configured</comment>
-        </field>
         <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -555,9 +485,9 @@
         </field>
       </group>
             
-      <!--Start Sofort-->
+      <!--Start SOFORT Banking-->
       <group id="sofort" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Sofort</label>
+        <label>SOFORT Banking</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -886,9 +816,9 @@
       </group>
             
       
-      <!--Start Betaal na Ontvangst-->
+      <!--Start Pay After Delivery -->
       <group id="betaalnaontvangst" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Betaal na Ontvangst</label>
+        <label>Pay After Delivery</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -943,12 +873,6 @@
           <label>Seconds active</label>
           <comment>Days active will not be used when seconds active is configured</comment>
         </field>
-        <!-- Disaled. We are now always updating status to shipped once completed in Magento
-        <field id="set_to_shipped" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Set Multisafepay status to shipped</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <comment>Status will be updated to shipped when order is completed</comment>
-        </field>-->
         <field id="instructions" translate="label" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1015,12 +939,6 @@
           <label>Seconds active</label>
           <comment>Days active will not be used when seconds active is configured</comment>
         </field>
-        <!-- Disaled. We are now always updating status to shipped once completed in Magento
-        <field id="set_to_shipped" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Set Multisafepay status to shipped</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <comment>Status will be updated to shipped when order is completed</comment>
-        </field>-->
         <field id="instructions" translate="label" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1030,9 +948,9 @@
         </field>
       </group>
       
-      <!--Start Betaal na Ontvangst-->
+      <!--Start Klarna -->
       <group id="klarnainvoice" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Klarna Factuur</label>
+        <label>Klarna</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -1087,13 +1005,6 @@
           <label>Seconds active</label>
           <comment>Days active will not be used when seconds active is configured</comment>
         </field>
-        <!-- Disaled. We are now always updating status to shipped once completed in Magento
-        <field id="set_to_shipped" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Set Multisafepay status to shipped</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <comment>Status will be updated to shipped when order is completed</comment>
-        </field>
-        -->
         <field id="instructions" translate="label" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Instructions</label>
         </field>
@@ -1103,9 +1014,9 @@
         </field>
       </group>
       
-      <!--Start Santander/betaalplan-->
+      <!--Start Betaalplan-->
       <group id="betaalplan" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Santander Betaalplan</label>
+        <label>Betaalplan</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -1498,11 +1409,10 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
-      
-      <!--Start ING-->
+
+      <!--Start ING Home'Pay-->
       <group id="ing" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>ING Homepay</label>
+        <label>ING Home'Pay</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -1631,12 +1541,10 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
-            
-            
+
       <!--Start EPS-->
       <group id="eps" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Eps</label>
+        <label>EPS</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -1699,11 +1607,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
-            
-            
-            
-            
+
       <!--Start DOTPAY-->
       <group id="dotpay" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Dotpay</label>
@@ -1747,8 +1651,6 @@
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
-
-
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -1771,7 +1673,8 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      <!--Start PAYSAFECARD-->
+
+      <!--Start paysafecard -->
       <group id="paysafecard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Paysafecard</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1814,8 +1717,6 @@
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
-
-
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -1970,6 +1871,72 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
+
+      <!--Start MultiSafepay-->
+      <group id="multisafepay" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>MultiSafepay</label>
+        <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enabled</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Title</label>
+        </field>
+        <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable Shipping Method Restriction</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Allowed Shipping Methods</label>
+          <depends>
+            <field id="allowed_carrier_active">1</field>
+          </depends>
+          <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+        </field>
+        <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Allowed Currencies</label>
+          <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
+          <can_be_empty>1</can_be_empty>
+        </field>
+        <field id="allowed_groups" translate="label" type="multiselect" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Allowed Groups</label>
+          <source_model>MultiSafepay\Connect\Model\Config\Source\Group</source_model>
+          <can_be_empty>0</can_be_empty>
+        </field>
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Payment from Applicable Countries</label>
+          <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Payment from Specific Countries</label>
+          <depends>
+            <field id="allowspecific">1</field>
+          </depends>
+          <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+          <can_be_empty>1</can_be_empty>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Minimum Order Total</label>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="99" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Maximum Order Total</label>
+          <comment>Leave empty to disable limit</comment>
+        </field>
+        <field id="days_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Days active</label>
+        </field>
+        <field id="seconds_active" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Seconds active</label>
+          <comment>Days active will not be used when seconds active is configured</comment>
+        </field>
+        <field id="instructions" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Instructions</label>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Sort Order</label>
+          <frontend_class>validate-number</frontend_class>
+        </field>
+      </group>      
 
       <!--Start iDEAL QR-->
       <group id="idealqr" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -2240,9 +2207,9 @@
         </field>
       </group>
             
-      <!--Start VVV Bon-->
+      <!--Start VVV Cadeaukaart-->
       <group id="vvvbon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>VVV Bon</label>
+        <label>VVV Cadeaukaart</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -2371,8 +2338,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
-            
+
       <!--Start Yourgift-->
       <group id="yourgift" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Yourgift</label>
@@ -3227,8 +3193,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
-      
+
       <!--Fietsenbon-->
       <group id="fietsenbon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Fietsenbon</label>
@@ -3439,11 +3404,6 @@
                 <label>Enable Fastcheckout</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             </field>
-            <!--<field id="fastcheckout_disable_checkout" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Disable normal checkout</label>
-                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                <comment>Will disable the normal Magento checkout, only checkout will be Fastcheckout</comment>
-            </field>-->
             <field id="fastcheckout_send_account_email" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Send account e-mail</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

@@ -16,7 +16,7 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      Ruud Jonk <techsupport@multisafepay.com>
+ * @author      MultiSafepay <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
@@ -30,11 +30,15 @@
 
 namespace MultiSafepay\Connect\Setup;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Storage\WriterInterface;
+use Magento\Framework\DB\Ddl\Table;
+use Magento\Framework\Notification\NotifierInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Sales\Model\Order;
-use Magento\Framework\DB\Ddl\Table;
+use Magento\Sales\Setup\SalesSetupFactory;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -44,12 +48,27 @@ class UpgradeData implements UpgradeDataInterface
     protected $salesSetupFactory;
 
     /**
-     * @param \Magento\Sales\Setup\SalesSetupFactory $salesSetupFactory
+     * @var \Magento\Framework\Notification\NotifierInterface
+     */
+    protected $notifier;
+
+    /**
+     *  @var \Magento\Framework\App\Config\Storage\WriterInterface
+     */
+    protected $configWriter;
+
+    /**
+     * @param \Magento\Sales\Setup\SalesSetupFactory            $salesSetupFactory
+     * @param \Magento\Framework\Notification\NotifierInterface $notifier
      */
     public function __construct(
-        \Magento\Sales\Setup\SalesSetupFactory $salesSetupFactory
+        SalesSetupFactory $salesSetupFactory,
+        NotifierInterface $notifier,
+        WriterInterface $configWriter
     ) {
         $this->salesSetupFactory = $salesSetupFactory;
+        $this->notifier = $notifier;
+        $this->configWriter = $configWriter;
     }
 
     public function upgrade(
@@ -57,6 +76,8 @@ class UpgradeData implements UpgradeDataInterface
         ModuleContextInterface $context
     ) {
         $installer = $setup;
+
+        $this->notifier->addNotice('MultiSafepay upgrade', 'MultiSafepay: Check out our documentation page for new features');
 
         $installer->startSetup();
 
@@ -83,5 +104,9 @@ class UpgradeData implements UpgradeDataInterface
         }
 
         $installer->endSetup();
+
+        if (version_compare($context->getVersion(), '1.7.1', '<')) {
+            $this->configWriter->save('giftcards/vvvbon/title',  'VVV Cadeaukaart');
+        }
     }
 }

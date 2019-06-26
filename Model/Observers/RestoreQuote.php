@@ -17,7 +17,7 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      Ruud Jonk <techsupport@multisafepay.com>
+ * @author      MultiSafepay <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
@@ -95,7 +95,7 @@ class RestoreQuote implements ObserverInterface
 
             if ($lastRealOrder->getState() == $state) {
                 $payment = $lastRealOrder->getPayment()->getMethodInstance();
-                if (is_object($payment) && in_array($payment->getCode(), $helper->gateways) && $payment->getCode() != "mspbanktransfer") {
+                if (is_object($payment) && $helper->isMspGateway($payment->getCode()) && $payment->getCode() != "mspbanktransfer") {
                     $session->restoreQuote();
                 }
             }

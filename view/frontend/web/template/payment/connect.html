@@ -16,7 +16,7 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      Ruud Jonk <techsupport@multisafepay.com>
+ * @author      MultiSafepay <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  * 
@@ -30,22 +30,27 @@
 -->
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
     <style>
-        .luma{
+        .luma {
             font-family: 'luma-icons'
         }
-        .luma.info:before{
+
+        .luma.info:before {
             content: '\e623';
         }
-        .luma.trash:before{
+
+        .luma.trash:before {
             content: '\e604';
         }
-        .float-right{
-            float:right;
+
+        .float-right {
+            float: right;
         }
-        .msp-d-flex{
+
+        .msp-d-flex {
             display: flex;
         }
-        #mspRecurringDelete{
+
+        .mspRecurringDelete {
             font-size: 23px;
             height: 32px;
             display: flex;
@@ -54,7 +59,8 @@
             cursor: pointer;
             margin-left: 5px;
         }
-        #mspMoreInformation{
+
+        #mspMoreInformation {
             font-size: 16px;
             cursor: pointer;
             margin-left: 3px;
@@ -77,8 +83,8 @@
         <!--/ko-->
 
         <!-- ko if: showIssuers() -->
-        <select  name="issuerid" class="select bank"
-                 data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
+        <select name="issuerid" class="select bank"
+                data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
 			enable: true,
 			options: getIssuers(),
 			optionsValue: 'code',
@@ -86,48 +92,68 @@
 			optionsCaption: $t('Choose your bank...'),
 			value: issuerid">
         </select>
-        <br /><br />
+        <br/><br/>
         <!-- /ko -->
 
         <!-- ko if: showCards() -->
-        <select  name="creditcard" class="select creditcard"
-                 data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
+        <div class="msp-d-flex">
+            <select name="creditcard" class="select creditcard"
+                    data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
 			enable: true,
 			options: getCreditcards(),
 			optionsValue: 'value',
 			optionsText: 'label',
-			optionsCaption: $t('Choose your creditcard...'),
-			value: creditcard">
-        </select>
-        <br /><br />
+			optionsCaption: $t('Choose your credit card...'),
+			value: creditcard,
+			event: {change: function(data, event){return setSelectedRecurring(data, event)}}">
+            </select>
+            <!-- ko ifnot: selectedRecurring() == "MAESTRO" -->
+            <!-- ko if: selectedRecurring -->
+            <a><span class="float-right luma trash float-right mspRecurringDelete"
+                     data-bind="click: deleteRecurring"></span>
+            </a>
+            <!-- /ko -->
+            <!-- /ko -->
+
+        </div>
+        <br/><br/>
         <!-- /ko -->
+
+
 
         <!-- ko if: showRecurring() -->
         <div class="msp-d-flex">
-        <select  name="recurring" class="select creditcard"
-                 data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-type' : getCode() ,'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
+            <select name="recurring" class="select creditcard"
+                    data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-type' : getCode() ,'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
 			enable: true,
 			options: getRecurrings(),
 			optionsValue: 'value',
 			optionsText: 'label',
-			optionsCaption: $t('Choose your creditcard...'),
+			optionsCaption: $t('Choose your credit card...'),
 			event: {change: function(data, event){return setSelectedRecurring(data, event)}}
             ">
-        </select>
-        <a ><span class="float-right luma trash float-right" id="mspRecurringDelete" data-bind="visible: selectedRecurring, click: deleteRecurring"></span>
-        </a>
+            </select>
+            <a><span class="float-right luma trash float-right mspRecurringDelete"
+                     data-bind="visible: selectedRecurring, click: deleteRecurring"></span>
+            </a>
         </div>
-        <br /><br />
+        <br/><br/>
         <!-- /ko -->
+
         <!-- ko if: showAddRecurringData() -->
-        <!-- ko ifnot: selectedRecurring -->
-        <input type="checkbox" name="saveCreditCard" id="saveCreditCard" data-bind="attr: {value:true}, checked: useCustomName">&nbsp;<label for="saveCreditCard">
-        <span><b><!-- ko i18n: 'Save your credit card details for a next purchase.' --><!-- /ko --> </b></span></label>
-        <br />
-        <div data-bind="if:useCustomName">
-            <input type="text" name="custom_name" placeholder="Name" data-bind="attr:{'data-type' : getCode()}">
+        <!-- ko ifnot: selectedRecurring() == "MAESTRO" -->
+        <!-- ko ifnot: selectedRecurring() -->
+        <div data-bind="visible: showTokenSave">
+            <input type="checkbox" name="saveCreditCard" id="saveCreditCard"
+                   data-bind="attr: {value:true}, checked: useCustomName">&nbsp;<label for="saveCreditCard">
+            <span><b><!-- ko i18n: 'Save your credit card details for a next purchase.' --><!-- /ko --> </b></span></label>
+            <br/>
+            <div data-bind="if:useCustomName">
+                <input type="text" name="custom_name" placeholder="Name" data-bind="attr:{'data-type' : getCode()}">
+            </div>
+            <br/>
         </div>
-        <br />
+        <!-- /ko -->
         <!-- /ko -->
         <!-- /ko -->
 

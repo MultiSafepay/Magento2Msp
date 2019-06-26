@@ -17,7 +17,7 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      Ruud Jonk <techsupport@multisafepay.com>
+ * @author      MultiSafepay <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
@@ -31,6 +31,7 @@
 
 namespace MultiSafepay\Connect\Helper;
 
+use Magento\Directory\Model\CurrencyFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
@@ -38,6 +39,7 @@ use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Math\Random;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\ResourceModel\Order\Status\Collection as orderStatusCollection;
 use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Model\Api\MspClient;
@@ -57,110 +59,58 @@ class Data
     const MSP_REFUNDED = "refunded";
     const MSP_PARTIAL_REFUNDED = "partial_refunded";
 
-    public $giftcards = array(
-        'webshopgiftcard',
-        'babygiftcard',
-        'boekenbon',
-        'erotiekbon',
-        'parfumcadeaukaart',
-        'yourgift',
-        'wijncadeau',
-        'gezondheidsbon',
-        'fashioncheque',
-        'fashiongiftcard',
-        'podium',
-        'vvvbon',
-        'sportenfit',
-        'goodcard',
-        'nationaletuinbon',
-        'nationaleverwencadeaubon',
-        'beautyandwellness',
-        'fietsenbon',
-        'wellnessgiftcard',
-        'winkelcheque',
-        'givacard'
-    );
     public $gateways = array(
-        'ideal',
-        'dotpay',
-        'betaalnaontvangst',
-        'einvoice',
-        'klarnainvoice',
-        'afterpaymsp',
-        'bancontact',
-        'visa',
-        'betaalplan',
-        'eps',
-        'ferbuy',
-        'mastercard',
-        'mspbanktransfer',
-        'maestro',
-        'paypalmsp',
-        'giropay',
-        'sofort',
-        'directdebit',
-        'americanexpress',
-        'creditcard',
-        'paysafecard',
-        'trustpay',
-        'kbc',
-        'alipay',
-        'belfius',
-        'ing',
-        'idealqr',
-        'trustly',
-    );
-    //MultiSafepay_gateways->Magento_codes
-    public $methodMap = array(
-        'ALIPAY' => 'alipay',
-        'AMEX' => 'americanexpress',
-        'BANKTRANS' => 'mspbanktransfer',
-        'BELFIUS' => 'belfius',
-        'DIRDEB' => 'directdebit',
-        'DIRECTBANK' => 'sofort',
-        'DOTPAY' => 'dotpay',
-        'EINVOICE' => 'einvoice',
-        'EPS' => 'eps',
-        'FERBUY' => 'ferbuy',
-        'GIROPAY' => 'giropay',
-        'IDEAL' => 'ideal',
-        'INGHOME' => 'ing',
-        'KBC' => 'kbc',
-        'KLARNA' => 'klarnainvoice',
-        'MAESTRO' => 'maestro',
-        'MASTERCARD' => 'mastercard',
-        'MISTERCASH' => 'bancontact',
-        'PAYAFTER' => 'betaalnaontvangst',
-        'PAYPAL' => 'paypalmsp',
-        'PSAFECARD' => 'paysafecard',
-        'TRUSTPAY' => 'trustpay',
-        'VISA' => 'visa',
-        'SANTANDER' => 'betaalplan',
-        'AFTERPAY' => 'afterpaymsp',
-        'IDEALQR' => 'idealqr',
-        'TRUSTLY' => 'trustly',
+        'afterpaymsp' => array('code' => 'AFTERPAY', 'name' => 'AfterPay', 'type' => 'gateways'),
+        'alipay' => array('code' => 'ALIPAY', 'name' => 'Alipay', 'type' => 'gateways'),
+        'americanexpress' => array('code' => 'AMEX', 'name' => 'American Express', 'type' => 'gateways'),
+        'bancontact' => array('code' => 'MISTERCASH', 'name' => 'Bancontact', 'type' => 'gateways'),
+        'belfius' => array('code' => 'BELFIUS', 'name' => 'Belfius', 'type' => 'gateways'),
+        'betaalnaontvangst'  => array('code' => 'PAYAFTER', 'name' => 'Pay After Delivery', 'type' => 'gateways'),
+        'betaalplan'  => array('code' => 'SANTANDER', 'name' => 'Betaalplan', 'type' => 'gateways'),
+        'creditcard'  => array('code' => '', 'name' => 'Credit card', 'type' => 'gateways'),
+        'directdebit' => array('code' => 'DIRDEB', 'name' => 'Direct Debit', 'type' => 'gateways'),
+        'dotpay'  => array('code' => 'DOTPAY', 'name' => 'Dotpay', 'type' => 'gateways'),
+        'einvoice' => array('code' => 'EINVOICE', 'name' => 'E-Invoicing', 'type' => 'gateways'),
+        'eps'  => array('code' => 'EPS', 'name' => 'EPS', 'type' => 'gateways'),
+        'ferbuy' => array('code' => 'AMEX', 'name' => 'Ferbuy', 'type' => 'gateways'),
+        'giropay' => array('code' => 'GIROPAY', 'name' => 'GiroPay', 'type' => 'gateways'),
+        'ideal'  => array('code' => 'IDEAL', 'name' => 'iDEAL', 'type' => 'gateways'),
+        'idealqr' => array('code' => 'IDEALQR', 'name' => 'iDEAL QR', 'type' => 'gateways'),
+        'ing' => array('code' => 'INGHOME', 'name' => 'ING Home\'Pay', 'type' => 'gateways'),
+        'kbc' => array('code' => 'KBC', 'name' => 'KBC', 'type' => 'gateways'),
+        'klarnainvoice' => array('code' => 'KLARNA', 'name' => 'Klarna', 'type' => 'gateways'),
+        'maestro' => array('code' => 'MAESTRO', 'name' => 'Maestro', 'type' => 'gateways'),
+        'mastercard' => array('code' => 'MASTERCARD', 'name' => 'Mastercard', 'type' => 'gateways'),
+        'mspbanktransfer' => array('code' => 'BANKTRANS', 'name' => 'Bank transfer', 'type' => 'gateways'),
+        'multisafepay' => array('code' => '', 'name' => 'MultiSafepay', 'type' => 'gateways'),
+        'paypalmsp' => array('code' => 'PAYPAL', 'name' => 'PayPal', 'type' => 'gateways'),
+        'paysafecard' => array('code' => 'PSAFECARD', 'name' => 'Paysafecard', 'type' => 'gateways'),
+        'sofort' => array('code' => 'DIRECTBANK', 'name' => 'SOFORT Banking', 'type' => 'gateways'),
+        'trustly' => array('code' => 'TRUSTLY', 'name' => 'Trustly', 'type' => 'gateways'),
+        'trustpay' => array('code' => 'TRUSTPAY', 'name' => 'Trustpay', 'type' => 'gateways'),
+        'visa' => array('code' => 'VISA', 'name' => 'Visa', 'type' => 'gateways'),
 
-        'BABYGIFTCARD' => 'babygiftcard',
-        'BEAUTYANDWELLNESS' => 'beautyandwellness',
-        'BOEKENBON' => 'boekenbon',
-        'EROTIEKBON' => 'erotiekbon',
-        'FASHIONCHEQUE' => 'fashioncheque',
-        'FASHIONGIFTCARD' => 'fashiongiftcard',
-        'FIETSENBON' => 'fietsenbon',
-        'GEZONDHEIDSBON' => 'gezondheidsbon',
-        'GIVACARD' => 'givacard',
-        'GOODCARD' =>'goodcard',
-        'NATIONALETUINBON' => 'nationaletuinbon',
-        'NATIONALEVERWENCADEAUBON' => 'nationaleverwencadeaubon',
-        'PARFUMCADEAUKAART' => 'parfumcadeaukaart',
-        'PODIUM' => 'podium',
-        'SPORTENFIT'=>'sportenfit',
-        'VVVBON' =>'vvvbon',
-        'WEBSHOPGIFTCARD' => 'webshopgiftcard',
-        'WELLNESSGIFTCARD' => 'wellnessgiftcard',
-        'WIJNCADEAU' => 'wijncadeau',
-        'WINKELCHEQUE' => 'winkelcheque',
-        'YOURGIFT' => 'yourgift',
+        'babygiftcard' => array('code' => 'BABYGIFTCARD', 'name' => 'Babygiftcard', 'type' => 'giftcards'),
+        'beautyandwellness' => array('code' => 'BEAUTYANDWELLNESS', 'name' => 'Beauty and wellness', 'type' => 'giftcards'),
+        'boekenbon' => array('code' => 'BOEKENBON', 'name' => 'Boekenbon', 'type' => 'giftcards'),
+        'erotiekbon' => array('code' => 'EROTIEKBON', 'name' => 'Erotiekbon', 'type' => 'giftcards'),
+        'fashioncheque' => array('code' => 'FASHIONCHEQUE', 'name' => 'Fashioncheque', 'type' => 'giftcards'),
+        'fashiongiftcard' => array('code' => 'FASHIONGIFTCARD', 'name' => 'Fashiongiftcard', 'type' => 'giftcards'),
+        'fietsenbon' => array('code' => 'FIETSENBON', 'name' => 'Fietsenbon', 'type' => 'giftcards'),
+        'gezondheidsbon' => array('code' => 'GEZONDHEIDSBON', 'name' => 'Gezondheidsbon', 'type' => 'giftcards'),
+        'givacard' => array('code' => 'GIVACARD', 'name' => 'Givacard', 'type' => 'giftcards'),
+        'goodcard' => array('code' => 'GOODCARD', 'name' => 'Goodcard', 'type' => 'giftcards'),
+        'nationaletuinbon' => array('code' => 'NATIONALETUINBON', 'name' => 'Nationale tuinbon', 'type' => 'giftcards'),
+        'nationaleverwencadeaubon' => array('code' => 'NATIONALEVERWENCADEAUBON', 'name' => 'Nationale verwencadeaubon', 'type' => 'giftcards'),
+        'parfumcadeaukaart' => array('code' => 'PARFUMCADEAUKAART', 'name' => 'Parfumcadeaukaart', 'type' => 'giftcards'),
+        'podiumcadeaukaart' => array('code' => 'PODIUM', 'name' => 'Podium', 'type' => 'giftcards'),
+        'sportenfit' => array('code' => 'SPORTENFIT', 'name' => 'Sportenfit', 'type' => 'giftcards'),
+        'vvvbon' => array('code' => 'VVVGIFTCRD', 'name' => 'VVV Cadeaukaart', 'type' => 'giftcards'),
+        'webshopgiftcard' => array('code' => 'WEBSHOPGIFTCARD', 'name' => 'Webshop Giftcard', 'type' => 'giftcards'),
+        'wellnessgiftcard' => array('code' => 'WELLNESSGIFTCARD', 'name' => 'Wellness Giftcards', 'type' => 'giftcards'),
+        'wijncadeau' => array('code' => 'WIJNCADEAU', 'name' => 'Wijn Cadeau', 'type' => 'giftcards'),
+        'winkelcheque' => array('code' => 'WINKELCHEQUE', 'name' => 'Winkel Cheque', 'type' => 'giftcards'),
+        'yourgift' => array('code' => 'YOURGIFT', 'name' => 'YourGift', 'type' => 'giftcards'),
     );
 
     /**
@@ -200,6 +150,7 @@ class Data
     protected $_ScopeConfigInterface;
     protected $_random;
     protected $_encryptor;
+    protected $_currencyFactory;
 
     public function __construct(
         StoreManagerInterface $storeManagerInterface,
@@ -208,7 +159,8 @@ class Data
         ScopeConfigInterface $scopeConfigInterface,
         Random $random,
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        CurrencyFactory $currencyFactory
 
 
 
@@ -218,6 +170,7 @@ class Data
         $this->filesystem = $filesystem;
         $this->_orderStatusCollection = $orderStatusCollection;
         $this->_scopeConfigInterface = $scopeConfigInterface;
+        $this->_currencyFactory = $currencyFactory;
 
         $this->tmpDirectory = $this->filesystem->getDirectoryWrite(
             DirectoryList::VAR_DIR
@@ -232,7 +185,7 @@ class Data
      */
     public function lockProcess($lockName)
     {
-        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+        $this->tmpDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::TMP);
         $this->lockFilePath = $this->getFilePath($lockName);
         while ($this->isProcessLocked()) {
             usleep(1000);
@@ -280,7 +233,7 @@ class Data
      */
     private function getFilePath($name)
     {
-        return DirectoryList::TMP . DIRECTORY_SEPARATOR . $name . self::LOCK_EXTENSION;
+        return $name . self::LOCK_EXTENSION;
     }
 
     public function getAmountInCents($order, $use_base_currency)
@@ -303,24 +256,18 @@ class Data
 
     public function getAllMethods()
     {
-        $methods = array_merge($this->gateways, $this->giftcards);
+        $paymentMethods = array();
 
-        $all_methods = array();
-
-        foreach ($methods as $key => $method) {
-            $all_methods[$method] = $method;
+        foreach ($this->gateways as $key => $gateway){
+            $paymentMethods[$key] = $gateway['name'];
         }
 
-        return $all_methods;
+        return $paymentMethods;
     }
 
     public function getPaymentType($code)
     {
-        if (in_array($code, $this->gateways)) {
-            return 'gateways';
-        } elseif (in_array($code, $this->giftcards)) {
-            return 'giftcards';
-        }
+        return (isset($this->gateways[$code])) ? $this->gateways[$code]['type'] : null;
     }
 
     /**
@@ -350,11 +297,7 @@ class Data
      */
     public function getPaymentCode($gateway)
     {
-        if (isset($this->methodMap[$gateway])) {
-            return $this->methodMap[$gateway];
-        } else {
-            return null;
-        }
+        return (isset($this->gateways[$gateway])) ? $this->gateways[$gateway]['code'] : null;
     }
 
     /**
@@ -445,7 +388,9 @@ class Data
 
     public function isMspGateway($gateway)
     {
-        if (in_array($gateway, $this->gateways)) {
+        if (isset($this->gateways[$gateway])
+            && $this->gateways[$gateway]['type'] === 'gateways'
+        ) {
             return true;
         }
         return false;
@@ -453,7 +398,9 @@ class Data
 
     public function isMspGiftcard($giftcard)
     {
-        if (in_array($giftcard, $this->giftcards)) {
+        if (isset($this->gateways[$giftcard])
+            && $this->gateways[$giftcard]['type'] === 'giftcards'
+        ) {
             return true;
         }
         return false;
@@ -537,4 +484,83 @@ class Data
         return $this->_encryptor->decrypt($string);
     }
 
+    /**
+     * @param string $orderIncrementId
+     * @param string $hash
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function validateOrderHash($orderIncrementId ,$hash)
+    {
+        return hash_equals($this->encryptOrder($orderIncrementId), $hash);
+    }
+
+    /**
+     * @param string $orderIncrementId
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function encryptOrder($orderIncrementId)
+    {
+        $api_key = $this->getMainConfigData('live_api_key');
+
+        if ($this->isTestEnvironment()) {
+            $api_key = $this->getMainConfigData('test_api_key');
+        }
+
+        if (empty($api_key)) {
+            throw new \Exception('Please configure your MultiSafepay API Key.');
+        }
+
+        return hash_hmac('sha512', $orderIncrementId, $api_key);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTestEnvironment()
+    {
+        return $this->getMainConfigData('msp_env');
+    }
+
+    /**
+     * You can use this method to communicate the MultiSafepay status to other systems by using a plugin
+     *
+     * @param OrderInterface $order
+     * @param string $status
+     * @return array
+     */
+    public function setMultisafepayStatus(OrderInterface $order, string $status)
+    {
+        $formatStatus = ucfirst($status);
+        $order->setMultisafepayStatus($formatStatus);
+        return [
+            'orderId' => $order->getEntityId(),
+            'mspStatus' => $formatStatus
+        ];
+    }
+
+    /**
+     * @param array $paymentMethods
+     *
+     * @return string
+     */
+    public function createMultiPaymentMethodsLine($paymentMethods = [])
+    {
+        if (empty($paymentMethods)) {
+            return "";
+        }
+        $translation = __('Payment methods specification');
+        $lineHeader = "<b>{$translation}:</b><br />";
+
+        foreach ($paymentMethods as $paymentMethod) {
+            $mspTotal = $this->_currencyFactory->create()->load(
+                $paymentMethod->currency
+            )->formatTxt((float)$paymentMethod->amount / 100);
+            $line[] = "{$paymentMethod->type} ({$mspTotal})";
+        }
+        return $lineHeader . implode(' / ', $line);
+    }
 }

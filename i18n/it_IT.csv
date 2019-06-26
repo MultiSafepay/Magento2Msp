@@ -1,8 +1,8 @@
-"The transaction was cancelled or declined and the order was closed, please try again.","The transaction was cancelled or declined and the order was closed, please try again."
+"The transaction was canceled or declined and the order was closed, please try again.","The transaction was canceled or declined and the order was closed, please try again."
 "There was an error processing your transaction request, please try again with another payment method.","There was an error processing your transaction request, please try again with another payment method."
 Guests,Guests
 "-- Please Select --","-- Please Select --"
-"<b>Klarna Invoice:</b> ","<b>Klarna Invoice:</b> "
+"<b>Klarna:</b> ","<b>Klarna:</b> "
 "Error: Refund not processed online as it did not match the complete shipping cost.  ","Error: Refund not processed online as it did not match the complete shipping cost.  "
 "Your shipment has been processed. Your transaction has also been updated at MultiSafepay","Your shipment has been processed. Your transaction has also been updated at MultiSafepay"
 "Your shipment has been processed, but the transaction could not be updated at MultiSafepay. If needed you need to update your transaction manually using MultiSafepay Control","Your shipment has been processed, but the transaction could not be updated at MultiSafepay. If needed you need to update your transaction manually using MultiSafepay Control"
@@ -18,7 +18,7 @@ Guests,Guests
 "Use base currency?","Use base currency?"
 "New Order Status","New Order Status"
 "Declined Order Status","Declined Order Status"
-"Cancelled Order Status","Cancelled Order Status"
+"Canceled Order Status","Canceled Order Status"
 "Expired Order Status","Expired Order Status"
 "Chargeback Order Status","Chargeback Order Status"
 "Create Payment link","Create Payment link"
@@ -41,29 +41,29 @@ Title,Title
 "Seconds active","Seconds active"
 Instructions,Instructions
 "Sort Order","Sort Order"
-Creditcard,Creditcard
-"Allowed Creditcards","Allowed Creditcards"
+"Credit card","Credit card"
+"Allowed Credit cards","Allowed Credit Cards"
 Visa,Visa
 Mastercard,Mastercard
 Giropay,Giropay
-Banktransfer,Banktransfer
-Sofort,Sofort
+"Bank transfer",Bank transfer
+"SOFORT Banking","SOFORT Banking"
 Maestro,Maestro
 Bancontact,Bancontact
 "American Express","American Express"
 "Direct Debit","Direct Debit"
-"Betaal na Ontvangst","Betaal na Ontvangst"
+"Pay After Delivery","Pay After Delivery"
 E-Invoicing,E-Invoicing
-"Klarna Factuur","Klarna Factuur"
-"Santander Betaalplan","Santander Betaalplan"
+"Klarna","Klarna"
+"Betaalplan","Betaalplan"
 PayPal,PayPal
 TrustPay,TrustPay
 KBC,KBC
 AliPay,AliPay
 Belfius,Belfius
-"ING Homepay","ING Homepay"
+"ING Home'Pay","ING Home'Pay"
 Ferbuy,Ferbuy
-Eps,Eps
+EPS,EPS
 Dotpay,Dotpay
 Paysafecard,Paysafecard
 AfterPay,AfterPay
@@ -73,7 +73,7 @@ Trustly,Trustly
 Wijncadeau,Wijncadeau
 Fashiongiftcard,Fashiongiftcard
 Podium,Podium
-"VVV Bon","VVV Bon"
+"VVV Cadeaukaart","VVV Cadeaukaart"
 "Sport en Fit","Sport en Fit"
 Yourgift,Yourgift
 Givacard,Givacard
@@ -111,6 +111,8 @@ Salutation,Salutation
 Comment,Comment
 Newsletter,Newsletter
 "Choose your bank...","Choose your bank..."
-"Choose your creditcard...","Choose your creditcard..."
+"Choose your credit card...","Choose your credit card..."
 "Order", "Ordine"
 "@","@"
+"Notice: Captured amount %1 differs from MultiSafepay amount %2", "Notice: Captured amount %1 differs from MultiSafepay amount %2"
+"Payment methods specification","Payment methods specification"

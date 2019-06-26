@@ -1,8 +1,8 @@
-"The transaction was cancelled or declined and the order was closed, please try again.","De transactie is geannuleerd of geweigerd en de bestelling is niet doorgevoerd, probeer het opnieuw."
+"The transaction was canceled or declined and the order was closed, please try again.","De transactie is geannuleerd of geweigerd en de bestelling is niet doorgevoerd, probeer het opnieuw."
 "There was an error processing your transaction request, please try again with another payment method.","Er is een fout opgetreden met de betaling, probeer het opnieuw met een andere betaalmethode."
 Guests,Gasten
 "-- Please Select --","-- Maak een keuze --"
-"<b>Klarna Invoice:</b> ","<b>Klarna Factuur:</b> "
+"<b>Klarna:</b> ","<b>Klarna:</b> "
 "Error: Refund not processed online as it did not match the complete shipping cost.  ","Fout: Terugbetaling niet online verwerkt omdat deze niet overeenkomt met de volledige verzendkosten.  "
 "Your shipment has been processed. Your transaction has also been updated at MultiSafepay","Uw verzending is verwerkt. De transactie is tevens geüpdate bij MultiSafepay"
 "Your shipment has been processed, but the transaction could not be updated at MultiSafepay. If needed you need to update your transaction manually using MultiSafepay Control","Uw verzending is verwerkt, maar de transactie kon niet worden bijgewerkt bij MultiSafepay. Indien nodig moet u de transactie handmatig bijwerken met MultiSafepay Control"
@@ -18,7 +18,7 @@ Guests,Gasten
 "Use base currency?","Gebruik standaardvaluta?"
 "New Order Status","Status nieuwe bestelling"
 "Declined Order Status","Status afgewezen bestelling"
-"Cancelled Order Status","Status geannuleerde bestelling"
+"Canceled Order Status","Status geannuleerde bestelling"
 "Expired Order Status","Status verlopen bestelling"
 "Chargeback Order Status","Status teruggevorderde bestelling"
 "Create Payment link","Maak betaallink aan"
@@ -41,29 +41,29 @@ Title,Titel
 "Seconds active","Seconden actief"
 Instructions,Instructies
 "Sort Order","Sorteer volgorde"
-Creditcard,Creditcard
-"Allowed Creditcards","Toegestane Creditcards"
+"Credit card","Credit card"
+"Allowed Credit cards","Toegestane Credit cards"
 Visa,Visa
 Mastercard,Mastercard
 Giropay,Giropay
-Banktransfer,Bankoverboeking
-Sofort,Sofort
+"Bank transfer",Bankoverschrijving
+"SOFORT Banking","SOFORT Banking"
 Maestro,Maestro
 Bancontact,Bancontact
 "American Express","American Express"
-"Direct Debit","Direct Debit"
-"Betaal na Ontvangst","Betaal na Ontvangst"
+"Direct Debit","Eenmalige machtiging"
+"Pay After Delivery","Betaal Na Ontvangst"
 E-Invoicing,E-Invoicing
-"Klarna Factuur","Klarna Factuur"
-"Santander Betaalplan","Santander Betaalplan"
+"Klarna","Klarna"
+"Betaalplan","Betaalplan"
 PayPal,PayPal
 TrustPay,TrustPay
 KBC,KBC
 AliPay,AliPay
 Belfius,Belfius
-"ING Homepay","ING Homepay"
+"ING Home'Pay","ING Home'Pay"
 Ferbuy,Ferbuy
-Eps,Eps
+EPS,EPS
 Dotpay,Dotpay
 Paysafecard,Paysafecard
 AfterPay,AfterPay
@@ -73,7 +73,7 @@ Trustly,Trustly
 Wijncadeau,Wijncadeau
 Fashiongiftcard,Fashiongiftcard
 Podium,Podium
-"VVV Bon","VVV Bon"
+"VVV Cadeaukaart","VVV Cadeaukaart"
 "Sport en Fit","Sport en Fit"
 Yourgift,Yourgift
 Givacard,Givacard
@@ -111,15 +111,17 @@ Salutation,Aanhef
 Comment,Commentaar
 Newsletter,Nieuwsbrief
 "Choose your bank...","Kies uw bank..."
-"Choose your creditcard...","Kies uw creditcard..."
+"Choose your credit card...","Kies uw credit card..."
 "Order", "Bestelling"
 "@","@"
-"Are you sure you want to delete this creditcard?","Weet u zeker dat u deze creditcard wilt verwijderen?"
+"Are you sure you want to delete this credit card?","Weet u zeker dat u deze credit card wilt verwijderen?"
 "Guarantees from MultiSafepay","Garanties van Multisafepay"
-"Your creditcard credentials will be saved in our secure bankserver. The webshop has for your safety no access to this information and will not be saved in any way","Uw creditcardgegevens worden direct opgeslagen op veilige MULTISAFEPAY bankservers. De webshop heeft voor uw veiligheid geen toegang tot gegevens en slaat het op geen enkele manier op."
+"Your credit card credentials will be saved in our secure bankserver. The webshop has for your safety no access to this information and will not be saved in any way","Uw creditcardgegevens worden direct opgeslagen op veilige MULTISAFEPAY bankservers. De webshop heeft voor uw veiligheid geen toegang tot gegevens en slaat het op geen enkele manier op."
 "Fast and easy","Makkelijk en snel"
-"By registering your credentials, You can speed up your purchases. Because you don't need to fill in your credentials again","Door uw creditcard te registreren, kunt u uw aankopen versnellen, omdat u uw gegevens niet opnieuw hoeft in te vullen."
+"By registering your credentials, You can speed up your purchases. Because you don't need to fill in your credentials again","Door uw credit card te registreren, kunt u uw aankopen versnellen, omdat u uw gegevens niet opnieuw hoeft in te vullen."
 "Free of charge","Kostenloos"
 "Activating and using this function is free of charge, and you can disable it any time","Het activeren en gebruiken van deze functie kost niets. U kunt het op elk gewenst moment uitschakelen."
-"Save your credit card details for a next purchase."," Bewaar uw creditcard gegevens voor een volgende aankoop"
+"Save your credit card details for a next purchase."," Bewaar uw credit card gegevens voor een volgende aankoop"
 "It is safe and easy","Het is makkelijk en veilig"
+"Notice: Captured amount %1 differs from MultiSafepay amount %2","Melding: Gefactureerd bedrag %1 verschilt van het via MultiSafepay betaalde bedrag %2"
+"Payment methods specification","Betaalmethodes specificatie"

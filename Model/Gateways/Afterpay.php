@@ -17,7 +17,7 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      Ruud Jonk <techsupport@multisafepay.com>
+ * @author      MultiSafepay <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
@@ -36,4 +36,5 @@ class Afterpay extends \MultiSafepay\Connect\Model\Connect
 
     protected $_code = 'afterpaymsp';
     public $_gatewayCode = 'AFTERPAY';
+    protected $_canUseInternal = false;
 }

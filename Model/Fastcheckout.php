@@ -17,7 +17,7 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      Ruud Jonk <techsupport@multisafepay.com>
+ * @author      MultiSafepay <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
@@ -376,7 +376,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_client->setApiKey($this->getConnectConfigData('test_api_key', null, null));
             $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/json/');
         } else {
-            $this->_client->setApiKey($this->getConnectConfigData('ive_api_key', null, null));
+            $this->_client->setApiKey($this->getConnectConfigData('live_api_key', null, null));
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
@@ -388,7 +388,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         $notification = $this->_urlBuilder->getUrl('multisafepay/fastcheckout/notification/&type=initial', ['_nosid' => true]);
         $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/fastcheckout/success', ['_nosid' => true]), 0, -1);
-        $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/fastcheckout/cancel', ['_nosid' => true]), 0, -1) . '?transactionid=' . $quoteId;
+        $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/fastcheckout/cancel', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($quoteId);
 
         $msporder = $this->_client->orders->post(array(
             "type" => $type,
@@ -412,14 +412,12 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             "plugin" => array(
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.6.3',
+                "plugin_version" => ' - Plugin 1.7.0',
                 "partner" => "MultiSafepay",
             ),
             "shopping_cart" => $shoppingCart,
             "checkout_options" => $checkoutData,
         ));
-
-        //$this->logger->info(print_r($msporder, true));
 
         return $this->_client->orders;
     }
@@ -761,7 +759,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $used_method = $this->_mspHelper->getPaymentCode($msp_gateway);
         $method_activated = false;
 
-        if (in_array($used_method, $this->_mspHelper->gateways)) {
+        if ($this->_mspHelper->isMspGateway($used_method)) {
             $is_method_active = $this->getGlobalConfig('gateways/' . $used_method . '/active');
             $type = 'gateways';
         } else {

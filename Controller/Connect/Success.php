@@ -17,7 +17,7 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      Ruud Jonk <techsupport@multisafepay.com>
+ * @author      MultiSafepay <techsupport@multisafepay.com>
  * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
@@ -88,6 +88,12 @@ class Success extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
+
+        if(!$this->validateParams($params) || !$this->_mspHelper->validateOrderHash($params['transactionid'], $params['hash']))
+        {
+            $this->_redirect('checkout/cart');
+            return;
+        }
         $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
         $session = $this->_session;
 
@@ -104,10 +110,16 @@ class Success extends \Magento\Framework\App\Action\Action
         //To a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
         $paymentMethod = $this->_mspConnect;
         $paymentMethod->_invoiceSender = $this->_invoiceSender;
-        $updated = $paymentMethod->notification($order_information, true);
+        $paymentMethod->notification($order_information, true);
 
         $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
         $this->_redirect('checkout/onepage/success?utm_nooverride=1');
         return;
     }
+
+    private function validateParams($params)
+    {
+        return isset($params['hash']) && isset($params['transactionid']) && is_numeric($params['transactionid']);
+    }
+
 }
