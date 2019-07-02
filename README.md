@@ -6,9 +6,9 @@
 
 Easily integrate MultiSafepay payment solutions into your Magento 2 webshop with the free and completely new MultiSafepay Magento 2 plugin.
 
-[![Latest Stable Version](https://poser.pugx.org/multisafepay/magento2msp/v/stable)](https://packagist.org/packages/multisafepay/magento2msp)
-[![Total Downloads](https://poser.pugx.org/multisafepay/magento2msp/downloads)](https://packagist.org/packages/multisafepay/magento2msp)
-[![License](https://poser.pugx.org/multisafepay/magento2msp/license)](https://packagist.org/packages/multisafepay/magento2msp)
+[![Latest Stable Version](https://img.shields.io/packagist/v/multisafepay/magento2msp.svg)](https://packagist.org/packages/multisafepay/magento2msp)
+[![Total Downloads](https://img.shields.io/packagist/dt/multisafepay/magento2msp.svg)](https://packagist.org/packages/multisafepay/magento2msp)
+[![License](https://img.shields.io/packagist/l/multisafepay/magento2msp.svg)](https://packagist.org/packages/multisafepay/magento2msp)
 
 ## About MultiSafepay ##
 MultiSafepay is a collecting payment service provider which means we take care of the agreements, technical details and payment collection required for each payment method. You can start selling online today and manage all your transactions from one place.
