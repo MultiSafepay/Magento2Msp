@@ -121,7 +121,7 @@ class Success extends \Magento\Framework\App\Action\Action
 
     private function validateParams($params)
     {
-        return isset($params['hash']) && isset($params['transactionid']) && is_numeric($params['transactionid']);
+        return isset($params['hash']) && isset($params['transactionid']);
     }
 
 }

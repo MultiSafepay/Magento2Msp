@@ -175,7 +175,7 @@ class Notification extends \Magento\Framework\App\Action\Action
      */
     private function validateParams($params)
     {
-        return isset($params['transactionid']) && is_numeric($params['transactionid']);
+        return isset($params['transactionid']);
     }
 
 }
