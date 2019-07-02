@@ -1,3 +1,9 @@
+## 1.7.1
+Release date: July 2nd, 2019
+
+### Fixed
++ PLGMAGTWOS-459: Fixed orders not completed when having a prefix
+
 ## 1.7.0
 Release date: June 26th, 2019
 
