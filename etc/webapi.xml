@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/multisafepay/:cartId/payment-url" method="GET">
+        <service class="MultiSafepay\Connect\Api\GuestPaymentUrlInterface" method="getPaymentUrl"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/multisafepay/mine/payment-url" method="GET">
+        <service class="MultiSafepay\Connect\Api\PaymentUrlInterface" method="getPaymentUrl"/>
+        <resources>
+            <resource ref="Magento_Cart::manage" />
+        </resources>
+    </route>
+</routes>

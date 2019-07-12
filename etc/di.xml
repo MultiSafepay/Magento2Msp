@@ -7,4 +7,6 @@
             </argument>
         </arguments>
     </virtualType>
+    <preference for="MultiSafepay\Connect\Api\PaymentUrlInterface" type="MultiSafepay\Connect\Model\PaymentUrl"/>
+    <preference for="MultiSafepay\Connect\Api\GuestPaymentUrlInterface" type="MultiSafepay\Connect\Model\GuestCart\PaymentUrl"/>
 </config>
