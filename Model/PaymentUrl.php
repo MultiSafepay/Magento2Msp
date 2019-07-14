@@ -2,6 +2,9 @@
 
 namespace MultiSafepay\Connect\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
+use PHPUnit\Runner\Exception;
+
 class PaymentUrl implements \MultiSafepay\Connect\Api\PaymentUrlInterface
 {
 
@@ -23,12 +26,25 @@ class PaymentUrl implements \MultiSafepay\Connect\Api\PaymentUrlInterface
     /**
      * {@inheritdoc}
      */
-    public function getPaymentUrl($orderId, $cartId)
+    public function getPaymentUrl($orderId, $customerId, $cartId = false)
     {
-        $order = $this->order->load($orderId);
-        $quoteId = $order->getQuoteId();
+        try {
+            $order = $this->order->load($orderId);
+        } catch (NoSuchEntityException $e) {
+            return 'Cannot find order';
+        } catch (Exception $e) {
+            return 'Unable to load order';
+        }
 
-        if ($quoteId != $cartId) {
+        if ($cartId && $order->getQuoteId() != $cartId) {
+            return false;
+        }
+
+        /**
+         * This is already checked on the order load
+         * \Magento\Sales\Model\ResourceModel\Order\Plugin\Authorization::afterLoad
+        */
+        if ($customerId && $customerId != $order->getCustomerId()) {
             return '';
         }
 

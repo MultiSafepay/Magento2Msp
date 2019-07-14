@@ -34,6 +34,6 @@ class PaymentUrl implements \MultiSafepay\Connect\Api\GuestPaymentUrlInterface
     {
         $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
 
-        return $this->paymentUrlModel->getPaymentUrl($orderId, $quoteIdMask->getQuoteId());
+        return $this->paymentUrlModel->getPaymentUrl($orderId, false, $quoteIdMask->getQuoteId());
     }
 }

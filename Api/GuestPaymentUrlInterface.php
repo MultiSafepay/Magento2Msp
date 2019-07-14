@@ -1,14 +1,12 @@
 <?php
 
-
 namespace MultiSafepay\Connect\Api;
 
 interface GuestPaymentUrlInterface
 {
-
     /**
      * GET for paymentUrl api
-     * @param string $orderId
+     * @param int $orderId
      * @param string $cartId
      * @return string
      */
