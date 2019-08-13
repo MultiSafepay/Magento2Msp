@@ -1362,10 +1362,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $order->addStatusToHistory($order->getStatus(), $line);
             }
 
-            if ($payment->getMethodInstance()->getCode() == 'klarnainvoice') {
-                $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
-            }
-
             // Force order to Processing to solve https://github.com/magento/magento2/issues/18148
             $state = Order::STATE_PROCESSING;            
             $status = $this->_statusResolver->getOrderStatusByState($order, $state);
