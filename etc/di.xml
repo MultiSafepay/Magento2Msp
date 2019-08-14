@@ -7,4 +7,13 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="multisafepay/connect/live_api_key" xsi:type="string">1</item>
+                <item name="multisafepay/connect/test_api_key" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
