@@ -75,7 +75,7 @@ class Core
     protected function processRequest($http_method, $api_method, $http_body = null)
     {
         $body = $this->mspapi->processAPIRequest($http_method, $api_method, $http_body);
-        if (!($object = @json_decode($body))) {
+        if (!($object = json_decode($body))) {
             throw new \Exception("'{$body}'.");
         }
 
