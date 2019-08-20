@@ -49,7 +49,7 @@ After these changes, the template should be tested to confirm it is working.
 *Note*: This can also be implemented directly in the email template files.
 
 ## Support
-You can create issues on our repository. If you need any additional help or support, please contact <a href="mailto:techsupport@multisafepay.com">techsupport@multisafepay.com</a>
+You can create issues on our repository. If you need any additional help or support, please contact <a href="mailto:integration@multisafepay.com">integration@multisafepay.com</a>
 
 ## License
 [Open Software License (OSL 3.0)](https://github.com/MultiSafepay/Magento2Msp/blob/master/LICENSE.md)
