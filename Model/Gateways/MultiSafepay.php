@@ -32,10 +32,28 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class MultiSafepay extends \MultiSafepay\Connect\Model\Connect
+use MultiSafepay\Connect\Model\Connect;
+
+class MultiSafepay extends Connect
 {
 
+    /**
+     * @var string
+     */
     protected $_code = 'multisafepay';
+    /**
+     * @var string
+     */
     public $_gatewayCode = '';
-
+    /**
+     * @return bool
+     */
+    public function canUseCheckout()
+    {
+        //Don't show payment method if not enabled in checkout
+        if (!$this->getConfigData('can_use_checkout')) {
+            return false;
+        }
+        return parent::canUseCheckout();
+    }
 }

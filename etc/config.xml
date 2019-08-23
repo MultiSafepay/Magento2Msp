@@ -368,6 +368,7 @@
             <!-- Start MultiSafepay -->
             <multisafepay>
                 <active>0</active>
+                <can_use_checkout>1</can_use_checkout>
                 <title>MultiSafepay</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
