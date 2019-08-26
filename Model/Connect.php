@@ -18,7 +18,7 @@
  * @category    MultiSafepay
  * @package     Connect
  * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @copyright   Copyright (c) 2019 MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -64,6 +64,7 @@ use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+use MultiSafepay\Connect\Helper\RefundHelper;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -216,6 +217,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $logger;
     public $_manualGateway = null;
     public $_isAdmin = false;
+    protected $refundHelper;
 
     /**
      * Connect constructor.
@@ -248,6 +250,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \MultiSafepay\Connect\Helper\Data                            $helperData
      * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
      * @param \Magento\Customer\Model\Session                              $customerSession
+     * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
      * @param array                                                        $data
@@ -283,6 +286,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         HelperData $helperData,
         Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
+        RefundHelper $refundHelper,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -306,6 +310,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_urlBuilder = $urlBuilder;
         $this->_requestHttp = $requestHttp;
         $this->_currencyFactory = $currencyFactory;
+        $this->refundHelper = $refundHelper;
 
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
@@ -1589,6 +1594,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $refundItem->tax_table_selector = $item->tax_table_selector;
                     $refundData['checkout_data']['items'][] = $refundItem;
                 }
+            }
+
+            // Calculate adjustments
+            $adjustmentLines = $this->refundHelper->getAdjustmentOrderLines($data, $order);
+            foreach ($adjustmentLines as $adjustmentLine) {
+                $refundData['checkout_data']['items'][] = $adjustmentLine;
             }
         } else {
             /*
