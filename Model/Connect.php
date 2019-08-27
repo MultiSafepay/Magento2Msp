@@ -980,10 +980,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             /*
              * Start Fooman Surcharge support
              */
-            /* We don't process fooman fee's for backend created orders */
+            /* We don't process fooman fee's for backend and rest api created orders */
             $app_state = $this->_appState;
             $area_code = $app_state->getAreaCode();
-            if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+            $allowedAreas = [
+                \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
+                \Magento\Framework\App\Area::AREA_WEBAPI_REST
+            ];
+            if (!in_array($area_code, $allowedAreas)) {
                 $orderRepository = $this->_orderRepositoryInterface;
                 $order = $orderRepository->get($order->getId());
 

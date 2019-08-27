@@ -85,7 +85,11 @@ class Order implements ObserverInterface
 
         $app_state = $this->_state;
         $area_code = $app_state->getAreaCode();
-        if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+        $allowedAreas = [
+            \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
+            \Magento\Framework\App\Area::AREA_WEBAPI_REST
+        ];
+        if (!in_array($area_code, $allowedAreas)) {
             return $this;
         } else {
             $paymentMethod->_isAdmin = true;
