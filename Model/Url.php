@@ -160,8 +160,13 @@ class Url
         );
 
         if ($storeId) {
-            $urlParams = ['_nosid' => true, '_query' => $params];
-            $url = $this->storeManager->getStore($storeId)->getUrl($endpoint, $urlParams);
+            $storeUrl = $this->storeManager->getStore($storeId)->getBaseUrl();
+            $queryString = http_build_query($params);
+
+            $url = $storeUrl . $endpoint;
+            if ($queryString) {
+                $url = $url . '?' . $queryString;
+            }
         }
 
         if (!$this->isValidUrl($url)) {
