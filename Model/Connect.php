@@ -36,6 +36,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Directory\Model\CurrencyFactory;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\RequestInterface;
@@ -980,10 +981,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             /*
              * Start Fooman Surcharge support
              */
-            /* We don't process fooman fee's for backend created orders */
+            /* We don't process fooman fee's for backend and rest api created orders */
             $app_state = $this->_appState;
             $area_code = $app_state->getAreaCode();
-            if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+            $allowedAreas = [
+                Area::AREA_ADMINHTML,
+                Area::AREA_WEBAPI_REST
+            ];
+            if (!in_array($area_code, $allowedAreas)) {
                 $orderRepository = $this->_orderRepositoryInterface;
                 $order = $orderRepository->get($order->getId());
 
