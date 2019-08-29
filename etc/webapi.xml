@@ -15,4 +15,19 @@
             <parameter name="customerId" force="true">%customer_id%</parameter>
         </data>
     </route>
+    <route url="/V1/multisafepay/:cartId/orders/:orderId" method="GET">
+        <service class="MultiSafepay\Connect\Api\GuestOrderInterface" method="getOrder"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/multisafepay/mine/orders/:orderId" method="GET">
+        <service class="MultiSafepay\Connect\Api\OrderInterface" method="getOrder"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
 </routes>
