@@ -6,9 +6,9 @@ interface OrderInterface
 {
     /**
      * GET for order api
-     * @param int $orderId
-     * @param int $customerId
+     * @param string $orderId
+     * @param string $hash
      * @return \Magento\Sales\Api\Data\OrderInterface Order interface.
      */
-    public function getOrder($orderId, $customerId);
+    public function getOrder($orderId, $hash);
 }
