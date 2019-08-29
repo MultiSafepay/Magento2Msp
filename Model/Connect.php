@@ -1435,21 +1435,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
 
-
         //Check currency rescrictions
         $allowedCurrencies = explode(',', $this->getConfigData('allowed_currency'));
         if (!in_array($quote->getQuoteCurrencyCode(), $allowedCurrencies)) {
             return false;
         }
 
-
-
         //Check customer group restrictions
         $allowedGroups = explode(',', $this->getConfigData('allowed_groups'));
-        if (!in_array($quote->getCustomerGroupId(), $allowedGroups)) {
+        if (!in_array('', $allowedGroups, true) &&
+            !in_array($quote->getCustomerGroupId(), $allowedGroups, true)) {
             return false;
         }
-
 
         return parent::isAvailable($quote) && $this->isCarrierAllowed(
             $quote->getShippingAddress()->getShippingMethod()
