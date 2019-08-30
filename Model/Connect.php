@@ -65,6 +65,7 @@ use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+use MultiSafepay\Connect\Model\Url;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -198,6 +199,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
+    /** @var $url Url */
+    protected $url;
     protected $_requestHttp;
     protected $_currencyFactory;
     protected $_client;
@@ -247,6 +250,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \MultiSafepay\Connect\Model\MultisafepayTokenizationFactory  $multisafepayTokenizationFactory
      * @param \MultiSafepay\Connect\Model\Api\MspClient                    $mspClient
      * @param \MultiSafepay\Connect\Helper\Data                            $helperData
+     * @param \MultiSafepay\Connect\Model\Url                              $url
      * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
      * @param \Magento\Customer\Model\Session                              $customerSession
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
@@ -282,6 +286,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
         HelperData $helperData,
+        Url $url,
         Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
         AbstractResource $resource = null,
@@ -311,6 +316,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
         $this->_creditcards = $creditcards;
+        $this->url = $url;
 
         $this->_minAmount = $this->getConfigData('min_order_total');
         $this->_maxAmount = $this->getConfigData('max_order_total');
@@ -506,16 +512,23 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_gatewayCode = "";
         }
 
-        $notification = $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]);
-        $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
-        $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
+        $hash = $this->_mspHelper->encryptOrder($order->getIncrementId());
+
+        $this->url->setRedirectUrl('multisafepay/connect/success', ['hash' => $hash])
+            ->setCancelUrl('multisafepay/connect/cancel', ['hash' => $hash]);
 
         if ($this->_isAdmin) {
             $store_id = $order->getStoreId();
-            $notification = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/notification/&type=initial';
-            $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/success' . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
-            $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/cancel' . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
+
+            $this->url
+                ->setNotificationUrl('multisafepay/connect/notification', ['type' => 'initial'], $store_id)
+                ->setCancelUrl('multisafepay/connect/cancel', ['hash' => $hash], $store_id)
+                ->setRedirectUrl('multisafepay/connect/success', ['hash' => $hash], $store_id);
         }
+
+        $notification = $this->url->getNotificationUrl();
+        $redirecturl = $this->url->getRedirectUrl();
+        $cancelurl = $this->url->getCancelUrl();
 
         $customerID = $this->_customerSession->getCustomer()->getId();
 
