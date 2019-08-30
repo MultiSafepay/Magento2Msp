@@ -53,17 +53,17 @@ class Url
     /**
      * @var string
      */
-    private $cancelUrl;
+    public $cancelUrl;
 
     /**
      * @var string
      */
-    private $notificationUrl;
+    public $notificationUrl;
 
     /**
      * @var string
      */
-    private $redirectUrl;
+    public $redirectUrl;
 
     /**
      * Url constructor.
@@ -77,23 +77,31 @@ class Url
     {
         $this->urlBuilder = $urlInterface;
         $this->storeManager = $storeManager;
-
-        //Set default values
-        $this->setCancelUrl('multisafepay/connect/cancel')
-            ->setRedirectUrl('multisafepay/connect/success')
-            ->setNotificationUrl('multisafepay/connect/notification', ['type' => 'initial']);
     }
 
+
     /**
-     * Get cancel Url
-     *
+     * @param string|null $cancelUrl
+     * @param array $params
+     * @param int|null $storeId
      * @return string
      */
-    public function getCancelUrl(): string
+    public function getCancelUrl(string $cancelUrl = null, array $params = [], int $storeId = null): string
     {
+        if ($cancelUrl !== null) {
+            $this->setCancelUrl($cancelUrl, $params, $storeId);
+        } elseif ($this->cancelUrl === null) {
+            $this->setCancelUrl('multisafepay/connect/cancel');
+        }
         return $this->cancelUrl;
     }
 
+    /**
+     * @param string $cancelUrl
+     * @param array $params
+     * @param int|null $storeId
+     * @return Url
+     */
     public function setCancelUrl(string $cancelUrl, array $params = [], int $storeId = null): Url
     {
         if (trim($cancelUrl) === '') {
@@ -105,15 +113,27 @@ class Url
     }
 
     /**
-     * Get notification url
-     *
+     * @param string|null $notificationUrl
+     * @param array $params
+     * @param int|null $storeId
      * @return string
      */
-    public function getNotificationUrl(): string
+    public function getNotificationUrl(string $notificationUrl = null, array $params = [], int $storeId = null): string
     {
+        if ($notificationUrl !== null) {
+            $this->setNotificationUrl($notificationUrl, $params, $storeId);
+        } elseif ($this->notificationUrl === null) {
+            $this->setNotificationUrl('multisafepay/connect/notification', ['type' => 'initial']);
+        }
         return $this->notificationUrl;
     }
 
+    /**
+     * @param string $notificationUrl
+     * @param array $params
+     * @param int|null $storeId
+     * @return Url
+     */
     public function setNotificationUrl(string $notificationUrl, array $params = [], int $storeId = null): Url
     {
         if (trim($notificationUrl) === '') {
@@ -125,16 +145,27 @@ class Url
     }
 
     /**
-     * Get redirect url
-     *
+     * @param string|null $redirectUrl
+     * @param array $params
+     * @param int|null $storeId
      * @return string
      */
-    public function getRedirectUrl(): string
+    public function getRedirectUrl(string $redirectUrl = null, array $params = [], int $storeId = null): string
     {
+        if ($redirectUrl !== null) {
+            $this->setRedirectUrl($redirectUrl, $params, $storeId);
+        } elseif ($this->redirectUrl === null) {
+            $this->setRedirectUrl('multisafepay/connect/success');
+        }
         return $this->redirectUrl;
     }
 
-
+    /**
+     * @param string $redirectUrl
+     * @param array $params
+     * @param int|null $storeId
+     * @return Url
+     */
     public function setRedirectUrl(string $redirectUrl, array $params = [], int $storeId = null): Url
     {
         if (trim($redirectUrl) === '') {
