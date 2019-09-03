@@ -10,4 +10,5 @@
     <preference for="MultiSafepay\Connect\Api\PaymentUrlInterface" type="MultiSafepay\Connect\Model\PaymentUrl"/>
     <preference for="MultiSafepay\Connect\Api\GuestPaymentUrlInterface" type="MultiSafepay\Connect\Model\GuestCart\PaymentUrl"/>
     <preference for="MultiSafepay\Connect\Api\OrderInterface" type="MultiSafepay\Connect\Model\Order"/>
+    <preference for="MultiSafepay\Connect\Api\RestoreQuoteInterface" type="MultiSafepay\Connect\Model\RestoreQuote"/>
 </config>

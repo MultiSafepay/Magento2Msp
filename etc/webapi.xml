@@ -21,4 +21,10 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/multisafepay/restore/:orderId/:hash" method="GET">
+        <service class="MultiSafepay\Connect\Api\RestoreQuoteInterface" method="restoreQuote"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
 </routes>
