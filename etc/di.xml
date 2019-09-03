@@ -12,4 +12,5 @@
     <preference for="MultiSafepay\Connect\Api\OrderInterface" type="MultiSafepay\Connect\Model\Order"/>
     <preference for="MultiSafepay\Connect\Api\PaymentMethodsInterface" type="MultiSafepay\Connect\Model\PaymentMethods"/>
     <preference for="MultiSafepay\Connect\Api\GuestPaymentMethodsInterface" type="MultiSafepay\Connect\Model\GuestCart\PaymentMethods"/>
+    <preference for="MultiSafepay\Connect\Api\RestoreQuoteInterface" type="MultiSafepay\Connect\Model\RestoreQuote"/>
 </config>
