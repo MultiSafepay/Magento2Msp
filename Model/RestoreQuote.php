@@ -4,11 +4,10 @@ namespace MultiSafepay\Connect\Model;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartRepositoryInterface;
-use MultiSafepay\Connect\Api\RestoreQuoteInterface;
-use MultiSafepay\Connect\Helper\Data;
+use Magento\Quote\Model\QuoteIdMaskFactory;
 use PHPUnit\Runner\Exception;
 
-class RestoreQuote implements RestoreQuoteInterface
+class RestoreQuote implements \MultiSafepay\Connect\Api\RestoreQuoteInterface
 {
 
     /**
@@ -22,34 +21,31 @@ class RestoreQuote implements RestoreQuoteInterface
     protected $order;
 
     /**
-     * @var Data
+     * @var QuoteIdMaskFactory
      */
-    protected $mspHelper;
+    protected $quoteIdMaskFactory;
 
     /**
      * @param \Magento\Sales\Model\Order $order
      * @param CartRepositoryInterface $quoteRepository
-     * @param Data $data
+     * @param QuoteIdMaskFactory $quoteIdMaskFactory
      */
     public function __construct(
         \Magento\Sales\Model\Order $order,
         CartRepositoryInterface $quoteRepository,
-        Data $data
+        QuoteIdMaskFactory $quoteIdMaskFactory
     ) {
         $this->order = $order;
         $this->quoteRepository = $quoteRepository;
-        $this->mspHelper = $data;
+        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function restoreQuote($orderId, $hash)
+    public function restoreQuote($orderId, $customerId, $cartId = false)
     {
-        /*if (!$this->mspHelper->validateOrderHash($orderId, $hash)) {
-            return '';
-        }*/
-
+        //var_dump($orderId);exit;
         try {
             $order = $this->order->loadByIncrementId($orderId);
         } catch (NoSuchEntityException $e) {
@@ -58,13 +54,23 @@ class RestoreQuote implements RestoreQuoteInterface
             return 'Unable to load order';
         }
 
+        if ($cartId && $order->getQuoteId() != $cartId) {
+            return false;
+        }
+
+        /**
+         * This is already checked on the order load
+         * \Magento\Sales\Model\ResourceModel\Order\Plugin\Authorization::afterLoad
+         */
+        if ($customerId && $customerId != $order->getCustomerId()) {
+            return '';
+        }
+
+        /* restore quote */
         $quote = $this->quoteRepository->get($order->getQuoteId());
         $quote->setIsActive(1)->setReservedOrderId(null);
         $this->quoteRepository->save($quote);
 
-
-        //Todo
-        // $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-        return "test";
+        return true;
     }
 }

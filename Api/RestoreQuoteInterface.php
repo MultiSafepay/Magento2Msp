@@ -7,8 +7,8 @@ interface RestoreQuoteInterface
     /**
      * Restore quote
      * @param string $orderId
-     * @param string $hash
+     * @param string $customerId
      * @return string masked_id
      */
-    public function restoreQuote($orderId, $hash);
+    public function restoreQuote($orderId, $customerId);
 }
