@@ -10,4 +10,7 @@
     <preference for="MultiSafepay\Connect\Api\PaymentUrlInterface" type="MultiSafepay\Connect\Model\PaymentUrl"/>
     <preference for="MultiSafepay\Connect\Api\GuestPaymentUrlInterface" type="MultiSafepay\Connect\Model\GuestCart\PaymentUrl"/>
     <preference for="MultiSafepay\Connect\Api\OrderInterface" type="MultiSafepay\Connect\Model\Order"/>
+    <type name="Magento\Payment\Model\MethodList">
+        <plugin name="MultiSafepay_Connect_MethodList" type="MultiSafepay\Connect\Plugin\MethodList" sortOrder="1" disabled="false" />
+    </type>
 </config>
