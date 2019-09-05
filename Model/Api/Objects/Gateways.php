@@ -37,7 +37,7 @@ class Gateways extends \MultiSafepay\Connect\Model\Api\Objects\Core
     public $success;
     public $data;
 
-    public function get($endpoint = 'gateways', $type = '', $body = array(), $query_string = false)
+    public function get($endpoint = 'gateways', $type = '', $body = [], $query_string = false)
     {
         $result = parent::get($endpoint, $type, json_encode($body), $query_string);
         $this->success = $result->success;

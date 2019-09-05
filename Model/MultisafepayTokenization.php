@@ -86,11 +86,11 @@ class MultisafepayTokenization extends AbstractModel implements
         return $returnArray;
     }
 
-    public function hideRecurringExpiredIds($array = []){
+    public function hideRecurringExpiredIds($array = [])
+    {
 
             $id = $this->getResource()->hideRecurringExpiredIds($array);
             return $id;
-
     }
 
     public function getIdByOrderId($orderId)

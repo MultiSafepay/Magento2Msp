@@ -45,15 +45,15 @@ class Environment
      */
     public function toOptionArray()
     {
-        return array(
-            array(
+        return [
+            [
                 "value" => self::TEST_MODE,
                 "label" => "Test account"
-            ),
-            array(
+            ],
+            [
                 "value" => self::LIVE_MODE,
                 "label" => "Live account"
-            ),
-        );
+            ],
+        ];
     }
 }

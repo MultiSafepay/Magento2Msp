@@ -45,7 +45,7 @@ class Orders extends Core
         return $result;
     }
 
-    public function get($type, $id, $body = array(), $query_string = false)
+    public function get($type, $id, $body = [], $query_string = false)
     {
         $result = parent::get($type, $id, $body, $query_string);
         $this->success = $result->success;
@@ -59,7 +59,7 @@ class Orders extends Core
 
         if (!empty($result->error_code)) {
             $this->success = null;
-            $this->data = (object) array('payment_url' => null);
+            $this->data = (object) ['payment_url' => null];
         } else {
             $this->success = $result->success;
             $this->data = $result->data;

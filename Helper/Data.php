@@ -59,59 +59,59 @@ class Data
     const MSP_REFUNDED = "refunded";
     const MSP_PARTIAL_REFUNDED = "partial_refunded";
 
-    public $gateways = array(
-        'afterpaymsp' => array('code' => 'AFTERPAY', 'name' => 'AfterPay', 'type' => 'gateways'),
-        'alipay' => array('code' => 'ALIPAY', 'name' => 'Alipay', 'type' => 'gateways'),
-        'americanexpress' => array('code' => 'AMEX', 'name' => 'American Express', 'type' => 'gateways'),
-        'bancontact' => array('code' => 'MISTERCASH', 'name' => 'Bancontact', 'type' => 'gateways'),
-        'belfius' => array('code' => 'BELFIUS', 'name' => 'Belfius', 'type' => 'gateways'),
-        'betaalnaontvangst'  => array('code' => 'PAYAFTER', 'name' => 'Pay After Delivery', 'type' => 'gateways'),
-        'betaalplan'  => array('code' => 'SANTANDER', 'name' => 'Betaalplan', 'type' => 'gateways'),
-        'creditcard'  => array('code' => '', 'name' => 'Credit card', 'type' => 'gateways'),
-        'directdebit' => array('code' => 'DIRDEB', 'name' => 'Direct Debit', 'type' => 'gateways'),
-        'dotpay'  => array('code' => 'DOTPAY', 'name' => 'Dotpay', 'type' => 'gateways'),
-        'einvoice' => array('code' => 'EINVOICE', 'name' => 'E-Invoicing', 'type' => 'gateways'),
-        'eps'  => array('code' => 'EPS', 'name' => 'EPS', 'type' => 'gateways'),
-        'ferbuy' => array('code' => 'AMEX', 'name' => 'Ferbuy', 'type' => 'gateways'),
-        'giropay' => array('code' => 'GIROPAY', 'name' => 'GiroPay', 'type' => 'gateways'),
-        'ideal'  => array('code' => 'IDEAL', 'name' => 'iDEAL', 'type' => 'gateways'),
-        'idealqr' => array('code' => 'IDEALQR', 'name' => 'iDEAL QR', 'type' => 'gateways'),
-        'ing' => array('code' => 'INGHOME', 'name' => 'ING Home\'Pay', 'type' => 'gateways'),
-        'kbc' => array('code' => 'KBC', 'name' => 'KBC', 'type' => 'gateways'),
-        'klarnainvoice' => array('code' => 'KLARNA', 'name' => 'Klarna', 'type' => 'gateways'),
-        'maestro' => array('code' => 'MAESTRO', 'name' => 'Maestro', 'type' => 'gateways'),
-        'mastercard' => array('code' => 'MASTERCARD', 'name' => 'Mastercard', 'type' => 'gateways'),
-        'mspbanktransfer' => array('code' => 'BANKTRANS', 'name' => 'Bank transfer', 'type' => 'gateways'),
-        'multisafepay' => array('code' => '', 'name' => 'MultiSafepay', 'type' => 'gateways'),
-        'paypalmsp' => array('code' => 'PAYPAL', 'name' => 'PayPal', 'type' => 'gateways'),
-        'paysafecard' => array('code' => 'PSAFECARD', 'name' => 'Paysafecard', 'type' => 'gateways'),
-        'sofort' => array('code' => 'DIRECTBANK', 'name' => 'SOFORT Banking', 'type' => 'gateways'),
-        'trustly' => array('code' => 'TRUSTLY', 'name' => 'Trustly', 'type' => 'gateways'),
-        'trustpay' => array('code' => 'TRUSTPAY', 'name' => 'Trustpay', 'type' => 'gateways'),
-        'visa' => array('code' => 'VISA', 'name' => 'Visa', 'type' => 'gateways'),
+    public $gateways = [
+        'afterpaymsp' => ['code' => 'AFTERPAY', 'name' => 'AfterPay', 'type' => 'gateways'],
+        'alipay' => ['code' => 'ALIPAY', 'name' => 'Alipay', 'type' => 'gateways'],
+        'americanexpress' => ['code' => 'AMEX', 'name' => 'American Express', 'type' => 'gateways'],
+        'bancontact' => ['code' => 'MISTERCASH', 'name' => 'Bancontact', 'type' => 'gateways'],
+        'belfius' => ['code' => 'BELFIUS', 'name' => 'Belfius', 'type' => 'gateways'],
+        'betaalnaontvangst'  => ['code' => 'PAYAFTER', 'name' => 'Pay After Delivery', 'type' => 'gateways'],
+        'betaalplan'  => ['code' => 'SANTANDER', 'name' => 'Betaalplan', 'type' => 'gateways'],
+        'creditcard'  => ['code' => '', 'name' => 'Credit card', 'type' => 'gateways'],
+        'directdebit' => ['code' => 'DIRDEB', 'name' => 'Direct Debit', 'type' => 'gateways'],
+        'dotpay'  => ['code' => 'DOTPAY', 'name' => 'Dotpay', 'type' => 'gateways'],
+        'einvoice' => ['code' => 'EINVOICE', 'name' => 'E-Invoicing', 'type' => 'gateways'],
+        'eps'  => ['code' => 'EPS', 'name' => 'EPS', 'type' => 'gateways'],
+        'ferbuy' => ['code' => 'AMEX', 'name' => 'Ferbuy', 'type' => 'gateways'],
+        'giropay' => ['code' => 'GIROPAY', 'name' => 'GiroPay', 'type' => 'gateways'],
+        'ideal'  => ['code' => 'IDEAL', 'name' => 'iDEAL', 'type' => 'gateways'],
+        'idealqr' => ['code' => 'IDEALQR', 'name' => 'iDEAL QR', 'type' => 'gateways'],
+        'ing' => ['code' => 'INGHOME', 'name' => 'ING Home\'Pay', 'type' => 'gateways'],
+        'kbc' => ['code' => 'KBC', 'name' => 'KBC', 'type' => 'gateways'],
+        'klarnainvoice' => ['code' => 'KLARNA', 'name' => 'Klarna', 'type' => 'gateways'],
+        'maestro' => ['code' => 'MAESTRO', 'name' => 'Maestro', 'type' => 'gateways'],
+        'mastercard' => ['code' => 'MASTERCARD', 'name' => 'Mastercard', 'type' => 'gateways'],
+        'mspbanktransfer' => ['code' => 'BANKTRANS', 'name' => 'Bank transfer', 'type' => 'gateways'],
+        'multisafepay' => ['code' => '', 'name' => 'MultiSafepay', 'type' => 'gateways'],
+        'paypalmsp' => ['code' => 'PAYPAL', 'name' => 'PayPal', 'type' => 'gateways'],
+        'paysafecard' => ['code' => 'PSAFECARD', 'name' => 'Paysafecard', 'type' => 'gateways'],
+        'sofort' => ['code' => 'DIRECTBANK', 'name' => 'SOFORT Banking', 'type' => 'gateways'],
+        'trustly' => ['code' => 'TRUSTLY', 'name' => 'Trustly', 'type' => 'gateways'],
+        'trustpay' => ['code' => 'TRUSTPAY', 'name' => 'Trustpay', 'type' => 'gateways'],
+        'visa' => ['code' => 'VISA', 'name' => 'Visa', 'type' => 'gateways'],
 
-        'babygiftcard' => array('code' => 'BABYGIFTCARD', 'name' => 'Babygiftcard', 'type' => 'giftcards'),
-        'beautyandwellness' => array('code' => 'BEAUTYANDWELLNESS', 'name' => 'Beauty and wellness', 'type' => 'giftcards'),
-        'boekenbon' => array('code' => 'BOEKENBON', 'name' => 'Boekenbon', 'type' => 'giftcards'),
-        'erotiekbon' => array('code' => 'EROTIEKBON', 'name' => 'Erotiekbon', 'type' => 'giftcards'),
-        'fashioncheque' => array('code' => 'FASHIONCHEQUE', 'name' => 'Fashioncheque', 'type' => 'giftcards'),
-        'fashiongiftcard' => array('code' => 'FASHIONGIFTCARD', 'name' => 'Fashiongiftcard', 'type' => 'giftcards'),
-        'fietsenbon' => array('code' => 'FIETSENBON', 'name' => 'Fietsenbon', 'type' => 'giftcards'),
-        'gezondheidsbon' => array('code' => 'GEZONDHEIDSBON', 'name' => 'Gezondheidsbon', 'type' => 'giftcards'),
-        'givacard' => array('code' => 'GIVACARD', 'name' => 'Givacard', 'type' => 'giftcards'),
-        'goodcard' => array('code' => 'GOODCARD', 'name' => 'Goodcard', 'type' => 'giftcards'),
-        'nationaletuinbon' => array('code' => 'NATIONALETUINBON', 'name' => 'Nationale tuinbon', 'type' => 'giftcards'),
-        'nationaleverwencadeaubon' => array('code' => 'NATIONALEVERWENCADEAUBON', 'name' => 'Nationale verwencadeaubon', 'type' => 'giftcards'),
-        'parfumcadeaukaart' => array('code' => 'PARFUMCADEAUKAART', 'name' => 'Parfumcadeaukaart', 'type' => 'giftcards'),
-        'podiumcadeaukaart' => array('code' => 'PODIUM', 'name' => 'Podium', 'type' => 'giftcards'),
-        'sportenfit' => array('code' => 'SPORTENFIT', 'name' => 'Sportenfit', 'type' => 'giftcards'),
-        'vvvbon' => array('code' => 'VVVGIFTCRD', 'name' => 'VVV Cadeaukaart', 'type' => 'giftcards'),
-        'webshopgiftcard' => array('code' => 'WEBSHOPGIFTCARD', 'name' => 'Webshop Giftcard', 'type' => 'giftcards'),
-        'wellnessgiftcard' => array('code' => 'WELLNESSGIFTCARD', 'name' => 'Wellness Giftcards', 'type' => 'giftcards'),
-        'wijncadeau' => array('code' => 'WIJNCADEAU', 'name' => 'Wijn Cadeau', 'type' => 'giftcards'),
-        'winkelcheque' => array('code' => 'WINKELCHEQUE', 'name' => 'Winkel Cheque', 'type' => 'giftcards'),
-        'yourgift' => array('code' => 'YOURGIFT', 'name' => 'YourGift', 'type' => 'giftcards'),
-    );
+        'babygiftcard' => ['code' => 'BABYGIFTCARD', 'name' => 'Babygiftcard', 'type' => 'giftcards'],
+        'beautyandwellness' => ['code' => 'BEAUTYANDWELLNESS', 'name' => 'Beauty and wellness', 'type' => 'giftcards'],
+        'boekenbon' => ['code' => 'BOEKENBON', 'name' => 'Boekenbon', 'type' => 'giftcards'],
+        'erotiekbon' => ['code' => 'EROTIEKBON', 'name' => 'Erotiekbon', 'type' => 'giftcards'],
+        'fashioncheque' => ['code' => 'FASHIONCHEQUE', 'name' => 'Fashioncheque', 'type' => 'giftcards'],
+        'fashiongiftcard' => ['code' => 'FASHIONGIFTCARD', 'name' => 'Fashiongiftcard', 'type' => 'giftcards'],
+        'fietsenbon' => ['code' => 'FIETSENBON', 'name' => 'Fietsenbon', 'type' => 'giftcards'],
+        'gezondheidsbon' => ['code' => 'GEZONDHEIDSBON', 'name' => 'Gezondheidsbon', 'type' => 'giftcards'],
+        'givacard' => ['code' => 'GIVACARD', 'name' => 'Givacard', 'type' => 'giftcards'],
+        'goodcard' => ['code' => 'GOODCARD', 'name' => 'Goodcard', 'type' => 'giftcards'],
+        'nationaletuinbon' => ['code' => 'NATIONALETUINBON', 'name' => 'Nationale tuinbon', 'type' => 'giftcards'],
+        'nationaleverwencadeaubon' => ['code' => 'NATIONALEVERWENCADEAUBON', 'name' => 'Nationale verwencadeaubon', 'type' => 'giftcards'],
+        'parfumcadeaukaart' => ['code' => 'PARFUMCADEAUKAART', 'name' => 'Parfumcadeaukaart', 'type' => 'giftcards'],
+        'podiumcadeaukaart' => ['code' => 'PODIUM', 'name' => 'Podium', 'type' => 'giftcards'],
+        'sportenfit' => ['code' => 'SPORTENFIT', 'name' => 'Sportenfit', 'type' => 'giftcards'],
+        'vvvbon' => ['code' => 'VVVGIFTCRD', 'name' => 'VVV Cadeaukaart', 'type' => 'giftcards'],
+        'webshopgiftcard' => ['code' => 'WEBSHOPGIFTCARD', 'name' => 'Webshop Giftcard', 'type' => 'giftcards'],
+        'wellnessgiftcard' => ['code' => 'WELLNESSGIFTCARD', 'name' => 'Wellness Giftcards', 'type' => 'giftcards'],
+        'wijncadeau' => ['code' => 'WIJNCADEAU', 'name' => 'Wijn Cadeau', 'type' => 'giftcards'],
+        'winkelcheque' => ['code' => 'WINKELCHEQUE', 'name' => 'Winkel Cheque', 'type' => 'giftcards'],
+        'yourgift' => ['code' => 'YOURGIFT', 'name' => 'YourGift', 'type' => 'giftcards'],
+    ];
 
     /**
      * File extension lock
@@ -161,9 +161,6 @@ class Data
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         EncryptorInterface $encryptor,
         CurrencyFactory $currencyFactory
-
-
-
     ) {
         $this->_random = $random;
         $this->_storeManagerInterface = $storeManagerInterface;
@@ -256,9 +253,9 @@ class Data
 
     public function getAllMethods()
     {
-        $paymentMethods = array();
+        $paymentMethods = [];
 
-        foreach ($this->gateways as $key => $gateway){
+        foreach ($this->gateways as $key => $gateway) {
             $paymentMethods[$key] = $gateway['name'];
         }
 
@@ -415,7 +412,8 @@ class Data
     public function getRecurringIdsByCustomerId($customerId, $showNull = false)
     {
         return $this->_mspToken->create()->getIdsByCustomerId(
-            $customerId, $showNull
+            $customerId,
+            $showNull
         );
     }
 
@@ -436,7 +434,8 @@ class Data
      *
      * @return integer
      */
-    public function getRecurringIdByOrderId($orderId){
+    public function getRecurringIdByOrderId($orderId)
+    {
         return $this->_mspToken->create()->getIdByOrderId($orderId);
     }
 
@@ -480,7 +479,8 @@ class Data
      *
      * @return string
      */
-    public function decrypt($string){
+    public function decrypt($string)
+    {
         return $this->_encryptor->decrypt($string);
     }
 
@@ -491,7 +491,7 @@ class Data
      * @return bool
      * @throws \Exception
      */
-    public function validateOrderHash($orderIncrementId ,$hash)
+    public function validateOrderHash($orderIncrementId, $hash)
     {
         return hash_equals($this->encryptOrder($orderIncrementId), $hash);
     }

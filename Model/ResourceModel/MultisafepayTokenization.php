@@ -30,9 +30,7 @@
 
 namespace MultiSafepay\Connect\Model\ResourceModel;
 
-
-class MultisafepayTokenization extends
-    \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+class MultisafepayTokenization extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
     /**
      * @param integer $customerId
@@ -44,18 +42,21 @@ class MultisafepayTokenization extends
     {
         $table = $this->getMainTable();
         $where = $this->getConnection()->quoteInto(
-            "customer_id = ?", $customerId
+            "customer_id = ?",
+            $customerId
         );
         if (!$showNull) {
             $showNull = $this->getConnection()->quoteInto(
-                "recurring_id != ?", null
+                "recurring_id != ?",
+                null
             );
         } else {
             $showNull = $this->getConnection()->quoteInto(
-                "id > ?", 0
+                "id > ?",
+                0
             );
         }
-        $sql = $this->getConnection()->select()->from($table, array('id'))
+        $sql = $this->getConnection()->select()->from($table, ['id'])
             ->where($where)->where($showNull);
         $id = $this->getConnection()->fetchAll($sql);
         return $id;
@@ -70,9 +71,10 @@ class MultisafepayTokenization extends
     {
         $table = $this->getMainTable();
         $where = $this->getConnection()->quoteInto(
-            "recurring_hash = ?", $hash
+            "recurring_hash = ?",
+            $hash
         );
-        $sql = $this->getConnection()->select()->from($table, array('id'))
+        $sql = $this->getConnection()->select()->from($table, ['id'])
             ->where($where);
         $id = $this->getConnection()->fetchOne($sql);
         return $id;
@@ -88,16 +90,18 @@ class MultisafepayTokenization extends
         $table = $this->getMainTable();
 
         $ids = $this->getConnection()->quoteInto(
-            "id IN (?)", $array
+            "id IN (?)",
+            $array
         );
 
         $date = date('ym');
 
         $whereDate = $this->getConnection()->quoteInto(
-            "expiry_date >= ?", $date
+            "expiry_date >= ?",
+            $date
         );
 
-        $sql = $this->getConnection()->select()->from($table, array('id'))
+        $sql = $this->getConnection()->select()->from($table, ['id'])
             ->where($ids)->where($whereDate);
 
         $id = $this->getConnection()->fetchAll($sql);
@@ -123,10 +127,10 @@ class MultisafepayTokenization extends
             ) {
                 array_push(
                     $returndata,
-                    array(
+                    [
                         'value' => $item['recurring_hash'],
                         'label' => (!is_null($item['name'])) ? $item['name'] : "{$item['cc_type']} - {$item['last_4']}"
-                    )
+                    ]
                 );
             }
 
@@ -139,9 +143,10 @@ class MultisafepayTokenization extends
     {
         $table = $this->getMainTable();
         $where = $this->getConnection()->quoteInto(
-            "order_id = ?", $orderId
+            "order_id = ?",
+            $orderId
         );
-        $sql = $this->getConnection()->select()->from($table, array('id'))
+        $sql = $this->getConnection()->select()->from($table, ['id'])
             ->where($where);
         $id = $this->getConnection()->fetchOne($sql);
         return $id;

@@ -52,7 +52,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $columnName = 'multisafepay_status';
         if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
             if (!$installer->getConnection()->tableColumnExists(
-                $installer->getTable($tableName), $columnName
+                $installer->getTable($tableName),
+                $columnName
             )
             ) {
                 $installer->getConnection()->addColumn(
@@ -152,5 +153,4 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         $installer->endSetup();
     }
-
 }

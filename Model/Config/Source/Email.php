@@ -42,19 +42,19 @@ class Email
      */
     public function toOptionArray()
     {
-        return array(
-            array(
+        return [
+            [
                 "value" => "place_order",
                 "label" => "When placing the order"
-            ),
-            array(
+            ],
+            [
                 "value" => "after_transaction",
                 "label" => "After transaction"
-            ),
-            array(
+            ],
+            [
                 "value" => "after_transaction_paid",
                 "label" => "After paid transaction"
-            ),
-        );
+            ],
+        ];
     }
 }

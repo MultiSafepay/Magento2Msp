@@ -53,7 +53,7 @@ class UpgradeData implements UpgradeDataInterface
     protected $notifier;
 
     /**
-     *  @var \Magento\Framework\App\Config\Storage\WriterInterface
+     * @var \Magento\Framework\App\Config\Storage\WriterInterface
      */
     protected $configWriter;
 
@@ -106,7 +106,7 @@ class UpgradeData implements UpgradeDataInterface
         $installer->endSetup();
 
         if (version_compare($context->getVersion(), '1.7.1', '<')) {
-            $this->configWriter->save('giftcards/vvvbon/title',  'VVV Cadeaukaart');
+            $this->configWriter->save('giftcards/vvvbon/title', 'VVV Cadeaukaart');
         }
     }
 }

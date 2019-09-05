@@ -59,7 +59,7 @@ class Core
         return $this->result;
     }
 
-    public function get($endpoint, $id, $body = array(), $query_string = false)
+    public function get($endpoint, $id, $body = [], $query_string = false)
     {
         if (!$query_string) {
             $url = "{$endpoint}/{$id}";

@@ -10,7 +10,6 @@ use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
 use Magento\Customer\Model\Session;
 
-
 class ConnectConfigProvider implements
     \Magento\Checkout\Model\ConfigProviderInterface
 {
@@ -42,13 +41,11 @@ class ConnectConfigProvider implements
         $this->_mspToken = $multisafepayTokenizationFactory;
 
         $this->_customerSession = $customerSession;
-
-
     }
 
     public function getConfig()
     {
-        $config = array();
+        $config = [];
 
         $config = array_merge_recursive(
             $config,
@@ -145,9 +142,9 @@ class ConnectConfigProvider implements
     public function getImageURLs()
     {
         //gateways
-        $images = array();
+        $images = [];
         foreach ($this->_mspHelper->gateways as $gatewayCode => $value) {
-            if($this->_mspHelper->isMspGateway($gatewayCode)) {
+            if ($this->_mspHelper->isMspGateway($gatewayCode)) {
                 $asset = $this->_assetRepo->createAsset(
                     "MultiSafepay_Connect::images/" . strtolower(
                         $this->localeResolver->getLocale()
@@ -171,7 +168,7 @@ class ConnectConfigProvider implements
 
         //giftcards
         foreach ($this->_mspHelper->gateways as $giftcardCode => $value) {
-            if($this->_mspHelper->isMspGiftcard($giftcardCode)) {
+            if ($this->_mspHelper->isMspGiftcard($giftcardCode)) {
                 $asset = $this->_assetRepo->createAsset(
                     "MultiSafepay_Connect::images/" . strtolower(
                         $this->localeResolver->getLocale()
@@ -195,9 +192,10 @@ class ConnectConfigProvider implements
         return $images;
     }
 
-    public function hasRecurrings($gateway, $array = null){
+    public function hasRecurrings($gateway, $array = null)
+    {
 
-        if(empty($array) || is_null($array)){
+        if (empty($array) || is_null($array)) {
             $array = [];
             $customerID = $this->_customerSession->getCustomer()->getId();
             $recurringIds = $this->_mspHelper->getRecurringIdsByCustomerId($customerID);
@@ -206,8 +204,8 @@ class ConnectConfigProvider implements
             }
         }
 
-        foreach ($array as $item){
-            if(strtolower($item['cc_type']) === strtolower($gateway)){
+        foreach ($array as $item) {
+            if (strtolower($item['cc_type']) === strtolower($gateway)) {
                 return true;
             }
         }

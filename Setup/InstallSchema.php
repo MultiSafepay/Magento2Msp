@@ -49,7 +49,8 @@ class InstallSchema implements InstallSchemaInterface
         $columnName = 'multisafepay_status';
         if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
             if (!$installer->getConnection()->tableColumnExists(
-                $installer->getTable($tableName), $columnName
+                $installer->getTable($tableName),
+                $columnName
             )
             ) {
                 $installer->getConnection()->addColumn(
@@ -149,5 +150,4 @@ class InstallSchema implements InstallSchemaInterface
 
         $installer->endSetup();
     }
-
 }

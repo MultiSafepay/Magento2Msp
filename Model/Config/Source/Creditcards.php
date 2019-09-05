@@ -42,7 +42,7 @@ class Creditcards
      */
     public function tokenizationSupported()
     {
-        return array("VISA", "MASTERCARD", "AMEX");
+        return ["VISA", "MASTERCARD", "AMEX"];
     }
 
     /**
@@ -50,23 +50,23 @@ class Creditcards
      */
     public function toOptionArray()
     {
-        return array(
-            array(
+        return [
+            [
                 "value" => 'VISA',
                 "label" => "VISA"
-            ),
-            array(
+            ],
+            [
                 "value" => 'MASTERCARD',
                 "label" => "Mastercard"
-            ),
-            array(
+            ],
+            [
                 "value" => 'AMEX',
                 "label" => "American Express"
-            ),
-            array(
+            ],
+            [
                 "value" => 'MAESTRO',
                 "label" => "Maestro"
-            ),
-        );
+            ],
+        ];
     }
 }

@@ -96,10 +96,10 @@ class MspClient
         $url = $this->api_url . $api_method;
         $ch = curl_init($url);
 
-        $request_headers = array(
+        $request_headers = [
             "Accept: application/json",
             "api_key:" . $this->api_key,
-        );
+        ];
 
         if ($http_body !== null) {
             $request_headers[] = "Content-Type: application/json";

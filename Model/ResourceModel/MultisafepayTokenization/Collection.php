@@ -30,11 +30,10 @@
 
 namespace MultiSafepay\Connect\Model\ResourceModel\MultisafepayTokenization;
 
-
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
     protected function _construct()
     {
-        $this->_init('MultiSafepay\Connect\Model\MultisafepayTokenization','MultiSafepay\Connect\Model\ResourceModel\MultisafepayTokenization');
+        $this->_init('MultiSafepay\Connect\Model\MultisafepayTokenization', 'MultiSafepay\Connect\Model\ResourceModel\MultisafepayTokenization');
     }
 }

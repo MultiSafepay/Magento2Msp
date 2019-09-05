@@ -58,7 +58,6 @@ class InstallData implements InstallDataInterface
     public function __construct(
         SalesSetupFactory $salesSetupFactory,
         NotifierInterface $notifier
-
     ) {
         $this->salesSetupFactory = $salesSetupFactory;
         $this->notifier = $notifier;

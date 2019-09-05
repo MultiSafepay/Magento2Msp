@@ -97,7 +97,7 @@ class Notification extends \Magento\Framework\App\Action\Action
     {
         $params = $this->_requestHttp->getParams();
 
-        if(!$this->validateParams($params)){
+        if (!$this->validateParams($params)) {
             return false;
         }
 
@@ -177,5 +177,4 @@ class Notification extends \Magento\Framework\App\Action\Action
     {
         return isset($params['transactionid']);
     }
-
 }

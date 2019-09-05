@@ -42,19 +42,19 @@ class Customfields
      */
     public function toOptionArray()
     {
-        return array(
-            array(
+        return [
+            [
                 "value" => 0,
                 "label" => 'Disabled'
-            ),
-            array(
+            ],
+            [
                 "value" => 1,
                 "label" => 'Mandatory'
-            ),
-            array(
+            ],
+            [
                 "value" => 2,
                 "label" => 'Optional'
-            )
-        );
+            ]
+        ];
     }
 }

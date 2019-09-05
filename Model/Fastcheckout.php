@@ -231,12 +231,12 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
     public $quoteManagement;
     public $orderService;
     public $scopeConfig;
-    public $shippingmethods = array(
+    public $shippingmethods = [
         "pickup" => "pickup_store",
         "flatrate" => "flatrate_flatrate",
         "freeshipping" => "freeshipping_freeshipping",
         "bestway" => "tablerate_bestway"
-    );
+    ];
 
     /**
      * @param \Magento\Framework\Model\Context                                          $context
@@ -390,7 +390,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/fastcheckout/success', ['_nosid' => true]), 0, -1);
         $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/fastcheckout/cancel', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($quoteId);
 
-        $msporder = $this->_client->orders->post(array(
+        $msporder = $this->_client->orders->post([
             "type" => $type,
             "order_id" => $quoteId,
             "currency" => 'EUR',
@@ -403,29 +403,29 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             "manual" => "false",
             "gateway" => $this->_gatewayCode,
             "days_active" => '30',
-            "payment_options" => array(
+            "payment_options" => [
                 "notification_url" => $notification,
                 "redirect_url" => $redirecturl,
                 "cancel_url" => $cancelurl,
                 "close_window" => "true"
-            ),
-            "plugin" => array(
+            ],
+            "plugin" => [
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
                 "plugin_version" => ' - Plugin 1.7.1',
                 "partner" => "MultiSafepay",
-            ),
+            ],
             "shopping_cart" => $shoppingCart,
             "checkout_options" => $checkoutData,
-        ));
+        ]);
 
         return $this->_client->orders;
     }
 
     public function getCheckoutData($order, $productRepo)
     {
-        $alternateTaxRates = array();
-        $shoppingCart = array();
+        $alternateTaxRates = [];
+        $shoppingCart = [];
         $items = $order->getAllItems();
 
         /*
@@ -436,7 +436,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
         $_taxModelConfig = $this->_taxRate;
         $taxRates = $_taxModelConfig->getCollection()->getData();
-        $taxArray = array();
+        $taxArray = [];
         foreach ($taxRates as $tax) {
             if ($tax['tax_calculation_rate_id'] == $shipping_tax_id) {
                 $taxRateId = $tax['tax_calculation_rate_id'];
@@ -444,13 +444,13 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                 $taxRate = $tax["rate"];
                 $taxName = $taxCode . '(' . $taxRate . '%)';
 
-                $alternateTaxRates['tax_tables']['default'][] = array(
+                $alternateTaxRates['tax_tables']['default'][] = [
                     "shipping_taxed" => "true",
                     "name" => $taxName,
-                    "rules" => array(
-                        array("rate" => $taxRate / 100)
-                    ),
-                );
+                    "rules" => [
+                        ["rate" => $taxRate / 100]
+                    ],
+                ];
             }
         }
 
@@ -476,13 +476,13 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             }
 
 
-            $alternateTaxRates['tax_tables']['alternate'][] = array(
+            $alternateTaxRates['tax_tables']['alternate'][] = [
                 "standalone" => "true",
                 "name" => $taxClass,
-                "rules" => array(
-                    array("rate" => $rate)
-                ),
-            );
+                "rules" => [
+                    ["rate" => $rate]
+                ],
+            ];
 
 
             $weight = (float) $item->getWeight();
@@ -512,7 +512,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                 $tierprices = $proddata->getTierPrice();
                 if (count($tierprices) > 0) {
                     $product_tier_prices = (object) $tierprices;
-                    $product_price = array();
+                    $product_price = [];
                     foreach ($product_tier_prices as $key => $value) {
                         $value = (object) $value;
                         if ($quantity >= $value->price_qty) {
@@ -534,18 +534,18 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                     $price = round($price, 2);
                 }
 
-                $shoppingCart['shopping_cart']['items'][] = array(
+                $shoppingCart['shopping_cart']['items'][] = [
                     "name" => $itemName,
                     "description" => $item->getDescription(),
                     "unit_price" => $price,
                     "quantity" => $quantity,
                     "merchant_item_id" => $item->getProductId(),
                     "tax_table_selector" => $taxClass,
-                    "weight" => array(
+                    "weight" => [
                         "unit" => "KG",
                         "value" => $item->getWeight(),
-                    )
-                );
+                    ]
+                ];
             }
         }
 
@@ -573,7 +573,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
+        $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = [], $query_string = false);
 
         if (!empty(json_decode(json_encode($msporder), true))) {
             $cart = $msporder->shopping_cart->items;
@@ -596,7 +596,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function createOrder($orderData)
     {
-        $billing_address = array(
+        $billing_address = [
             'firstname' => $orderData->customer->first_name, //address Details
             'lastname' => $orderData->customer->last_name,
             'street' => $orderData->customer->address1 . ' ' . $orderData->customer->house_number,
@@ -608,10 +608,10 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             'email' => $orderData->customer->email,
             'fax' => '',
             'save_in_address_book' => 0
-        );
+        ];
 
 
-        $shipping_address = array(
+        $shipping_address = [
             'firstname' => $orderData->delivery->first_name, //address Details
             'lastname' => $orderData->delivery->last_name,
             'street' => $orderData->delivery->address1 . ' ' . $orderData->delivery->house_number,
@@ -623,7 +623,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             'fax' => '',
             'email' => $orderData->customer->email,
             'save_in_address_book' => 0
-        );
+        ];
 
 
         $quote_id = $orderData->order_id;
@@ -774,7 +774,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             $cacheTypeList = $this->cacheTypeList;
             $cacheFrontendPool = $this->cacheFrontendPool;
 
-            $types = array('config', 'layout', 'block_html', 'collections', 'reflection', 'db_ddl', 'eav', 'config_integration', 'config_integration_api', 'full_page', 'translate', 'config_webservice');
+            $types = ['config', 'layout', 'block_html', 'collections', 'reflection', 'db_ddl', 'eav', 'config_integration', 'config_integration_api', 'full_page', 'translate', 'config_webservice'];
             foreach ($types as $type) {
                 $cacheTypeList->cleanType($type);
             }
@@ -785,7 +785,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             $cacheTypeList = $this->cacheTypeList;
             $cacheFrontendPool = $this->cacheFrontendPool;
 
-            $types = array('config', 'layout', 'block_html', 'collections', 'reflection', 'db_ddl', 'eav', 'config_integration', 'config_integration_api', 'full_page', 'translate', 'config_webservice');
+            $types = ['config', 'layout', 'block_html', 'collections', 'reflection', 'db_ddl', 'eav', 'config_integration', 'config_integration_api', 'full_page', 'translate', 'config_webservice'];
             foreach ($types as $type) {
                 $cacheTypeList->cleanType($type);
             }
@@ -1052,7 +1052,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         foreach ($shippingMethods as $shipmethod) {
-            $shipping = array();
+            $shipping = [];
             $shipping['id'] = $shipmethod->id;
             $shipping['name'] = $shipmethod->name;
             $shipping['cost'] = $shipmethod->price;

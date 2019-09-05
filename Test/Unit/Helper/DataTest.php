@@ -307,5 +307,4 @@ class DataTest extends TestCase
 
         $this->assertEquals($methods, $result);
     }
-
 }

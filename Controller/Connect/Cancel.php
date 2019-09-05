@@ -96,8 +96,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
     {
         $params = $this->_requestHttp->getParams();
 
-        if(!$this->validateParams($params) || !$this->_mspHelper->validateOrderHash($params['transactionid'], $params['hash']))
-        {
+        if (!$this->validateParams($params) || !$this->_mspHelper->validateOrderHash($params['transactionid'], $params['hash'])) {
             $this->_redirect('checkout/cart');
             return;
         }
