@@ -21,4 +21,10 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/multisafepay/issuers/ideal" method="GET">
+        <service class="MultiSafepay\Connect\Api\IdealIssuersInterface" method="getIssuers"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
 </routes>

@@ -563,4 +563,36 @@ class Data
         }
         return $lineHeader . implode(' / ', $line);
     }
+
+    /**
+     * @return bool|mixed
+     */
+    public function getIssuers()
+    {
+        $mspClient = new MspClient();
+        $environment = $this->getMainConfigData('msp_env');
+
+        $apiKey = null;
+
+        if ($environment == true) {
+            $mspClient->setApiKey($this->getMainConfigData('test_api_key'));
+            $apiKey = $this->getMainConfigData('test_api_key');
+            $mspClient->setApiUrl('https://testapi.multisafepay.com/v1/json/');
+        } else {
+            $mspClient->setApiKey($this->getMainConfigData('live_api_key'));
+            $apiKey = $this->getMainConfigData('live_api_key');
+            $mspClient->setApiUrl('https://api.multisafepay.com/v1/json/');
+        }
+
+        if (empty($apiKey)) {
+            return false;
+        }
+
+        try {
+            $issuers = $mspClient->issuers->get();
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            return false;
+        }
+        return $issuers;
+    }
 }
