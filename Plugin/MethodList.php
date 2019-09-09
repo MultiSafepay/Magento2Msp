@@ -30,9 +30,13 @@ class MethodList
     {
         foreach ($result as $key => $value) {
             if ($value->getCode() === 'ideal' && $value->getTitle() === 'iDEAL') {
-                $ideal = ['code' => 'ideal', 'title' => 'iDEAL'];
-                $idealExtended = array_merge($ideal, $this->mspHelper->getIssuers());
-                $result[$key] = $idealExtended;
+                $ideal = [
+                    'code' => 'ideal',
+                    'title' => 'iDEAL',
+                    'issuers' => $this->mspHelper->getIssuers()
+                ];
+
+                $result[$key] = $ideal;
             }
         }
         return $result;
