@@ -21,4 +21,19 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/multisafepay/:cartId/payment-methods" method="GET">
+        <service class="MultiSafepay\Connect\Api\GuestPaymentMethodsInterface" method="getList"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/multisafepay/mine/payment-methods" method="GET">
+        <service class="MultiSafepay\Connect\Api\PaymentMethodsInterface" method="getList"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
 </routes>
