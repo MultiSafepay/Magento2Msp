@@ -42,8 +42,7 @@ class PaymentMethods implements PaymentMethodsInterface
     }
 
     /**
-     * @param $cartId
-     * @return string
+     * {@inheritdoc}
      */
     public function getList($cartId)
     {

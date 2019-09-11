@@ -36,6 +36,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Math\Random;
@@ -572,7 +573,7 @@ class Data
         $mspClient = new MspClient();
         $environment = $this->getMainConfigData('msp_env');
         $apiKey = null;
-        if ($environment == true) {
+        if ($environment) {
             $mspClient->setApiKey($this->getMainConfigData('test_api_key'));
             $apiKey = $this->getMainConfigData('test_api_key');
             $mspClient->setApiUrl('https://testapi.multisafepay.com/v1/json/');
@@ -586,7 +587,7 @@ class Data
         }
         try {
             $issuers = $mspClient->issuers->get();
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+        } catch (LocalizedException $e) {
             return false;
         }
         return $issuers;
