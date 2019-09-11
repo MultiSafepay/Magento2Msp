@@ -49,10 +49,6 @@ class PaymentMethods implements PaymentMethodsInterface
         $quote = $this->quoteRepository->get($cartId);
         $methods = $this->methodList->getAvailableMethods($quote);
         foreach ($methods as $key => $value) {
-            // Hide non MultiSafepay methods
-            if (!property_exists($value, '_gatewayCode')) {
-                unset($methods[$key]);
-            }
             // Add iDEAL issuers
             if ($value->getCode() === 'ideal' && $value->getTitle() === 'iDEAL') {
                 $ideal = [
