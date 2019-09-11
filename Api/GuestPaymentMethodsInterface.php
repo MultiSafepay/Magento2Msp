@@ -6,7 +6,7 @@ interface GuestPaymentMethodsInterface
 {
     /**
      * GET for payment-methods api
-     * @param int $cartId The cart ID.
+     * @param string $cartId The cart ID.
      * @return \Magento\Quote\Api\Data\PaymentMethodInterface[] Array of payment methods.
      */
     public function getList($cartId);
