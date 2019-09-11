@@ -36,6 +36,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Math\Random;
@@ -562,5 +563,33 @@ class Data
             $line[] = "{$paymentMethod->type} ({$mspTotal})";
         }
         return $lineHeader . implode(' / ', $line);
+    }
+
+    /**
+     * @return bool|mixed
+     */
+    public function getIssuers()
+    {
+        $mspClient = new MspClient();
+        $environment = $this->getMainConfigData('msp_env');
+        $apiKey = null;
+        if ($environment) {
+            $mspClient->setApiKey($this->getMainConfigData('test_api_key'));
+            $apiKey = $this->getMainConfigData('test_api_key');
+            $mspClient->setApiUrl('https://testapi.multisafepay.com/v1/json/');
+        } else {
+            $mspClient->setApiKey($this->getMainConfigData('live_api_key'));
+            $apiKey = $this->getMainConfigData('live_api_key');
+            $mspClient->setApiUrl('https://api.multisafepay.com/v1/json/');
+        }
+        if (empty($apiKey)) {
+            return false;
+        }
+        try {
+            $issuers = $mspClient->issuers->get();
+        } catch (LocalizedException $e) {
+            return false;
+        }
+        return $issuers;
     }
 }
