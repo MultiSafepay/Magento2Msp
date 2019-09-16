@@ -14,6 +14,13 @@
                 <item name="multisafepay/connect/live_api_key" xsi:type="string">1</item>
                 <item name="multisafepay/connect/test_api_key" xsi:type="string">1</item>
             </argument>
+            <argument name="environment" xsi:type="array">
+                <item name="multisafepay/connect/msp_env" xsi:type="string">1</item>
+                <item name="multisafepay/connect/live_api_key" xsi:type="string">1</item>
+                <item name="multisafepay/connect/test_api_key" xsi:type="string">1</item>
+                <item name="multisafepay/connect/msp_debug" xsi:type="string">1</item>
+                <item name="fastcheckout/fastcheckout_custom/agreements_url" xsi:type="string">1</item>
+            </argument>
         </arguments>
     </type>
 </config>
