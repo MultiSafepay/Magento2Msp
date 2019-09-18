@@ -27,6 +27,11 @@ class RestoreQuote implements RestoreQuoteInterface
     protected $mspHelper;
 
     /**
+     * @var \Magento\Quote\Model\QuoteIdMaskFactory
+     */
+    protected $quoteIdMaskFactory;
+
+    /**
      * @param \Magento\Sales\Model\Order $order
      * @param CartRepositoryInterface $quoteRepository
      * @param Data $data
@@ -34,11 +39,13 @@ class RestoreQuote implements RestoreQuoteInterface
     public function __construct(
         \Magento\Sales\Model\Order $order,
         CartRepositoryInterface $quoteRepository,
+        \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory,
         Data $data
     ) {
         $this->order = $order;
         $this->quoteRepository = $quoteRepository;
         $this->mspHelper = $data;
+        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
     }
 
     /**
@@ -46,9 +53,9 @@ class RestoreQuote implements RestoreQuoteInterface
      */
     public function restoreQuote($orderId, $hash)
     {
-        /*if (!$this->mspHelper->validateOrderHash($orderId, $hash)) {
+        if (!$this->mspHelper->validateOrderHash($orderId, $hash)) {
             return '';
-        }*/
+        }
 
         try {
             $order = $this->order->loadByIncrementId($orderId);
@@ -63,8 +70,10 @@ class RestoreQuote implements RestoreQuoteInterface
         $this->quoteRepository->save($quote);
 
 
-        //Todo
-        // $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-        return "test";
+        if ($order->getCustomerIsGuest()) {
+            $quoteIdMask = $this->quoteIdMaskFactory->create()->load($order->getQuoteId(), 'quote_id');
+            return $quoteIdMask->getMaskedId();
+        }
+        return true;
     }
 }
