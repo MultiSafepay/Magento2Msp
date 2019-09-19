@@ -218,6 +218,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     public $_manualGateway = null;
     public $_isAdmin = false;
     protected $refundHelper;
+    protected $restrictions;
 
     /**
      * Connect constructor.
@@ -251,6 +252,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
      * @param \Magento\Customer\Model\Session                              $customerSession
      * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
+     * @param \MultiSafepay\Connect\Model\GatewayRestrictions              $restrictions
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
      * @param array                                                        $data
@@ -286,6 +288,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
         RefundHelper $refundHelper,
+        GatewayRestrictions $restrictions,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -310,6 +313,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_requestHttp = $requestHttp;
         $this->_currencyFactory = $currencyFactory;
         $this->refundHelper = $refundHelper;
+        $this->restrictions = $restrictions;
 
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
@@ -1431,7 +1435,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
 
-
         //Don't show payment method based on main configuration settings
         if ($this->getCode() == 'connect') {
             return false;
@@ -1443,10 +1446,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
 
-        //Check customer group restrictions
-        $allowedGroups = explode(',', $this->getConfigData('allowed_groups'));
-        if (!in_array('', $allowedGroups, true) &&
-            !in_array($quote->getCustomerGroupId(), $allowedGroups, true)) {
+        //Don't show payment method if group is not allowed
+        if (!$this->restrictions->isGroupAllowed(
+            $quote->getCustomerGroupId(),
+            $this->getConfigData('allowed_groups')
+        )) {
             return false;
         }
 
