@@ -31,8 +31,10 @@
 
 namespace MultiSafepay\Connect\Model\Observers;
 
-use Magento\Catalog\Model\Product;
+use Magento\Backend\App\Area\FrontNameResolver;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\State;
+use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Message\ManagerInterface;
 use MultiSafepay\Connect\Helper\Data;
@@ -43,7 +45,11 @@ class Order implements ObserverInterface
     protected $_mspConnect;
     protected $_state;
     protected $_mspData;
-    protected $_product;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
 
     /*
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -51,27 +57,31 @@ class Order implements ObserverInterface
     protected $_messageManager;
 
     /**
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
-     * @param \Magento\Framework\App\State $state
-     * @param \Magento\Catalog\Model\Product $product
-     * @param \MultiSafepay\Connect\Model\Connect $connect
-     * @param \MultiSafepay\Connect\Helper\Data $data
+     * @param ManagerInterface $messageManager
+     * @param State $state
+     * @param ProductRepositoryInterface $productRepository
+     * @param Connect $connect
+     * @param Data $data
      */
     public function __construct(
         ManagerInterface $messageManager,
         State $state,
-        Product $product,
+        ProductRepositoryInterface $productRepository,
         Connect $connect,
         Data $data
     ) {
         $this->_messageManager = $messageManager;
         $this->_mspConnect = $connect;
         $this->_mspData = $data;
-        $this->_product = $product;
+        $this->productRepository = $productRepository;
         $this->_state = $state;
     }
 
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    /**
+     * @param Observer $observer
+     * @return $this
+     */
+    public function execute(Observer $observer)
     {
         $paymentMethod = $this->_mspConnect;
         /** @var $event Varien_Event */
@@ -85,7 +95,7 @@ class Order implements ObserverInterface
 
         $app_state = $this->_state;
         $area_code = $app_state->getAreaCode();
-        if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+        if ($app_state->getAreaCode() != FrontNameResolver::AREA_CODE) {
             return $this;
         } else {
             $paymentMethod->_isAdmin = true;
@@ -109,9 +119,7 @@ class Order implements ObserverInterface
 
         $paymentMethod->_manualGateway = $payment->_gatewayCode;
 
-        $productRepo = $this->_product;
-
-        $transactionObject = $paymentMethod->transactionRequest($order, $productRepo, $resetGateway);
+        $transactionObject = $paymentMethod->transactionRequest($order, $this->productRepository, $resetGateway);
 
         if (!empty($transactionObject->result->error_code)) {
             $this->_messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));

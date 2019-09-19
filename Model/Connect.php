@@ -781,7 +781,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
 
 
-            $proddata = $productRepo->load($product_id);
+            $proddata = $productRepo->getById($product_id);
             $ndata = $item->getData();
 
             if ($ndata['price'] != 0) {

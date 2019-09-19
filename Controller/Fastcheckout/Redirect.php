@@ -31,8 +31,9 @@
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Catalog\Model\Product;
 use Magento\Framework\Registry;
 use Magento\Checkout\Model\Session;
 use MultiSafepay\Connect\Model\Fastcheckout;
@@ -43,7 +44,7 @@ use MultiSafepay\Connect\Model\Fastcheckout;
  * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
-class Redirect extends \Magento\Framework\App\Action\Action
+class Redirect extends Action
 {
 
     /**
@@ -57,14 +58,27 @@ class Redirect extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_requestHttp;
-    protected $_product;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+
     protected $_session;
     protected $_mspFastcheckout;
 
+    /**
+     * Redirect constructor.
+     * @param Context $context
+     * @param Registry $coreRegistry
+     * @param ProductRepositoryInterface $productRepository
+     * @param Session $session
+     * @param Fastcheckout $fastcheckout
+     */
     public function __construct(
         Context $context,
         Registry $coreRegistry,
-        Product $product,
+        ProductRepositoryInterface $productRepository,
         Session $session,
         Fastcheckout $fastcheckout
     ) {
@@ -73,7 +87,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
 
         $this->_mspFastcheckout = $fastcheckout;
-        $this->_product = $product;
+        $this->productRepository = $productRepository;
         $this->_session = $session;
     }
 
@@ -81,9 +95,8 @@ class Redirect extends \Magento\Framework\App\Action\Action
     {
         $session = $this->_session;
         $paymentMethod = $this->_mspFastcheckout;
-        $productRepo = $this->_product;
 
-        $transactionObject = $paymentMethod->transactionRequest($session, $productRepo, false);
+        $transactionObject = $paymentMethod->transactionRequest($session, $this->productRepository, false);
 
         if (!empty($transactionObject->result->error_code)) {
             $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
