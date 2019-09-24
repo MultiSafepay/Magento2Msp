@@ -4,6 +4,8 @@ namespace MultiSafepay\Connect\Model;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Model\QuoteIdMaskFactory;
+use Magento\Sales\Model\Order;
 use MultiSafepay\Connect\Api\RestoreQuoteInterface;
 use MultiSafepay\Connect\Helper\Data;
 use PHPUnit\Runner\Exception;
@@ -17,7 +19,7 @@ class RestoreQuote implements RestoreQuoteInterface
     private $quoteRepository;
 
     /**
-     * @var \Magento\Sales\Model\Order
+     * @var Order
      */
     protected $order;
 
@@ -27,19 +29,20 @@ class RestoreQuote implements RestoreQuoteInterface
     protected $mspHelper;
 
     /**
-     * @var \Magento\Quote\Model\QuoteIdMaskFactory
+     * @var QuoteIdMaskFactory
      */
     protected $quoteIdMaskFactory;
 
     /**
-     * @param \Magento\Sales\Model\Order $order
+     * @param Order $order
      * @param CartRepositoryInterface $quoteRepository
+     * @param QuoteIdMaskFactory $quoteIdMaskFactory
      * @param Data $data
      */
     public function __construct(
-        \Magento\Sales\Model\Order $order,
+        Order $order,
         CartRepositoryInterface $quoteRepository,
-        \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory,
+        QuoteIdMaskFactory $quoteIdMaskFactory,
         Data $data
     ) {
         $this->order = $order;
@@ -74,6 +77,7 @@ class RestoreQuote implements RestoreQuoteInterface
             $quoteIdMask = $this->quoteIdMaskFactory->create()->load($order->getQuoteId(), 'quote_id');
             return $quoteIdMask->getMaskedId();
         }
-        return true;
+
+        return 'Quote restored';
     }
 }
