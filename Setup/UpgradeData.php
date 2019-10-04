@@ -77,7 +77,11 @@ class UpgradeData implements UpgradeDataInterface
     ) {
         $installer = $setup;
 
-        $this->notifier->addNotice('MultiSafepay upgrade', 'MultiSafepay: Check out our documentation page for new features');
+        $this->notifier->addNotice(
+            'MultiSafepay upgrade',
+            'MultiSafepay: Check out our documentation page for new features',
+            'https://docs.multisafepay.com/integrations/magento2/'
+        );
 
         $installer->startSetup();
 

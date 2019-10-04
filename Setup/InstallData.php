@@ -71,7 +71,11 @@ class InstallData implements InstallDataInterface
 
         $installer->startSetup();
 
-        $this->notifier->addNotice('MultiSafepay install', 'MultiSafepay: Check out our documentation page to setup your webshop');
+        $this->notifier->addNotice(
+            'MultiSafepay install',
+            'MultiSafepay: Check out our documentation page to setup your webshop',
+            'https://docs.multisafepay.com/integrations/magento2/manual/'
+        );
 
         $tableName = $installer->getConnection()->getTableName(
             'sales_order_grid'
