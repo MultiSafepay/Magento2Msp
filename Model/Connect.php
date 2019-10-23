@@ -1448,6 +1448,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
+        //Prevent 0 refunds (full refund)
+        if ($amount <= 0) {
+            return $this;
+        }
+
         $transaction_id = $payment->getParentTransactionId();
         $order = $payment->getOrder();
         $transactionRepository = $this->_transactionRepositoryInterface;
