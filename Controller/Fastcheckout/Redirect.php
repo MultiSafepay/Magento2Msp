@@ -31,7 +31,6 @@
 
 namespace MultiSafepay\Connect\Controller\Fastcheckout;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Registry;
@@ -59,11 +58,6 @@ class Redirect extends Action
      */
     protected $_requestHttp;
 
-    /**
-     * @var ProductRepositoryInterface
-     */
-    protected $productRepository;
-
     protected $_session;
     protected $_mspFastcheckout;
 
@@ -71,14 +65,12 @@ class Redirect extends Action
      * Redirect constructor.
      * @param Context $context
      * @param Registry $coreRegistry
-     * @param ProductRepositoryInterface $productRepository
      * @param Session $session
      * @param Fastcheckout $fastcheckout
      */
     public function __construct(
         Context $context,
         Registry $coreRegistry,
-        ProductRepositoryInterface $productRepository,
         Session $session,
         Fastcheckout $fastcheckout
     ) {
@@ -87,7 +79,6 @@ class Redirect extends Action
         parent::__construct($context);
 
         $this->_mspFastcheckout = $fastcheckout;
-        $this->productRepository = $productRepository;
         $this->_session = $session;
     }
 
@@ -96,7 +87,7 @@ class Redirect extends Action
         $session = $this->_session;
         $paymentMethod = $this->_mspFastcheckout;
 
-        $transactionObject = $paymentMethod->transactionRequest($session, $this->productRepository, false);
+        $transactionObject = $paymentMethod->transactionRequest($session, false);
 
         if (!empty($transactionObject->result->error_code)) {
             $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));

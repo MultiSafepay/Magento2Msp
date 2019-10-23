@@ -59,6 +59,7 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\StatusResolver;
 use Magento\Sales\Model\OrderNotifier;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
@@ -375,7 +376,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
     }
 
-    public function transactionRequest($order, $productRepo = null, $resetGateway = false)
+    public function transactionRequest($order, $resetGateway = false)
     {
         $params = $this->_requestHttp->getParams();
 
@@ -445,7 +446,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $use_base_currency = $this->getMainConfigData('transaction_currency');
 
-        $checkoutData = $this->getCheckoutData($order, $productRepo, $use_base_currency);
+        $checkoutData = $this->getCheckoutData($order, $use_base_currency);
         $shoppingCart = $checkoutData["shopping_cart"];
         $checkoutData = $checkoutData["checkout_options"];
 
@@ -727,7 +728,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         return $shipped;
     }
 
-    public function getCheckoutData($order, $productRepo, $use_base_currency)
+    /**
+     * @param Order $order
+     * @param $use_base_currency
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCheckoutData(Order $order, $use_base_currency)
     {
         $alternateTaxRates = [];
         $shoppingCart = [];
@@ -761,10 +768,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 ],
             ];
 
-
-            $weight = (float) $item->getWeight();
-            $product_id = $item->getProductId();
-
             // name and options
             $itemName = $item->getName();
             $options = $this->getProductOptions($item);
@@ -780,59 +783,35 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $itemName .= ')';
             }
 
-
-            $proddata = $productRepo->getById($product_id);
             $ndata = $item->getData();
 
             if ($ndata['price'] != 0) {
+
+                $storeId = $this->getStore();
                 if ($use_base_currency) {
                     $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
-                    $tierprices = $proddata->getTierPrice();
-                    if (count($tierprices) > 0) {
-                        $product_tier_prices = (object) $tierprices;
-                        foreach ($product_tier_prices as $key => $value) {
-                            $value = (object) $value;
-                            if ($quantity >= $value->price_qty) {
-                                if ($ndata['base_price'] < $value->price) {
-                                    $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
-                                } else {
-                                    $price = $value->price - ($item->getBaseDiscountAmount() / $quantity);
-                                }
-                            }
-                            $price = $price;
-                        }
-                    }
-
-                    $storeId = $this->getStore();
 
                     // Fix for 1027 with catalog prices including tax
-                    if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                        $price = (($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
+                    if ($this->_scopeConfig->getValue(
+                        'tax/calculation/price_includes_tax',
+                        ScopeInterface::SCOPE_STORE,
+                        $storeId
+                    )) {
+                        $price = (($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) /
+                            $quantity / (1 + ($item->getTaxPercent() / 100)));
                         $price = round($price, 10);
                     }
                 } else {
                     $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
-                    $tierprices = $proddata->getTierPrice();
-                    if (count($tierprices) > 0) {
-                        $product_tier_prices = (object) $tierprices;
-                        foreach ($product_tier_prices as $key => $value) {
-                            $value = (object) $value;
-                            if ($quantity >= $value->price_qty) {
-                                if ($ndata['price'] < $value->price) {
-                                    $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
-                                } else {
-                                    $price = $value->price - ($item->getDiscountAmount() / $quantity);
-                                }
-                            }
-                            $price = $price;
-                        }
-                    }
-
-                    $storeId = $this->getStore();
 
                     // Fix for 1027 with catalog prices including tax
-                    if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                        $price = (($item->getRowTotalInclTax() - $item->getDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
+                    if ($this->_scopeConfig->getValue(
+                        'tax/calculation/price_includes_tax',
+                        ScopeInterface::SCOPE_STORE,
+                        $storeId
+                    )) {
+                        $price = (($item->getRowTotalInclTax() - $item->getDiscountAmount()) /
+                            $quantity / (1 + ($item->getTaxPercent() / 100)));
                         $price = round($price, 10);
                     }
                 }
@@ -850,7 +829,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                 $amount = $tax->amount;
                             }
 
-                            if (!$this->_scopeConfig->getValue('tax/weee/apply_vat', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+                            if (!$this->_scopeConfig->getValue('tax/weee/apply_vat', ScopeInterface::SCOPE_STORE, $storeId)) {
                                 $weetaxClass = 'BTW0';
                                 $alternateTaxRates['tax_tables']['alternate'][] = [
                                     "standalone" => "true",

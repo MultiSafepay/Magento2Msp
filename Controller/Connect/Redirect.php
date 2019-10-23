@@ -31,7 +31,6 @@
 
 namespace MultiSafepay\Connect\Controller\Connect;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -51,11 +50,6 @@ class Redirect extends Action
     protected $_order;
     protected $_mspConnect;
 
-    /**
-     * @var ProductRepositoryInterface
-     */
-    protected $productRepository;
-
     protected $_cartRepo;
 
     /**
@@ -63,7 +57,6 @@ class Redirect extends Action
      * @param Context $context
      * @param Session $session
      * @param Order $order
-     * @param ProductRepositoryInterface $productRepository
      * @param CartRepositoryInterface $cartRepository
      * @param Connect $mspConnect
      */
@@ -71,14 +64,12 @@ class Redirect extends Action
         Context $context,
         Session $session,
         Order $order,
-        ProductRepositoryInterface $productRepository,
         CartRepositoryInterface $cartRepository,
         Connect $mspConnect
     ) {
         parent::__construct($context);
         $this->_session = $session;
         $this->_order = $order;
-        $this->productRepository = $productRepository;
         $this->_mspConnect = $mspConnect;
         $this->_cartRepo = $cartRepository;
     }
@@ -91,7 +82,7 @@ class Redirect extends Action
 
         $order->load($this->_session->getlastOrderId());
 
-        $transactionObject = $paymentMethod->transactionRequest($order, $this->productRepository, false);
+        $transactionObject = $paymentMethod->transactionRequest($order, false);
 
         if ($order->getId()) {
             /** @var CartRepositoryInterface $quoteRepository */

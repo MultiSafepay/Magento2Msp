@@ -363,7 +363,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_client->debug = ($this->getConnectConfigData('msp_debug')) ? true : false;
     }
 
-    public function transactionRequest($session, $productRepo = null, $resetGateway = false)
+    public function transactionRequest($session, $resetGateway = false)
     {
         $quote = $session->getQuote();
         $quoteId = $quote->getId();
@@ -380,7 +380,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_client->setApiUrl('https://api.multisafepay.com/v1/json/');
         }
 
-        $checkoutData = $this->getCheckoutData($quote, $productRepo);
+        $checkoutData = $this->getCheckoutData($quote);
         $shoppingCart = $checkoutData["shopping_cart"];
         $checkoutData = $checkoutData["checkout_options"];
         $type = 'checkout';
@@ -422,7 +422,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
         return $this->_client->orders;
     }
 
-    public function getCheckoutData($order, $productRepo)
+    public function getCheckoutData($order)
     {
         $alternateTaxRates = [];
         $shoppingCart = [];
@@ -484,10 +484,6 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                 ],
             ];
 
-
-            $weight = (float) $item->getWeight();
-            $product_id = $item->getProductId();
-
             // name and options
             $itemName = $item->getName();
             $options = $this->getProductOptions($item);
@@ -503,28 +499,10 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
                 $itemName .= ')';
             }
 
-
-            $proddata = $productRepo->getById($product_id);
             $ndata = $item->getData();
 
             if ($ndata['price'] != 0) {
                 $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
-                $tierprices = $proddata->getTierPrice();
-                if (count($tierprices) > 0) {
-                    $product_tier_prices = (object) $tierprices;
-                    $product_price = [];
-                    foreach ($product_tier_prices as $key => $value) {
-                        $value = (object) $value;
-                        if ($quantity >= $value->price_qty) {
-                            if ($ndata['price'] < $value->price) {
-                                $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
-                            } else {
-                                $price = $value->price - ($item->getDiscountAmount() / $quantity);
-                            }
-                        }
-                        $price = $price;
-                    }
-                }
 
                 $storeId = $this->getStore();
 

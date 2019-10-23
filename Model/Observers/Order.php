@@ -32,7 +32,6 @@
 namespace MultiSafepay\Connect\Model\Observers;
 
 use Magento\Backend\App\Area\FrontNameResolver;
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -46,11 +45,6 @@ class Order implements ObserverInterface
     protected $_state;
     protected $_mspData;
 
-    /**
-     * @var ProductRepositoryInterface
-     */
-    protected $productRepository;
-
     /*
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -59,21 +53,18 @@ class Order implements ObserverInterface
     /**
      * @param ManagerInterface $messageManager
      * @param State $state
-     * @param ProductRepositoryInterface $productRepository
      * @param Connect $connect
      * @param Data $data
      */
     public function __construct(
         ManagerInterface $messageManager,
         State $state,
-        ProductRepositoryInterface $productRepository,
         Connect $connect,
         Data $data
     ) {
         $this->_messageManager = $messageManager;
         $this->_mspConnect = $connect;
         $this->_mspData = $data;
-        $this->productRepository = $productRepository;
         $this->_state = $state;
     }
 
@@ -119,7 +110,7 @@ class Order implements ObserverInterface
 
         $paymentMethod->_manualGateway = $payment->_gatewayCode;
 
-        $transactionObject = $paymentMethod->transactionRequest($order, $this->productRepository, $resetGateway);
+        $transactionObject = $paymentMethod->transactionRequest($order, $resetGateway);
 
         if (!empty($transactionObject->result->error_code)) {
             $this->_messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
