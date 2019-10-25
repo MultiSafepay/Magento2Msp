@@ -106,18 +106,6 @@
                 <model>MultiSafepay\Connect\Model\Gateways\Eps</model>
                 <group>multisafepay_connect</group>
             </eps>
-      
-            <!-- Start Ferbuy -->
-            <ferbuy>
-                <active>0</active>
-                <title>Ferbuy</title>
-                <instructions></instructions>
-                <allowed_currency>EUR</allowed_currency>
-                <allowed_groups>0,1,2,3</allowed_groups>
-                <payment_action>true</payment_action>
-                <model>MultiSafepay\Connect\Model\Gateways\Ferbuy</model>
-                <group>multisafepay_connect</group>
-            </ferbuy>
             
             <!-- Start Mastercard -->
             <mastercard>
@@ -685,18 +673,6 @@
                 <model>MultiSafepay\Connect\Model\Gateways\Eps</model>
                 <group>multisafepay_connect</group>
             </eps>
-      
-            <!-- Start Ferbuy -->
-            <ferbuy>
-                <active>0</active>
-                <title>Ferbuy</title>
-                <instructions></instructions>
-                <allowed_currency>EUR</allowed_currency>
-                <allowed_groups>0,1,2,3</allowed_groups>
-                <payment_action>true</payment_action>
-                <model>MultiSafepay\Connect\Model\Gateways\Ferbuy</model>
-                <group>multisafepay_connect</group>
-            </ferbuy>
             
             <!-- Start Mastercard -->
             <mastercard>

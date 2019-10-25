@@ -72,7 +72,6 @@ class Data
         'dotpay'  => ['code' => 'DOTPAY', 'name' => 'Dotpay', 'type' => 'gateways'],
         'einvoice' => ['code' => 'EINVOICE', 'name' => 'E-Invoicing', 'type' => 'gateways'],
         'eps'  => ['code' => 'EPS', 'name' => 'EPS', 'type' => 'gateways'],
-        'ferbuy' => ['code' => 'AMEX', 'name' => 'Ferbuy', 'type' => 'gateways'],
         'giropay' => ['code' => 'GIROPAY', 'name' => 'GiroPay', 'type' => 'gateways'],
         'ideal'  => ['code' => 'IDEAL', 'name' => 'iDEAL', 'type' => 'gateways'],
         'idealqr' => ['code' => 'IDEALQR', 'name' => 'iDEAL QR', 'type' => 'gateways'],

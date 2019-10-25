@@ -88,15 +88,7 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
-                                                                <item name="ferbuy" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/ferbuy</item>
-                                                                    <item name="methods" xsi:type="array">
-                                                                                                        
-                                                                        <item name="ferbuy" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                        </item>
-                                                                    </item>
-                                                                </item>
+
                                                                 <item name="mastercard" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/mastercard</item>
                                                                     <item name="methods" xsi:type="array">
