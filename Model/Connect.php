@@ -64,6 +64,8 @@ use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+use Magento\Framework\DataObjectFactory;
+use Magento\Framework\Event\ManagerInterface as EventManager;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -217,6 +219,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     public $_manualGateway = null;
     public $_isAdmin = false;
 
+    protected $dataObjectFactory;
+
     /**
      * Connect constructor.
      *
@@ -277,12 +281,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         OrderNotifier $orderNotifier,
         StatusResolver $statusResolver,
         CurrencyFactory $currencyFactory,
-
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
         HelperData $helperData,
         Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
+        DataObjectFactory $dataObjectFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -299,6 +303,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $resourceCollection,
             $data
         );
+
+        $this->dataObjectFactory = $dataObjectFactory;
         $this->_customerSession = $customerSession;
         $this->_client = $mspClient;
         $this->_checkoutSession = $checkoutSession;
@@ -542,7 +548,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
         try {
-            $this->_client->orders->post(array(
+            $mspOrderData = array(
                 "type" => $type,
                 "order_id" => $order->getIncrementId(),
                 "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
@@ -594,7 +600,19 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 ),
                 "shopping_cart" => $shoppingCart,
                 "checkout_options" => $checkoutData,
-            ));
+            );
+
+            $mspOrderDataObject = $this->dataObjectFactory->create();
+            $mspOrderDataObject->setData('orderData', $mspOrderData);
+
+            $this->_eventManager->dispatch(
+                'before_send_msp_transaction_request',
+                ['order' => $order, 'mspOrderData' => $mspOrderDataObject]
+            );
+
+            $mspOrderData = $mspOrderDataObject->getData('orderData');
+            $this->_client->orders->post($mspOrderData);
+
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             return false;
         }
@@ -1367,11 +1385,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
 
             // Force order to Processing to solve https://github.com/magento/magento2/issues/18148
-            $state = Order::STATE_PROCESSING;            
+            $state = Order::STATE_PROCESSING;
             $status = $this->_statusResolver->getOrderStatusByState($order, $state);
             $order->setState($state);
             $order->setStatus($status);
-            
+
             $this->_orderRepositoryInterface->save($order);
 
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports
@@ -1451,8 +1469,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         return parent::isAvailable($quote) && $this->isCarrierAllowed(
-            $quote->getShippingAddress()->getShippingMethod()
-        );
+                $quote->getShippingAddress()->getShippingMethod()
+            );
     }
 
     /**
