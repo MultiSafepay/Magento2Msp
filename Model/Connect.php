@@ -64,6 +64,8 @@ use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+use Magento\Framework\DataObjectFactory;
+use Magento\Framework\Event\ManagerInterface as EventManager;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -277,7 +279,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         OrderNotifier $orderNotifier,
         StatusResolver $statusResolver,
         CurrencyFactory $currencyFactory,
-
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
         HelperData $helperData,
@@ -285,6 +286,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Customer\Model\Session $customerSession,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
+        EventManager $eventManager = null,
+        DataObjectFactory $dataObjectFactory = null,
         array $data = []
     ) {
         parent::__construct(
@@ -299,6 +302,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $resourceCollection,
             $data
         );
+
+        $this->eventManager = $eventManager;
+        $this->dataOjbectFactory = $dataObjectFactory;
+
         $this->_customerSession = $customerSession;
         $this->_client = $mspClient;
         $this->_checkoutSession = $checkoutSession;
@@ -542,7 +549,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
         try {
-            $this->_client->orders->post(array(
+            $mspOrderData = array(
                 "type" => $type,
                 "order_id" => $order->getIncrementId(),
                 "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
@@ -594,7 +601,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 ),
                 "shopping_cart" => $shoppingCart,
                 "checkout_options" => $checkoutData,
-            ));
+            );
+
+            $mspOrderDataObject = $this->dataOjbectFactory->create();
+            $mspOrderDataObject->setMspOrderData($mspOrderData);
+
+            $this->eventManager->dispatch('before_send_msp_transaction_request', ['mspOrderData' => $mspOrderDataObject]);
+
+            $mspOrderData = $mspOrderDataObject->getMspOrderData();
+
+            $this->_client->orders->post($mspOrderData);
+
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             return false;
         }
