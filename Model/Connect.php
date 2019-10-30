@@ -606,7 +606,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $mspOrderDataObject = $this->dataOjbectFactory->create();
             $mspOrderDataObject->setMspOrderData($mspOrderData);
 
-            $this->eventManager->dispatch('before_send_msp_transaction_request', ['mspOrderData' => $mspOrderDataObject]);
+            $this->eventManager->dispatch(
+                'before_send_msp_transaction_request',
+                ['order' => $order, 'mspOrderData' => $mspOrderDataObject]
+            );
 
             $mspOrderData = $mspOrderDataObject->getMspOrderData();
 
