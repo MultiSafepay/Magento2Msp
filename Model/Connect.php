@@ -65,7 +65,6 @@ use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
 use Magento\Framework\DataObjectFactory;
-use Magento\Framework\Event\ManagerInterface as EventManager;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
