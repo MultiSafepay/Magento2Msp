@@ -1341,7 +1341,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             $transdetails = [];
             $transdetails['Fastcheckout'] = $msporder->fastcheckout;
-            $transaction = $payment->addTransaction('capture', null, false, 'multisafepay');
+            $transaction = $payment->addTransaction('capture', null, true, 'multisafepay');
             $transaction->setParentTxnId($msporder->transaction_id);
             $transaction->setIsClosed(1);
             $transaction->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS, $transdetails);
