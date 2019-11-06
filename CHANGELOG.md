@@ -1,8 +1,38 @@
+## 1.8.0 - RC1
+Release date: November 5th, 2019
+
+### Added
++ PLGMAGTWOS-506: Enable fail save option for saving transactions.
++ PLGMAGTWOS-504: Add link to the MultiSafepay update and install notification message that redirects to the MultiSafepay documentation.
++ PLGMAGTWOS-483: Add Magento 2 module dependencies to composer.
++ PLGMAGTWOS-479: Add PHP dependencies to composer.
++ PLGMAGTWOS-471: Add option to hide MultiSafepay payment method from checkout.
++ PLGMAGTWOS-454: Add translation for 'Choose your creditcard' in German.
+
+### Changed
++ PLGMAGTWOS-473: Mark MultiSafepay configuration values as environment specific.
++ PLGMAGTWOS-481: Change configuration allowed groups when selecting '-- Please Select --' to show payment method for all groups.
++ PLGMAGTWOS-468: Decline orders if refund contains adjustments.
+
+### Fixed
++ PLGMAGTWOS-505: Prevent refunds at MultiSafepay with zero amount.
++ PLGMAGTWOS-284: Fix error when redirecting to payment page if cart contains configurable and simple product in this order.
++ PLGMAGTWOS-498: Fix uncaught TypeErrors when FastCheckout is enabled.
++ PLGMAGTWOS-449: Fix payment redirect to cart instead of success page if the payment is done with the iDEAL app and iOS.
+
+### Removed
++ PLGMAGTWOS-514: Remove FerBuy payment method.
++ PLGMAGTWOS-452: Remove Klarna reservation number from order note.
+
+***
+
 ## 1.7.1
 Release date: July 2nd, 2019
 
 ### Fixed
 + PLGMAGTWOS-459: Fixed orders not completed when having a prefix
+
+***
 
 ## 1.7.0
 Release date: June 26th, 2019
@@ -13,7 +43,7 @@ Release date: June 26th, 2019
 + PLGMAGTWOS-404: Added payment link to order confirmation email.
 + PLGMAGTWOS-350: Added order log record if MultiSafepay amount is not identical to order amount.
 + PLGMAGTWOS-375: Added validation on cancel URL (Thanks to [Luciferiix](https://github.com/Luciferiix)).
-+ PLGMAGTWOS-376: Added validation input on redirect and notification url (Thanks to [Luciferiix](https://github.com/Luciferiix)).
++ PLGMAGTWOS-376: Added validation input on redirect and notification URL (Thanks to [Luciferiix](https://github.com/Luciferiix)).
 + PLGMAGTWOS-365: Added globally observe shipment and order placement.
 + PLGMAGTWOS-288: Added payment specification when paid with coupon and payment method.
 
@@ -29,7 +59,7 @@ Release date: June 26th, 2019
 + PLGMAGTWOS-370: Fixed getMethodInstance error after checkout.
 + PLGMAGTWOS-339: Fixed Api key not found for Fastcheckout on the live environment.
 + PLGMAGTWOS-346: Fixed module.xml missing sequence breaking filters in sales_order view (Thanks to [HeadlineInteractive](https://github.com/HeadlineInteractive)).
-+ PLGMAGTWOS-277: Prevent protected propery error in rare cases.
++ PLGMAGTWOS-277: Prevent protected property error in rare cases.
 + PLGMAGTWOS-331: Prevent htmlParseEntityRef in exception.log when viewing orders (Thanks to [teun-loonen](https://github.com/teun-loonen)).
 
 ### Removed
@@ -37,6 +67,8 @@ Release date: June 26th, 2019
 + PLGMAGTWOS-383: Remove support for days and seconds active for bank transfer.
 + PLGMAGTWOS-301: Remove manually created payment links for Klarna, Pay After Delivery, AfterPay and Betaalplan
 + PLGMAGTWOS-418: Remove second chance mail on backend orders.
+
+***
 
 ## 1.6.3
 Release date: November 29th, 2018  
@@ -99,7 +131,7 @@ Release date: May 25th, 2018
 + PLGMAGTWOS-186: Improve FastCheckout logo localization
 + PLGMAGTWOS-252: Updated Klarna logo
 
-***
+---
 
 ## 1.4.9
 Release date: Feb 21th, 2018
@@ -129,7 +161,7 @@ Release date: Nov 30th, 2017
 + PLGMAGTWOS-216 - Improve error handling when client error occurs
 + PLGMAGTWOS-216 - Fix blank page for connectivity issues
 + PLGMAGTWOS-79 - Include quantity in discount calculation to prevent 1027
-+ PLGMAGTWOS-79 - Include discount into article price
++ PLGMAGTWOS-79 - Include discount into page price
 + PLGMAGTWOS-204 - Removed js on success page to prevent customer-data error
 + PLGMAGTWOS-203 - Refactored and fixed restorequote on backbutton
 + PLGMAGTWOS-212 - FCO division by zero when getting the quantity of quote_item
@@ -139,7 +171,7 @@ Release date: Nov 30th, 2017
 + PLGMAGTWOS-201 - Only use shipping address data if the order can be shipped and the address is provided.
 + PLGMAGTWOS-203 - No cart restore on bank transfer by MultiSafepay
 + PLGMAGTWOS-196 - Added a comment for the cancelled status in combination with Second Chance.
-+ PLGMAGTWOS-198 - Improved code on Cancel url for unlocking of the lockfile.
++ PLGMAGTWOS-198 - Improved code on Cancel URL for unlocking of the lockfile.
 
 ***
 
@@ -149,7 +181,7 @@ Release date: oct 9th, 2017
 + PLGMAGTWOS-23 - FCO incorrect use of payment_details_type
 + PLGMAGTWOS-148 - Improve payment images localization
 + PLGMAGTWOS-158 - Fastcheckout completed doesn't clear shopping_cart
-+ PLGMAGTWOS-167 - Check articles quantity used for example 12 or 12.0000 (both processed as 12)
++ PLGMAGTWOS-167 - Check pages quantity used for example 12 or 12.0000 (both processed as 12)
 + PLGMAGTWOS-170 - FCO transaction creates new addresses all the time instead of checking if it already exists.
 + PLGMAGTWOS-171 - Have defaults for order statuses
 + PLGMAGTWOS-176 - FCO correct spelling mistake shipping_taxed
@@ -190,7 +222,7 @@ Release date: August 25th, 2017
 + Fixes #PLGMAGTWOS-168. Update composer with PHP 7.1
 + Fixes #PLGMAGTWOS-169. Fastcheckout buttons only visible for quote currency EUR.
 + Fixes #PLGMAGTWOS-172 improved undo cancel function, so it does not overwrite the $status variable.
-+ Fix PLGMAGTWOS-113 overwrite payment method with actual method. Affects bank transfer and second chance
++ Fix PLGMAGTWOS-113 overwrite payment method with actual method. Affects bank transfer/Second chance
 + Added license/disclaimer
 + Updated default file permissions following PLGMAGTWOS-149
 + Fixes PLGMAGTWOS-175, updated version number for FCO transactions
@@ -200,7 +232,7 @@ Release date: August 25th, 2017
 ## 1.4.4
 Release date: August 4th, 2017
 ### Changes
-+ Fixes #24. Added notification to cart page after redirect back to the store once the transaction was canceled/declined
++ Fixes #24. Added notification to cart page after redirect back to the store once the transaction was cancelled/declined
 + Fixes PLGMAG-304. Only allow Klarna when billing and shipping address are the same (Klarna regulation)
 + Fixes #25. Improvements to the process locking.
 + Fixed wrong urls used when order is created from the Magento backend.
@@ -213,7 +245,7 @@ Release date: August 4th, 2017
 + Fix PLGMAGTWO-134. Observe ship event when REST API is used to ship order.
 + Configurable option to use the base currency, or store currency
 + Fixed PLGMAGTWO-138. Added support for MultiSafepay Magento 2 Payment Fee plugin. (Will become available soon)
-+ Fixes PLGMAGTWOS-146. Fixed an issue causing invoices not being created when the storeview currency was used for transactions. This issue was caused by an issue with Magento, described in https://github.com/magento/magento2/commit/c0c24116c3a790db671ae1831c09a4e51adf0549 In order to get this fixed it's important to manually apply the fix described on that page when using a version lower than Magento 2.1.8.
++ Fixes PLGMAGTWOS-146. Fixed an issue causing invoices not being created when the storeview currency was used for transactions. This issue was caused by an issue with Magento, described in https://github.com/magento/magento2/commit/c0c24116c3a790db671ae1831c09a4e51adf0549 In order to get this fixed it�s important to manually apply the fix described on that page when using a version lower than Magento 2.1.8.
 + Online refunding when using a storeview currency causes issues because Magento provides the base amount. When converting we have rounding issues causing a mismatch when refunding. After investigation we found an overall issue with refunding and for now have disabled refunding from within Magento. A new refunding implementation will be added to the next release.(1.4.5)
 
 ***
@@ -223,7 +255,7 @@ Release date: May 24th, 2017
 ### Bugs
 + Fixed compilation errors
 + Fixed the shippping title used
-+ Fixed an issue with the stock articles
++ Fixed an issue with the stock pages
 
 ***
 
@@ -259,7 +291,7 @@ Release date: May 17th, 2017
 + Logging is now done within the Client and logs requests/responses to var/log/multisafepay.log.
 + Added process locking to solve double invoice and orders when processes start simultaneously
 + Added a check for the total paid amount. On some installations this is not updated, causing the order not to go to complete after shipment.
-+ Removed the bank transfer url from the order comment for manual created orders as there is no need to communicate the success url as normally it would be an url to the payment pages
++ Removed the bank transfer URL from the order comment for manual created orders as there is no need to communicate the success URL as normally it would be an URL to the Payment pages
 + The cart is now correctly active on cancel or when using the back button
 + When the transaction status is uncleared, a comment is added to the order about this. The order will not be set to payment review and will go to completed once the transaction has been approved. This now works like in the Magento 1 plugin.
 + Added version to menu item
@@ -335,7 +367,7 @@ Release date: Jul 21th, 2016
 + This fix sets the payment method to disabled by default, so it only has to be enabled to show it on the frontend. This change was needed because of PLGMAGTWO-25. PLGMAGTWO-25 now sets the restrictions by default, causing all payment methods to show on config save. PLGMAGTWO-24 prevents everything to show as it must be enabled first.
 + Check was not complete as we checked if the house number was set, not if it had an empty value, causing the check to fail and no house number to be added to the transaction request. This caused a rejection for Klarna.
 + Added gateway images in the same format as the default PayPal plugin. Restructured the folder so in is setup in a way it can be copied to the root of the Magento installation as it was not clear for merchants that the code folder needed to be created when it was not existing yet. Added all images.
-+ Changed the bank transfer payment method to a "direct" payment method. This will remove the MultiSafepay payment page and submit the payment details by email to the consumer.
++ Changed the bank transfer payment method to a "direct" payment method. This will remove the MultiSafepay Payment page and submit the payment details by email to the customer.
 
 ***
 
