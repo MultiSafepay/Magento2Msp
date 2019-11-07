@@ -41,6 +41,7 @@ use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\AppInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
@@ -62,10 +63,10 @@ use Magento\Sales\Model\OrderNotifier;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\Data as HelperData;
+use MultiSafepay\Connect\Helper\RefundHelper;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
-use MultiSafepay\Connect\Helper\RefundHelper;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -221,6 +222,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $refundHelper;
     protected $restrictions;
 
+    protected $dataObjectFactory;
+
     /**
      * Connect constructor.
      *
@@ -290,6 +293,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Customer\Model\Session $customerSession,
         RefundHelper $refundHelper,
         GatewayRestrictions $restrictions,
+        DataObjectFactory $dataObjectFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -306,6 +310,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $resourceCollection,
             $data
         );
+
+        $this->dataObjectFactory = $dataObjectFactory;
         $this->_customerSession = $customerSession;
         $this->_client = $mspClient;
         $this->_checkoutSession = $checkoutSession;
@@ -550,7 +556,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
         try {
-            $this->_client->orders->post([
+            $mspOrderData = [
                 "type" => $type,
                 "order_id" => $order->getIncrementId(),
                 "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
@@ -602,7 +608,19 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 ],
                 "shopping_cart" => $shoppingCart,
                 "checkout_options" => $checkoutData,
-            ]);
+            ];
+
+            $mspOrderDataObject = $this->dataObjectFactory->create();
+            $mspOrderDataObject->setData('orderData', $mspOrderData);
+
+            $this->_eventManager->dispatch(
+                'before_send_msp_transaction_request',
+                ['order' => $order, 'mspOrderData' => $mspOrderDataObject]
+            );
+
+            $mspOrderData = $mspOrderDataObject->getData('orderData');
+            $this->_client->orders->post($mspOrderData);
+
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             return false;
         }
