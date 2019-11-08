@@ -1426,9 +1426,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $quote = $this->_checkoutSession->getQuote();
         }
         //Check amount restrictions
-        if ($quote && (
-                $quote->getBaseGrandTotal() < $this->_minAmount || ($this->_maxAmount && $quote->getBaseGrandTotal() > $this->_maxAmount))
-        ) {
+        if ($quote &&
+            (
+                $quote->getBaseGrandTotal() < $this->_minAmount ||
+                (
+                    $this->_maxAmount && $quote->getBaseGrandTotal() > $this->_maxAmount
+                )
+            )) {
             return false;
         }
 
@@ -1437,7 +1441,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
 
-        //Check currency rescrictions
+        //Check currency restrictions
         $allowedCurrencies = explode(',', $this->getConfigData('allowed_currency'));
         if (!in_array($quote->getQuoteCurrencyCode(), $allowedCurrencies)) {
             return false;
@@ -1704,9 +1708,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 return true;
             }
             return strpos($this->getConfigData('allowed_carrier'), $shippingMethod) !== false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
