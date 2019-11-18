@@ -951,6 +951,45 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             )
         );
 
+        /*
+         * Start support for custom totals
+         */
+        $storeId = $this->getStore();
+        $path = 'multisafepay/connect/advanced/custom_totals';
+        $customTotalConfig = $this->_scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+
+        if (isset($customTotalConfig)) {
+            $totals = $this->_checkoutSession->getQuote()->getTotals();
+
+            $customTotals = explode(';', $customTotalConfig);
+
+            foreach ($customTotals as $customTotal) {
+                if (isset($totals[(trim($customTotal))])) {
+                    $customTotalCode = $totals[(trim($customTotal))]->getData('code');
+                    $customTotalPrice = $totals[(trim($customTotal))]->getData('value');
+                    $customTotalTitle = $totals[(trim($customTotal))]->getData('title');
+
+                    $shoppingCart['shopping_cart']['items'][] = [
+                        'name' => $customTotalTitle,
+                        'description' => $customTotalTitle,
+                        'unit_price' => $customTotalPrice,
+                        'quantity' => '1',
+                        'merchant_item_id' => $customTotalCode,
+                        'tax_table_selector' => 'customTotalBTW0',
+                        'weight' => [
+                            'unit' => 'KG',
+                            'value' => '0',
+                        ]
+                    ];
+                }
+            }
+            $alternateTaxRates['tax_tables']['alternate'][] = [
+                'standalone' => 'true',
+                'name' => 'customTotalBTW0',
+                'rules' => [
+                    ['rate' => '0.00']]
+            ];
+        }
 
         /*
          * Start Payment fee support for official MultiSafepay payment fee extension
