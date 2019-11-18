@@ -84,15 +84,15 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <comment>All API request will be stored within var/log/multisafepay.log</comment>
         </field>
-      </group>
-      <group id="advanced" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Advanced Settings</label>
-        <field id="custom_totals" translate="label" type="text" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Add custom totals</label>
-          <comment>
-            Fill in the custom total code(s) to add them to the shopping cart in the gateway checkout page. Semicolon (;) separated values.
-          </comment>
-        </field>
+        <group id="advanced" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Advanced Settings</label>
+          <field id="custom_totals" translate="label" type="text" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Add custom totals</label>
+            <comment>
+              Fill in the custom total code(s) to add them to the shopping cart in the gateway checkout page. Semicolon (;) separated values.
+            </comment>
+          </field>
+        </group>
       </group>
     </section>
     <section id="gateways" translate="label" type="text" sortOrder="402" showInDefault="1" showInWebsite="1" showInStore="1">
