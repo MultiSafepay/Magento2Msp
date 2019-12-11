@@ -33,8 +33,19 @@ namespace MultiSafepay\Connect\Model\Gateways;
 
 class Betaalnaontvangst extends \MultiSafepay\Connect\Model\Connect
 {
-
     protected $_code = 'betaalnaontvangst';
     public $_gatewayCode = 'PAYAFTER';
     protected $_canUseInternal = false;
+
+    public function validate()
+    {
+        $quote = $this->_checkoutSession->getQuote();
+
+        if (!$this->addressHelper->isSameAddress($quote->getShippingAddress(), $quote->getBillingAddress())) {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('This gateway does not allow a different billing and shipping address')
+            );
+        }
+        return parent::validate();
+    }
 }

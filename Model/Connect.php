@@ -62,6 +62,7 @@ use Magento\Sales\Model\Order\StatusResolver;
 use Magento\Sales\Model\OrderNotifier;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use MultiSafepay\Connect\Helper\AddressHelper;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Helper\RefundHelper;
 use MultiSafepay\Connect\Model\Api\MspClient;
@@ -223,6 +224,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $restrictions;
 
     protected $dataObjectFactory;
+    /**
+     * @var AddressHelper
+     */
+    protected $addressHelper;
 
     /**
      * Connect constructor.
@@ -255,6 +260,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \MultiSafepay\Connect\Helper\Data                            $helperData
      * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
      * @param \Magento\Customer\Model\Session                              $customerSession
+     * @param \MultiSafepay\Connect\Helper\AddressHelper                   $addressHelper
      * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
      * @param \MultiSafepay\Connect\Model\GatewayRestrictions              $restrictions
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
@@ -292,6 +298,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
         RefundHelper $refundHelper,
+        AddressHelper $addressHelper,
         GatewayRestrictions $restrictions,
         DataObjectFactory $dataObjectFactory,
         AbstractResource $resource = null,
@@ -319,6 +326,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_urlBuilder = $urlBuilder;
         $this->_requestHttp = $requestHttp;
         $this->_currencyFactory = $currencyFactory;
+        $this->addressHelper = $addressHelper;
         $this->refundHelper = $refundHelper;
         $this->restrictions = $restrictions;
 
