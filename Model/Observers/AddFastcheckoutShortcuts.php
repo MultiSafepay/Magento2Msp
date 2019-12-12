@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Copyright © 2013-2017 Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
 namespace MultiSafepay\Connect\Model\Observers;
 
 use MultiSafepay\Connect\Block\Fastcheckout\Button;

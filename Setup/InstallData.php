@@ -17,8 +17,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -58,7 +58,6 @@ class InstallData implements InstallDataInterface
     public function __construct(
         SalesSetupFactory $salesSetupFactory,
         NotifierInterface $notifier
-
     ) {
         $this->salesSetupFactory = $salesSetupFactory;
         $this->notifier = $notifier;
@@ -72,7 +71,11 @@ class InstallData implements InstallDataInterface
 
         $installer->startSetup();
 
-        $this->notifier->addNotice('MultiSafepay install', 'MultiSafepay: Check out our documentation page to setup your webshop');
+        $this->notifier->addNotice(
+            'MultiSafepay install',
+            'MultiSafepay: Check out our documentation page to setup your webshop',
+            'https://docs.multisafepay.com/integrations/magento2/manual/'
+        );
 
         $tableName = $installer->getConnection()->getTableName(
             'sales_order_grid'

@@ -16,8 +16,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -86,11 +86,11 @@ class MultisafepayTokenization extends AbstractModel implements
         return $returnArray;
     }
 
-    public function hideRecurringExpiredIds($array = []){
+    public function hideRecurringExpiredIds($array = [])
+    {
 
             $id = $this->getResource()->hideRecurringExpiredIds($array);
             return $id;
-
     }
 
     public function getIdByOrderId($orderId)

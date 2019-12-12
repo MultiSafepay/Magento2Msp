@@ -32,7 +32,7 @@ class FastcheckoutConfigProvider implements \Magento\Checkout\Model\ConfigProvid
 
     public function getConfig()
     {
-        $config = array();
+        $config = [];
         $config = array_merge_recursive($config, [
             'payment' => [
                 'connect' => [

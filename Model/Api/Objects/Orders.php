@@ -17,8 +17,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -45,7 +45,7 @@ class Orders extends Core
         return $result;
     }
 
-    public function get($type, $id, $body = array(), $query_string = false)
+    public function get($type, $id, $body = [], $query_string = false)
     {
         $result = parent::get($type, $id, $body, $query_string);
         $this->success = $result->success;
@@ -59,7 +59,7 @@ class Orders extends Core
 
         if (!empty($result->error_code)) {
             $this->success = null;
-            $this->data = (object) array('payment_url' => null);
+            $this->data = (object) ['payment_url' => null];
         } else {
             $this->success = $result->success;
             $this->data = $result->data;

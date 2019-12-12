@@ -1,0 +1,142 @@
+version: 2.1
+commands:
+  pre_commands:
+    steps:
+      - run:
+          name: Install System Package
+          command: |
+            sudo apt-get update
+            sudo apt install -y libicu-dev libxml2-dev libxslt1-dev zlib1g-dev libmcrypt-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+      - run:
+          name: Install PHP extension
+          command: |
+            sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+            sudo -E docker-php-ext-install -j$(nproc) intl soap xsl zip mcrypt pdo pdo_mysql gd gettext mbstring bcmath
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.1-apache-node-browsers
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_PASSWORD: mage
+          MYSQL_USER: mage
+          MYSQL_DATABASE: magento
+          MYSQL_ROOT_PASSWORD: docker
+    environment:
+      MAGENTO_VERSION: "2.3.2"
+    working_directory: /var/www/html
+    steps:
+      - pre_commands
+      - run:
+          name: Downloading Magento CE
+          command: git clone -b $MAGENTO_VERSION --single-branch --depth=1 https://github.com/magento/magento2.git .
+      - restore_cache:
+          key: -v1-{{ checksum "/var/www/html/composer.json"}}
+      - run:
+          name: Composer install
+          command: |
+            composer install --prefer-dist
+      - save_cache:
+          key: -v1-{{ checksum "/var/www/html/composer.json"}}
+          paths:
+            - /var/www/html/vendor
+      - checkout:
+          path: /var/www/html/app/code/MultiSafepay/Connect/
+      - persist_to_workspace:
+          root: /var/www/
+          paths:
+            - html
+  code_sniffer:
+    working_directory: /var/www/html
+    docker:
+      - image: circleci/php:7.1-apache-node-browsers
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_PASSWORD: mage
+          MYSQL_USER: mage
+          MYSQL_DATABASE: magento
+          MYSQL_ROOT_PASSWORD: docker
+    steps:
+      - pre_commands
+      - attach_workspace:
+          at: /var/www/html
+      - run:
+          name: Run Magento 2 code sniffer
+          command: |
+            cd html
+            vendor/bin/phpcs -v --error-severity=1 --warning-severity=0 --exclude="Magento2.Security.LanguageConstruct" -s --standard=vendor/magento/magento-coding-standard/Magento2/ruleset.xml /var/www/html/html/app/code/MultiSafepay/Connect/
+  mess_detector:
+    working_directory: /var/www/html
+    docker:
+      - image: circleci/php:7.1-apache-node-browsers
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_PASSWORD: mage
+          MYSQL_USER: mage
+          MYSQL_DATABASE: magento
+          MYSQL_ROOT_PASSWORD: docker
+    environment:
+      MAGENTO_VERSION: "2.3"
+    steps:
+      - pre_commands
+      - attach_workspace:
+          at: /var/www/html
+      - run:
+          name: Run codesniffer
+          command: |
+            cd html
+            ./vendor/bin/phpmd ./app/code/MultiSafepay/Connect/ text ./dev/tests/static/testsuite/Magento/Test/Php/_files/phpmd/ruleset.xml
+  yireo:
+    working_directory: /var/www/html
+    docker:
+      - image: circleci/php:7.1-apache-node-browsers
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_PASSWORD: mage
+          MYSQL_USER: mage
+          MYSQL_DATABASE: magento
+          MYSQL_ROOT_PASSWORD: docker
+    environment:
+      MAGENTO_VERSION: "2.3"
+    steps:
+      - pre_commands
+      - attach_workspace:
+          at: /var/www/html
+      - run:
+          name: Install Magento 2
+          command: |
+            cd html
+            ./bin/magento setup:install --backend-frontname admin --db-host 127.0.0.1 --db-name magento --db-user mage --db-password mage --base-url http://magento2.docker/ --language en_US --timezone Europe/Amsterdam --currency EUR --admin-lastname Admin --admin-firstname Admin --admin-email admin@example.com --admin-user admin --admin-password admin123 --cleanup-database --use-rewrites 1
+      - run:
+          name: Download Yireo Extension Checker
+          command: |
+            cd html
+            composer require --dev yireo/magento2-extensionchecker
+      - run:
+          name: Upgrade Magento 2 plugins
+          command: |
+            cd html
+            ./bin/magento setup:upgrade
+      - run:
+          name: Run Yireo
+          command: |
+            cd html
+            bin/magento module:enable Yireo_ExtensionChecker
+            bin/magento yireo_extensionchecker:scan MultiSafepay_Connect
+workflows:
+  version: 2
+  default_check:
+    jobs:
+      - build
+      - code_sniffer:
+          requires:
+            - build
+#      - mess_detector:
+#          requires:
+#            - build
+#      - yireo:
+#          requires:
+#            - build

@@ -17,8 +17,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -59,11 +59,13 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\StatusResolver;
 use Magento\Sales\Model\OrderNotifier;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+use MultiSafepay\Connect\Helper\RefundHelper;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -216,6 +218,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $logger;
     public $_manualGateway = null;
     public $_isAdmin = false;
+    protected $refundHelper;
+    protected $restrictions;
 
     /**
      * Connect constructor.
@@ -248,6 +252,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \MultiSafepay\Connect\Helper\Data                            $helperData
      * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
      * @param \Magento\Customer\Model\Session                              $customerSession
+     * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
+     * @param \MultiSafepay\Connect\Model\GatewayRestrictions              $restrictions
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
      * @param array                                                        $data
@@ -277,12 +283,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         OrderNotifier $orderNotifier,
         StatusResolver $statusResolver,
         CurrencyFactory $currencyFactory,
-
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
         HelperData $helperData,
         Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
+        RefundHelper $refundHelper,
+        GatewayRestrictions $restrictions,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -306,6 +313,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_urlBuilder = $urlBuilder;
         $this->_requestHttp = $requestHttp;
         $this->_currencyFactory = $currencyFactory;
+        $this->refundHelper = $refundHelper;
+        $this->restrictions = $restrictions;
 
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
@@ -367,7 +376,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
     }
 
-    public function transactionRequest($order, $productRepo = null, $resetGateway = false)
+    public function transactionRequest($order, $resetGateway = false)
     {
         $params = $this->_requestHttp->getParams();
 
@@ -386,9 +395,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if (isset($params['creditcard'])) {
             $this->_gatewayCode = $params['creditcard'];
-        } elseif ( isset($params['recurring_hash'])
-            && in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported()))
-        {
+        } elseif (isset($params['recurring_hash'])
+            && in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported())) {
             $this->_gatewayCode = $params['recurring_hash'];
         }
 
@@ -438,7 +446,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $use_base_currency = $this->getMainConfigData('transaction_currency');
 
-        $checkoutData = $this->getCheckoutData($order, $productRepo, $use_base_currency);
+        $checkoutData = $this->getCheckoutData($order, $use_base_currency);
         $shoppingCart = $checkoutData["shopping_cart"];
         $checkoutData = $checkoutData["checkout_options"];
 
@@ -468,7 +476,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $shipping_phone = $shipping->getTelephone();
             }
 
-            $delivery_data = array(
+            $delivery_data = [
                 "first_name" => $shipping->getFirstName(),
                 "last_name" => $shipping->getLastName(),
                 "address1" => $shipping_street,
@@ -480,9 +488,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "country" => $shipping->getCountryId(),
                 "phone" => $shipping_phone,
                 "email" => $order->getCustomerEmail()
-            );
+            ];
         } else {
-            $delivery_data = array();
+            $delivery_data = [];
         }
 
 
@@ -522,7 +530,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             && $this->_mspHelper->isEnabled('tokenization')
             && isset($params['save'])
             && filter_var($params['save'], FILTER_VALIDATE_BOOLEAN)
-            && (in_array($params['recurring_hash'],$this->_creditcards->tokenizationSupported()) || empty($params['recurring_hash']))
+            && (in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported()) || empty($params['recurring_hash']))
         ) {
 
             $model = $this->_mspToken->create();
@@ -542,7 +550,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
         try {
-            $this->_client->orders->post(array(
+            $this->_client->orders->post([
                 "type" => $type,
                 "order_id" => $order->getIncrementId(),
                 "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
@@ -560,13 +568,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "second_chance" => [
                     "send_email" => $this->_isAdmin ? false : true
                 ],
-                "payment_options" => array(
+                "payment_options" => [
                     "notification_url" => $notification,
                     "redirect_url" => $redirecturl,
                     "cancel_url" => $cancelurl,
                     "close_window" => "true"
-                ),
-                "customer" => array(
+                ],
+                "customer" => [
                     "locale" => $resolver->getLocale(),
                     "ip_address" => $ip_address,
                     "forwarded_ip" => $forwarded_ip,
@@ -581,27 +589,27 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "country" => $billing->getCountryId(),
                     "phone" => $phone,
                     "email" => $order->getCustomerEmail(),
-                ),
+                ],
                 "delivery" => $delivery_data,
-                "plugin" => array(
+                "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.7.1',
+                    "plugin_version" => ' - Plugin 1.8.0',
                     "partner" => "MultiSafepay",
-                ),
-                "gateway_info" => array(
+                ],
+                "gateway_info" => [
                     "issuer_id" => !empty($this->issuer_id) ? $this->issuer_id : null,
-                ),
+                ],
                 "shopping_cart" => $shoppingCart,
                 "checkout_options" => $checkoutData,
-            ));
+            ]);
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             return false;
         }
 
         if ($this->_gatewayCode != "BANKTRANS") {
             $order->addStatusToHistory($order->getStatus(), "User redirected to MultiSafepay" . '<br/>' . "Payment link:" . '<br/>' . htmlspecialchars($this->_client->orders->getPaymentLink()), false);
-            $order->getPayment()->setAdditionalInformation('payment_link',$this->_client->orders->getPaymentLink());
+            $order->getPayment()->setAdditionalInformation('payment_link', $this->_client->orders->getPaymentLink());
             $order->save();
         } else {
             $order->addStatusToHistory($order->getStatus(), "Bank transfer transaction started, waiting for payment", false);
@@ -672,7 +680,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
 
-        $shipped = array();
+        $shipped = [];
         $shipped['success'] = false;
         $shipped['error'] = false;
         $payment = $order->getPayment()->getMethodInstance();
@@ -703,12 +711,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $endpoint = 'orders/' . $id;
         $this->_client->orders->patch(
-            array(
+            [
                 "tracktrace_code" => $tracking_number,
                 "carrier" => $order->getShippingDescription(),
                 "ship_date" => date('Y-m-d H:i:s'),
                 "reason" => 'Shipped'
-            ),
+            ],
             $endpoint
         );
 
@@ -720,10 +728,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         return $shipped;
     }
 
-    public function getCheckoutData($order, $productRepo, $use_base_currency)
+    /**
+     * @param Order $order
+     * @param $use_base_currency
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCheckoutData(Order $order, $use_base_currency)
     {
-        $alternateTaxRates = array();
-        $shoppingCart = array();
+        $alternateTaxRates = [];
+        $shoppingCart = [];
         $items = $order->getAllItems();
 
         foreach ($items as $item) {
@@ -746,17 +760,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $rate = '0.00';
             }
 
-            $alternateTaxRates['tax_tables']['alternate'][] = array(
+            $alternateTaxRates['tax_tables']['alternate'][] = [
                 "standalone" => "true",
                 "name" => $taxClass,
-                "rules" => array(
-                    array("rate" => $rate)
-                ),
-            );
-
-
-            $weight = (float) $item->getWeight();
-            $product_id = $item->getProductId();
+                "rules" => [
+                    ["rate" => $rate]
+                ],
+            ];
 
             // name and options
             $itemName = $item->getName();
@@ -773,59 +783,35 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $itemName .= ')';
             }
 
-
-            $proddata = $productRepo->load($product_id);
             $ndata = $item->getData();
 
             if ($ndata['price'] != 0) {
+
+                $storeId = $this->getStore();
                 if ($use_base_currency) {
                     $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
-                    $tierprices = $proddata->getTierPrice();
-                    if (count($tierprices) > 0) {
-                        $product_tier_prices = (object) $tierprices;
-                        foreach ($product_tier_prices as $key => $value) {
-                            $value = (object) $value;
-                            if ($quantity >= $value->price_qty) {
-                                if ($ndata['base_price'] < $value->price) {
-                                    $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
-                                } else {
-                                    $price = $value->price - ($item->getBaseDiscountAmount() / $quantity);
-                                }
-                            }
-                            $price = $price;
-                        }
-                    }
-
-                    $storeId = $this->getStore();
 
                     // Fix for 1027 with catalog prices including tax
-                    if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                        $price = (($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
+                    if ($this->_scopeConfig->getValue(
+                        'tax/calculation/price_includes_tax',
+                        ScopeInterface::SCOPE_STORE,
+                        $storeId
+                    )) {
+                        $price = (($item->getBaseRowTotalInclTax() - $item->getBaseDiscountAmount()) /
+                            $quantity / (1 + ($item->getTaxPercent() / 100)));
                         $price = round($price, 10);
                     }
                 } else {
                     $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
-                    $tierprices = $proddata->getTierPrice();
-                    if (count($tierprices) > 0) {
-                        $product_tier_prices = (object) $tierprices;
-                        foreach ($product_tier_prices as $key => $value) {
-                            $value = (object) $value;
-                            if ($quantity >= $value->price_qty) {
-                                if ($ndata['price'] < $value->price) {
-                                    $price = $ndata['price'] - ($item->getDiscountAmount() / $quantity);
-                                } else {
-                                    $price = $value->price - ($item->getDiscountAmount() / $quantity);
-                                }
-                            }
-                            $price = $price;
-                        }
-                    }
-
-                    $storeId = $this->getStore();
 
                     // Fix for 1027 with catalog prices including tax
-                    if ($this->_scopeConfig->getValue('tax/calculation/price_includes_tax', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
-                        $price = (($item->getRowTotalInclTax() - $item->getDiscountAmount()) / $quantity / (1 + ($item->getTaxPercent() / 100)));
+                    if ($this->_scopeConfig->getValue(
+                        'tax/calculation/price_includes_tax',
+                        ScopeInterface::SCOPE_STORE,
+                        $storeId
+                    )) {
+                        $price = (($item->getRowTotalInclTax() - $item->getDiscountAmount()) /
+                            $quantity / (1 + ($item->getTaxPercent() / 100)));
                         $price = round($price, 10);
                     }
                 }
@@ -843,49 +829,49 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                 $amount = $tax->amount;
                             }
 
-                            if (!$this->_scopeConfig->getValue('tax/weee/apply_vat', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId)) {
+                            if (!$this->_scopeConfig->getValue('tax/weee/apply_vat', ScopeInterface::SCOPE_STORE, $storeId)) {
                                 $weetaxClass = 'BTW0';
-                                $alternateTaxRates['tax_tables']['alternate'][] = array(
+                                $alternateTaxRates['tax_tables']['alternate'][] = [
                                     "standalone" => "true",
                                     "name" => "BTW0",
-                                    "rules" => array(
-                                        array("rate" => "0.00")
-                                    ),
-                                );
+                                    "rules" => [
+                                        ["rate" => "0.00"]
+                                    ],
+                                ];
                             } else {
                                 $weetaxClass = $taxClass;
                             }
 
-                            $shoppingCart['shopping_cart']['items'][] = array(
+                            $shoppingCart['shopping_cart']['items'][] = [
                                 "name" => $tax->title,
                                 "description" => $tax->title,
                                 "unit_price" => $amount,
                                 "quantity" => $quantity,
                                 "merchant_item_id" => 'FPT',
                                 "tax_table_selector" => $weetaxClass,
-                                "weight" => array(
+                                "weight" => [
                                     "unit" => "KG",
                                     "value" => "0",
-                                )
-                            );
+                                ]
+                            ];
                         }
                     }
                 }
 
 
 
-                $shoppingCart['shopping_cart']['items'][] = array(
+                $shoppingCart['shopping_cart']['items'][] = [
                     "name" => $itemName,
                     "description" => $item->getDescription(),
                     "unit_price" => $price,
                     "quantity" => $quantity,
                     "merchant_item_id" => $item->getId(),
                     "tax_table_selector" => $taxClass,
-                    "weight" => array(
+                    "weight" => [
                         "unit" => "KG",
                         "value" => $item->getWeight(),
-                    )
-                );
+                    ]
+                ];
             }
         }
 
@@ -929,27 +915,27 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $price = $shippin_exc_tac_calculated;
-        $alternateTaxRates['tax_tables']['alternate'][] = array(
+        $alternateTaxRates['tax_tables']['alternate'][] = [
             "standalone" => "true",
             "name" => $shipping_percentage,
-            "rules" => array(
-                array("rate" => $shipping_percentage)
-            ),
-        );
+            "rules" => [
+                ["rate" => $shipping_percentage]
+            ],
+        ];
 
 
-        $shoppingCart['shopping_cart']['items'][] = array(
+        $shoppingCart['shopping_cart']['items'][] = [
             "name" => $title,
             "description" => 'Shipping',
             "unit_price" => $price,
             "quantity" => "1",
             "merchant_item_id" => 'msp-shipping',
             "tax_table_selector" => $shipping_percentage,
-            "weight" => array(
+            "weight" => [
                 "unit" => "KG",
                 "value" => "0",
-            )
-        );
+            ]
+        ];
 
 
         /*
@@ -964,18 +950,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $fee_title = $objectManager->create('MultiSafepay\PaymentFee\Helper\Data')->_getMethodDescription($order->getPayment()->getMethod());
-            $shoppingCart['shopping_cart']['items'][] = array(
+            $shoppingCart['shopping_cart']['items'][] = [
                 "name" => $fee_title,
                 "description" => $fee_title,
                 "unit_price" => $payment_fee,
                 "quantity" => "1",
                 "merchant_item_id" => 'payment-fee',
                 "tax_table_selector" => '0.00',
-                "weight" => array(
+                "weight" => [
                     "unit" => "KG",
                     "value" => "0",
-                )
-            );
+                ]
+            ];
         } else {
             /*
              * Start Fooman Surcharge support
@@ -1001,26 +987,26 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                         $percentage = "0.00";
                                     }
 
-                                    $shoppingCart['shopping_cart']['items'][] = array(
+                                    $shoppingCart['shopping_cart']['items'][] = [
                                         "name" => $total->getLabel(),
                                         "description" => $total->getLabel(),
                                         "unit_price" => $total->getBaseAmount(),
                                         "quantity" => "1",
                                         "merchant_item_id" => 'payment-fee',
                                         "tax_table_selector" => $percentage,
-                                        "weight" => array(
+                                        "weight" => [
                                             "unit" => "KG",
                                             "value" => "0",
-                                        )
-                                    );
+                                        ]
+                                    ];
 
-                                    $alternateTaxRates['tax_tables']['alternate'][] = array(
+                                    $alternateTaxRates['tax_tables']['alternate'][] = [
                                         "standalone" => "true",
                                         "name" => $percentage,
-                                        "rules" => array(
-                                            array("rate" => $percentage)
-                                        ),
-                                    );
+                                        "rules" => [
+                                            ["rate" => $percentage]
+                                        ],
+                                    ];
                                 }
                             }
                         }
@@ -1062,7 +1048,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
 
-        $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = array(), $query_string = false);
+        $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = [], $query_string = false);
 
         //$this->logger->info(print_r($msporder, true));
         //Avoid errors shown to consumer when there was an error on requesting the transaction status
@@ -1089,8 +1075,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
                 $customerRecurringIds
                     = $this->_mspHelper->getRecurringIdsByCustomerId(
-                    $customerID, true
-                );
+                        $customerID,
+                        true
+                    );
 
                 $lastElm = end($customerRecurringIds);
 
@@ -1108,12 +1095,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                             $model = $this->_mspToken->create()->load($id);
 
                             $model->setData(
-                                "recurring_id", $this->_mspHelper->encrypt(
-                                $msporder->payment_details->recurring_id
-                            )
+                                "recurring_id",
+                                $this->_mspHelper->encrypt(
+                                    $msporder->payment_details->recurring_id
+                                )
                             );
                             $model->setData(
-                                "last_4", $msporder->payment_details->last4
+                                "last_4",
+                                $msporder->payment_details->last4
                             );
                             $model->setData(
                                 "expiry_date",
@@ -1337,11 +1326,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $payment->setIsTransactionApproved(true);
             $payment->save();
 
-            if((float)$order->getBaseGrandTotal() != ($msporder->amount / 100)) {
+            if ((float)$order->getBaseGrandTotal() != ($msporder->amount / 100)) {
                 $MspCurrency  = $this->_currencyFactory->create()->load($msporder->currency);
                 $order->addStatusToHistory(
                     $order->getStatus(),
-                    __("Notice: Captured amount %1 differs from MultiSafepay amount %2",
+                    __(
+                        "Notice: Captured amount %1 differs from MultiSafepay amount %2",
                         $order->getBaseCurrency()->formatTxt($order->getBaseGrandTotal()),
                         $MspCurrency->formatTxt((float)$msporder->amount / 100)
                     ),
@@ -1349,9 +1339,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 );
             }
 
-            $transdetails = array();
+            $transdetails = [];
             $transdetails['Fastcheckout'] = $msporder->fastcheckout;
-            $transaction = $payment->addTransaction('capture', null, false, 'multisafepay');
+            $transaction = $payment->addTransaction('capture', null, true, 'multisafepay');
             $transaction->setParentTxnId($msporder->transaction_id);
             $transaction->setIsClosed(1);
             $transaction->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS, $transdetails);
@@ -1362,12 +1352,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $order->addStatusToHistory($order->getStatus(), $line);
             }
 
-            if ($payment->getMethodInstance()->getCode() == 'klarnainvoice') {
-                $order->addStatusToHistory($order->getStatus(), "<b>Klarna Reservation number:</b>" . $this->_client->orders->data->payment_details->external_transaction_id, false);
-            }
-
             // Force order to Processing to solve https://github.com/magento/magento2/issues/18148
-            $state = Order::STATE_PROCESSING;            
+            $state = Order::STATE_PROCESSING;
             $status = $this->_statusResolver->getOrderStatusByState($order, $state);
             $order->setState($state);
             $order->setStatus($status);
@@ -1384,9 +1370,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
                     try {
                         $neworder = $this->_client->orders->patch(
-                            array(
+                            [
                                 "invoice_id" => $invoice->getIncrementId(),
-                            ),
+                            ],
                             $endpoint
                         );
 
@@ -1428,12 +1414,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
 
-
         //Don't show payment method based on main configuration settings
         if ($this->getCode() == 'connect') {
             return false;
         }
-
 
         //Check currency rescrictions
         $allowedCurrencies = explode(',', $this->getConfigData('allowed_currency'));
@@ -1441,14 +1425,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
 
-
-
-        //Check customer group restrictions
-        $allowedGroups = explode(',', $this->getConfigData('allowed_groups'));
-        if (!in_array($quote->getCustomerGroupId(), $allowedGroups)) {
+        //Don't show payment method if group is not allowed
+        if (!$this->restrictions->isGroupAllowed(
+            $quote->getCustomerGroupId(),
+            $this->getConfigData('allowed_groups')
+        )) {
             return false;
         }
-
 
         return parent::isAvailable($quote) && $this->isCarrierAllowed(
             $quote->getShippingAddress()->getShippingMethod()
@@ -1465,6 +1448,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
+        //Prevent 0 refunds (full refund)
+        if ($amount <= 0) {
+            return $this;
+        }
+
         $transaction_id = $payment->getParentTransactionId();
         $order = $payment->getOrder();
         $transactionRepository = $this->_transactionRepositoryInterface;
@@ -1487,9 +1475,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             //Get the creditmemo data as this is not yet stored at this moment.
             $data = $this->_requestHttp->getPost('creditmemo');
             //Do a status request for this order to receive already refunded item data from MSP transaction
-            $msporder = $this->_client->orders->get('orders', $id, $body = array(), $query_string = false);
+            $msporder = $this->_client->orders->get('orders', $id, $body = [], $query_string = false);
             $originalCart = $msporder->shopping_cart;
-            $refundData = array();
+            $refundData = [];
 
             foreach ($originalCart->items as $key => $item) {
                 if ($item->unit_price > 0) {
@@ -1594,6 +1582,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     $refundData['checkout_data']['items'][] = $refundItem;
                 }
             }
+
+            // Calculate adjustments
+            $adjustmentLines = $this->refundHelper->getAdjustmentOrderLines($data, $order);
+            foreach ($adjustmentLines as $adjustmentLine) {
+                $refundData['checkout_data']['items'][] = $adjustmentLine;
+            }
         } else {
             /*
              * Because we support transactions based on base- and storeview currency, we must check if we use the correct amount to refund i.c.m. with the correct currency
@@ -1608,11 +1602,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $currency = $order->getOrderCurrencyCode();
             }
 
-            $refundData = array(
+            $refundData = [
                 "amount" => $refund_amount * 100,
                 "currency" => $currency,
                 "description" => "Refund: " . $id,
-            );
+            ];
         }
 
         try {
@@ -1802,7 +1796,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $address1 = trim($address1);
         $address2 = trim($address2);
         $fullAddress = trim("{$address1} {$address2}");
-        $fullAddress = preg_replace("/[[:blank:]]+/"," ",$fullAddress);
+        $fullAddress = preg_replace("/[[:blank:]]+/", " ", $fullAddress);
 
         // Make array of all regex matches
         $matches = [];

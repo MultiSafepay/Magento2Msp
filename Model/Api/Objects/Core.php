@@ -17,8 +17,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -59,7 +59,7 @@ class Core
         return $this->result;
     }
 
-    public function get($endpoint, $id, $body = array(), $query_string = false)
+    public function get($endpoint, $id, $body = [], $query_string = false)
     {
         if (!$query_string) {
             $url = "{$endpoint}/{$id}";
@@ -75,7 +75,7 @@ class Core
     protected function processRequest($http_method, $api_method, $http_body = null)
     {
         $body = $this->mspapi->processAPIRequest($http_method, $api_method, $http_body);
-        if (!($object = @json_decode($body))) {
+        if (!($object = json_decode($body))) {
             throw new \Exception("'{$body}'.");
         }
 

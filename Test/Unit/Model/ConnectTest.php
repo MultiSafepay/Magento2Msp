@@ -34,7 +34,10 @@ class ConnectTest extends TestCase
      * @dataProvider addressProvider
      */
     public function testparseAddress(
-        $address1, $address2, $expected_street, $expected_apartment
+        $address1,
+        $address2,
+        $expected_street,
+        $expected_apartment
     ) {
         $result = $this->connect->parseAddress($address1, $address2);
         $this->assertEquals($expected_street, $result[0]);
@@ -166,5 +169,4 @@ class ConnectTest extends TestCase
             ]
         ];
     }
-
 }

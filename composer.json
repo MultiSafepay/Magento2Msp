@@ -2,10 +2,18 @@
     "name": "multisafepay/magento2msp",
     "description": "MultiSafepay module for Magento2",
     "type": "magento2-module",
-    "version": "1.7.1",
+    "version": "1.8.0",
     "license": [
         "OSL-3.0"
     ],
+    "require": {
+        "magento/framework": "^100.1|^101.0|^102.0",
+        "magento/module-payment": "100.1.*|100.2.*|100.3.*",
+        "magento/module-sales": "^100.1.9|^101.0|^102.0",
+        "php": ">=7.0",
+        "ext-json": "*",
+        "ext-pcre": "*"
+    },
     "autoload": {
         "files": [
             "registration.php"

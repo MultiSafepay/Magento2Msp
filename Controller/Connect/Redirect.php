@@ -17,8 +17,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -31,8 +31,8 @@
 
 namespace MultiSafepay\Connect\Controller\Connect;
 
-use Magento\Catalog\Model\Product;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -44,26 +44,32 @@ use MultiSafepay\Connect\Model\Connect;
  * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
-class Redirect extends \Magento\Framework\App\Action\Action
+class Redirect extends Action
 {
     protected $_session;
     protected $_order;
     protected $_mspConnect;
-    protected $_product;
+
     protected $_cartRepo;
 
+    /**
+     * Redirect constructor.
+     * @param Context $context
+     * @param Session $session
+     * @param Order $order
+     * @param CartRepositoryInterface $cartRepository
+     * @param Connect $mspConnect
+     */
     public function __construct(
         Context $context,
         Session $session,
         Order $order,
-        Product $product,
         CartRepositoryInterface $cartRepository,
         Connect $mspConnect
     ) {
         parent::__construct($context);
         $this->_session = $session;
         $this->_order = $order;
-        $this->_product = $product;
         $this->_mspConnect = $mspConnect;
         $this->_cartRepo = $cartRepository;
     }
@@ -73,14 +79,13 @@ class Redirect extends \Magento\Framework\App\Action\Action
         $session = $this->_session;
         $order = $this->_order;
         $paymentMethod = $this->_mspConnect;
-        $productRepo = $this->_product;
 
         $order->load($this->_session->getlastOrderId());
 
-        $transactionObject = $paymentMethod->transactionRequest($order, $productRepo, false);
+        $transactionObject = $paymentMethod->transactionRequest($order, false);
 
         if ($order->getId()) {
-            /** @var \Magento\Quote\Api\CartRepositoryInterface $quoteRepository */
+            /** @var CartRepositoryInterface $quoteRepository */
             $quoteRepository = $this->_cartRepo;
             /** @var \Magento\Quote\Model\Quote $quote */
             $quote = $quoteRepository->get($order->getQuoteId());

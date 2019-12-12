@@ -62,7 +62,6 @@ KBC,KBC
 AliPay,AliPay
 Belfius,Belfius
 "ING Home'Pay","ING Home'Pay"
-Ferbuy,Ferbuy
 EPS,EPS
 Dotpay,Dotpay
 Paysafecard,Paysafecard
@@ -111,7 +110,7 @@ Salutation,Salutation
 Comment,Comment
 Newsletter,Newsletter
 "Choose your bank...","Choose your bank..."
-"Choose your credit card...","Choose your credit card..."
+"Choose your credit card...","Wählen Sie Ihre Kreditkarte..."
 "Order", "Bestellen"
 "@","@"
 "Notice: Captured amount %1 differs from MultiSafepay amount %2", "Notice: Captured amount %1 differs from MultiSafepay amount %2"

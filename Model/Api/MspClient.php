@@ -17,8 +17,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -96,10 +96,10 @@ class MspClient
         $url = $this->api_url . $api_method;
         $ch = curl_init($url);
 
-        $request_headers = array(
+        $request_headers = [
             "Accept: application/json",
             "api_key:" . $this->api_key,
-        );
+        ];
 
         if ($http_body !== null) {
             $request_headers[] = "Content-Type: application/json";
