@@ -1,5 +1,5 @@
-## 1.8.0 - RC1
-Release date: November 5th, 2019
+## 1.8.0
+Release date: December 12th, 2019
 
 ### Added
 + PLGMAGTWOS-506: Enable fail save option for saving transactions.
