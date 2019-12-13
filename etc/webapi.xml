@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/multisafepay/:cartId/payment-url/:orderId" method="GET">
+        <service class="MultiSafepay\Connect\Api\GuestPaymentUrlInterface" method="getPaymentUrl"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/multisafepay/mine/payment-url/:orderId" method="GET">
+        <service class="MultiSafepay\Connect\Api\PaymentUrlInterface" method="getPaymentUrl"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/multisafepay/orders/:orderId/:hash" method="GET">
+        <service class="MultiSafepay\Connect\Api\OrderInterface" method="getOrder"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/multisafepay/:cartId/payment-methods" method="GET">
+        <service class="MultiSafepay\Connect\Api\GuestPaymentMethodsInterface" method="getList"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/multisafepay/mine/payment-methods" method="GET">
+        <service class="MultiSafepay\Connect\Api\PaymentMethodsInterface" method="getList"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/multisafepay/restore/:orderId/:hash" method="GET">
+        <service class="MultiSafepay\Connect\Api\RestoreQuoteInterface" method="restoreQuote"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+</routes>
