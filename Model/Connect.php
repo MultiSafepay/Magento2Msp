@@ -549,6 +549,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $ip_address = $this->validateIP($order->getRemoteIp());
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
+        $storeId =  $order->getStoreId();
+        $locale =  $this->_scopeConfig->getValue('general/locale/code',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+
         try {
             $this->_client->orders->post([
                 "type" => $type,
@@ -575,7 +579,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "close_window" => "true"
                 ],
                 "customer" => [
-                    "locale" => $resolver->getLocale(),
+                    "locale" => $locale,
                     "ip_address" => $ip_address,
                     "forwarded_ip" => $forwarded_ip,
                     "first_name" => $billing->getFirstName(),
