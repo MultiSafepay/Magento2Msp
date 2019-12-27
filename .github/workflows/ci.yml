@@ -15,7 +15,6 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         php_version:
           - '7.2'
@@ -79,5 +78,8 @@ jobs:
           sed -i -e  "s/'amqp-user' => '.*'/'amqp-user' => ''/" etc/install-config-mysql.php
           sed -i -e  "s/'amqp-password' => '.*'/'amqp-password' => ''/" etc/install-config-mysql.php
       - name: Run tests
-        working-directory: /tmp/magento2/dev/tests/integration
-        run: php ../../../vendor/bin/phpunit ../../../app/code/MultiSafepay/Connect/Test -v
+        working-directory: /tmp/magento2/app/code/MultiSafepay/Connect/
+        run: php ../../../../vendor/bin/phpunit --coverage-clover=/tmp/magento2/app/code/MultiSafepay/Connect/coverage.xml -v
+      - name: Send clover to codecov
+        working-directory: /tmp/magento2/app/code/MultiSafepay/Connect
+        run: bash -c "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }} -R . "
