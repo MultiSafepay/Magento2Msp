@@ -83,3 +83,45 @@ jobs:
       - name: Send clover to codecov
         working-directory: /tmp/magento2/app/code/MultiSafepay/Connect
         run: bash -c "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }} -R . "
+  code_sniffer:
+    container: circleci/php:7.3-apache-node-browsers
+    services:
+      mysql:
+        image: mariadb
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: magento
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+    runs-on: ubuntu-latest
+    name: Coding standards
+    steps:
+      - name: Prepare composer builds
+        run: |
+          sudo sed -i s/"memory_limit = 128M"/"memory_limit = 4G"/g /usr/local/etc/php/php.ini-development
+          sudo cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+          sudo service apache2 restart
+          sudo mkdir ~/.composer
+          sudo chmod -R 777 ~
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install -y mariadb-client libicu-dev libxml2-dev libxslt1-dev zlib1g-dev libmcrypt-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+      - name: Install PHP extensions
+        run: |
+          sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+          sudo -E docker-php-ext-install -j$(nproc) intl soap xsl zip pdo pdo_mysql gd gettext mbstring bcmath
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Setup Magento 2 repo credentials
+        run: sudo composer config --global http-basic.repo.magento.com ${{ secrets.MAGENTO_CE_USER }} ${{ secrets.MAGENTO_CE_PASSWORD }}
+      - name: Download Magento 2
+        run: |
+          sudo composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:${{ matrix.magento_version }} /tmp/magento2
+          sudo chmod -R 777 /tmp/magento2
+      - name: Place plugin in Magento2
+        run: |
+          mkdir -p /tmp/magento2/app/code/MultiSafepay/Connect
+          cp -r * /tmp/magento2/app/code/MultiSafepay/Connect/
+      - name: Check coding standards
+        working-directory: /tmp/magento2
+        run: vendor/bin/phpcs --standard=app/code/MultiSafepay/Connect/phpcs.ruleset.xml app/code/MultiSafepay/Connect/

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ruleset name="MultiSafepay coding standard for Magento 2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+    <rule ref="../../../../vendor/magento/magento-coding-standard/Magento2/ruleset.xml">
+        <exclude name="Squiz.PHP.NonExecutableCode.ReturnNotRequired"/>
+        <exclude name="Magento2.Files.LineLength.MaxExceeded"/>
+        <exclude name="Magento2.Functions.DiscouragedFunction"/>
+        <exclude name="Magento2.CodeAnalysis.EmptyBlock"/>
+        <exclude name="Magento2.Whitespace.MultipleEmptyLines.MultipleEmptyLines"/>
+        <exclude name="Magento2.Security"/>
+        <exclude name="Magento2.PHP.LiteralNamespaces.LiteralClassUsage"/>
+        <exclude name="Magento2.Translation.ConstantUsage.VariableTranslation"/>
+        <exclude name="Generic.CodeAnalysis.ForLoopWithTestFunctionCall.NotAllowed"/>
+        <exclude name="Generic.Metrics.NestingLevel.TooHigh"/>
+        <exclude name="Magento2.Exceptions.ThrowCatch.ThrowCatch"/>
+        <exclude name="Squiz.PHP.NonExecutableCode.Unreachable"/>
+        <exclude name="Squiz.PHP.CommentedOutCode.Found"/>
+        <exclude name="Magento2.Exceptions.DirectThrow.FoundDirectThrow"/>
+        <exclude name="Magento2.PHP.ShortEchoSyntax.ShortEchoTag"/>
+    </rule>
+</ruleset>
