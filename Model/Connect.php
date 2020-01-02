@@ -71,6 +71,10 @@ use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
+    const KEY_SUB_TOTAL = 'subtotal';
+    const KEY_SHIPPING = 'shipping';
+    const KEY_TAX = 'tax';
+    const KEY_GRAND_TOTAL = 'grand_total';
 
     protected $_isInitializeNeeded = true;
     protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
@@ -963,6 +967,56 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             ]
         ];
 
+        /*
+         * Start support for custom totals
+         */
+        $storeId = $this->getStore();
+        $path = 'multisafepay/connect/advanced/custom_totals';
+        $customTotalConfig = $this->_scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
+        $customTotalList = array_map('trim', explode(';', $customTotalConfig));
+
+        $excludeTotals = [
+            self::KEY_SUB_TOTAL,
+            self::KEY_SHIPPING,
+            self::KEY_TAX,
+            self::KEY_GRAND_TOTAL
+        ];
+        $excludeTotals = array_merge($excludeTotals, $customTotalList);
+        $totals = $this->_checkoutSession->getQuote()->getTotals();
+
+        foreach ($totals as $total) {
+            $customTotalPrice = $total->getData('value');
+            if (empty($customTotalPrice)) {
+                continue;
+            }
+
+            $customTotalCode = $total->getCode();
+            if (in_array($customTotalCode, $excludeTotals, true)) {
+                continue;
+            }
+
+            $customTotalTitle = $total->getData('title');
+            $customTotalTax = 'CustomTotalTax_' . $customTotalCode;
+
+            $shoppingCart['shopping_cart']['items'][] = [
+                'name' => $customTotalTitle,
+                'description' => $customTotalTitle,
+                'unit_price' => $customTotalPrice,
+                'quantity' => '1',
+                'merchant_item_id' => $customTotalCode,
+                'tax_table_selector' => $customTotalTax,
+                'weight' => [
+                    'unit' => 'KG',
+                    'value' => '0',
+                ]
+            ];
+            $alternateTaxRates['tax_tables']['alternate'][] = [
+                'standalone' => 'true',
+                'name' => $customTotalTax,
+                'rules' => [
+                    ['rate' => '0.00']]
+            ];
+        }
 
         /*
          * Start Payment fee support for official MultiSafepay payment fee extension
