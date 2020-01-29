@@ -985,7 +985,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $area_code = $app_state->getAreaCode();
             $allowedAreas = [
                 Area::AREA_ADMINHTML,
-                Area::AREA_WEBAPI_REST
+                Area::AREA_WEBAPI_REST,
+                Area::AREA_GRAPHQL
             ];
             if (!in_array($area_code, $allowedAreas)) {
                 $orderRepository = $this->_orderRepositoryInterface;

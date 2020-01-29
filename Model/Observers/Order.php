@@ -77,23 +77,9 @@ class Order implements ObserverInterface
     public function execute(Observer $observer)
     {
         $paymentMethod = $this->_mspConnect;
-        /** @var $event Varien_Event */
-        $event = $observer->getEvent();
-
-        $orderId = $observer->getEvent()->getOrder()->getId();
-
 
         /** @var $order Mage_Sales_Model_Order */
         $order = $observer->getEvent()->getOrder();
-
-        $area_code = $this->_state->getAreaCode();
-        $allowedAreas = [
-            Area::AREA_ADMINHTML,
-            Area::AREA_WEBAPI_REST
-        ];
-        if (!in_array($area_code, $allowedAreas)) {
-            return $this;
-        }
 
         $paymentMethod->_isAdmin = true;
 
