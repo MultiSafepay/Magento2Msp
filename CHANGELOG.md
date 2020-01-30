@@ -1,3 +1,17 @@
+## 1.9.0 - RC1
+Release date: January 30th, 2019
+
+### Added
++ PLGMAGTWOS-334: Add support for custom totals.
+
+### Changed
++ PLGMAGTWOS-539: Prevent selection of billing address for Pay After Delivery.
+
+### Fixed
++ Dispatch event before transaction request is sent (Thanks to [duckchip](https://github.com/duckchip)).
+
+***
+
 ## 1.8.0
 Release date: December 12th, 2019
 
