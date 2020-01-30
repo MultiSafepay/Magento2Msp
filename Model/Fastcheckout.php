@@ -412,7 +412,7 @@ class Fastcheckout extends \Magento\Payment\Model\Method\AbstractMethod
             "plugin" => [
                 "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                 "shop_version" => $magentoInfo->getVersion(),
-                "plugin_version" => ' - Plugin 1.8.0',
+                "plugin_version" => ' - Plugin 1.9.0-RC1',
                 "partner" => "MultiSafepay",
             ],
             "shopping_cart" => $shoppingCart,
