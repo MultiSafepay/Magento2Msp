@@ -16,8 +16,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -30,11 +30,10 @@
 
 namespace MultiSafepay\Connect\Model\ResourceModel\MultisafepayTokenization;
 
-
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
     protected function _construct()
     {
-        $this->_init('MultiSafepay\Connect\Model\MultisafepayTokenization','MultiSafepay\Connect\Model\ResourceModel\MultisafepayTokenization');
+        $this->_init('MultiSafepay\Connect\Model\MultisafepayTokenization', 'MultiSafepay\Connect\Model\ResourceModel\MultisafepayTokenization');
     }
 }

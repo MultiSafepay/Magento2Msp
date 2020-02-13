@@ -16,8 +16,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -49,7 +49,8 @@ class InstallSchema implements InstallSchemaInterface
         $columnName = 'multisafepay_status';
         if ($installer->getConnection()->isTableExists($installer->getTable($tableName))) {
             if (!$installer->getConnection()->tableColumnExists(
-                $installer->getTable($tableName), $columnName
+                $installer->getTable($tableName),
+                $columnName
             )
             ) {
                 $installer->getConnection()->addColumn(
@@ -149,5 +150,4 @@ class InstallSchema implements InstallSchemaInterface
 
         $installer->endSetup();
     }
-
 }

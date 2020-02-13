@@ -17,8 +17,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -32,10 +32,28 @@
 
 namespace MultiSafepay\Connect\Model\Gateways;
 
-class MultiSafepay extends \MultiSafepay\Connect\Model\Connect
+use MultiSafepay\Connect\Model\Connect;
+
+class MultiSafepay extends Connect
 {
 
+    /**
+     * @var string
+     */
     protected $_code = 'multisafepay';
+    /**
+     * @var string
+     */
     public $_gatewayCode = '';
-
+    /**
+     * @return bool
+     */
+    public function canUseCheckout()
+    {
+        //Don't show payment method if not enabled in checkout
+        if (!$this->getConfigData('can_use_checkout')) {
+            return false;
+        }
+        return parent::canUseCheckout();
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace MultiSafepay\Connect\Test\Unit\Helper;
 
 use Magento\Directory\Model\CurrencyFactory;
@@ -111,23 +112,23 @@ class DataTest extends TestCase
     {
         return [
             [
-                'paymentMethods'  => [$this->getVisaObject()],
-                'expected'  => "<b>Payment methods specification:</b><br />VISA (€10.00)",
+                'paymentMethods' => [$this->getVisaObject()],
+                'expected' => "<b>Payment methods specification:</b><br />VISA (€10.00)",
             ],
             [
-                'paymentMethods'  => [
+                'paymentMethods' => [
                     $this->getVisaObject(),
                     $this->getCouponObject()
                 ],
-                'expected'  => "<b>Payment methods specification:</b><br />VISA (€10.00) / COUPON (€10.00)",
+                'expected' => "<b>Payment methods specification:</b><br />VISA (€10.00) / COUPON (€10.00)",
             ],
             [
-                'paymentMethods'  => [
+                'paymentMethods' => [
                     $this->getVisaObject(),
                     $this->getCouponObject(),
                     $this->getCouponObject()
                 ],
-                'expected'  => "<b>Payment methods specification:</b><br />VISA (€10.00) / COUPON (€10.00) / COUPON (€10.00)",
+                'expected' => "<b>Payment methods specification:</b><br />VISA (€10.00) / COUPON (€10.00) / COUPON (€10.00)",
             ],
         ];
     }
@@ -141,7 +142,6 @@ class DataTest extends TestCase
         return $visa;
     }
 
-
     private function getCouponObject()
     {
         $coupon = new \stdClass();
@@ -149,5 +149,160 @@ class DataTest extends TestCase
         $coupon->amount = 1000;
         $coupon->type = 'COUPON';
         return $coupon;
+    }
+
+    /**
+     * @dataProvider getGatewayProvider
+     * @dataProvider getGiftcardProvider
+     * @param $gatewayCode
+     */
+    public function testGetPaymentType($gatewayCode)
+    {
+        $result = $this->helper->getPaymentType($gatewayCode);
+
+        $this->assertEquals($this->helper->gateways[$gatewayCode]['type'], $result);
+    }
+
+    /**
+     * @dataProvider getGatewayProvider
+     * @param $gateway
+     */
+    public function testIsMspGateway($gateway)
+    {
+        $result = $this->helper->isMspGateway($gateway);
+
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @dataProvider getGiftcardProvider
+     * @param $giftcard
+     */
+    public function testIsMspGiftcard($giftcard)
+    {
+        $result = $this->helper->isMspGiftcard($giftcard);
+
+        $this->assertTrue($result);
+    }
+
+    public function getGatewayProvider()
+    {
+        return [
+            ['afterpaymsp'],
+            ['alipay'],
+            ['americanexpress'],
+            ['bancontact'],
+            ['belfius'],
+            ['betaalnaontvangst'],
+            ['betaalplan'],
+            ['creditcard'],
+            ['directdebit'],
+            ['dotpay'],
+            ['einvoice'],
+            ['eps'],
+            ['giropay'],
+            ['ideal'],
+            ['idealqr'],
+            ['ing'],
+            ['kbc'],
+            ['klarnainvoice'],
+            ['maestro'],
+            ['mastercard'],
+            ['mspbanktransfer'],
+            ['multisafepay'],
+            ['paypalmsp'],
+            ['paysafecard'],
+            ['sofort'],
+            ['trustly'],
+            ['trustpay'],
+            ['visa'],
+        ];
+    }
+
+    public function getGiftcardProvider()
+    {
+        return [
+            ['babygiftcard'],
+            ['beautyandwellness'],
+            ['boekenbon'],
+            ['erotiekbon'],
+            ['fashioncheque'],
+            ['fashiongiftcard'],
+            ['fietsenbon'],
+            ['gezondheidsbon'],
+            ['givacard'],
+            ['goodcard'],
+            ['nationaletuinbon'],
+            ['nationaleverwencadeaubon'],
+            ['parfumcadeaukaart'],
+            ['podiumcadeaukaart'],
+            ['sportenfit'],
+            ['vvvbon'],
+            ['webshopgiftcard'],
+            ['wellnessgiftcard'],
+            ['wijncadeau'],
+            ['winkelcheque'],
+            ['yourgift'],
+        ];
+    }
+
+
+    public function testGetAllMethods()
+    {
+        $result = $this->helper->getAllMethods();
+
+        $methods = [
+            'afterpaymsp' => 'AfterPay',
+            'alipay' => 'Alipay',
+            'americanexpress' => 'American Express',
+            'bancontact' => 'Bancontact',
+            'belfius' => 'Belfius',
+            'betaalnaontvangst' => 'Pay After Delivery',
+            'betaalplan' => 'Betaalplan',
+            'creditcard' => 'Credit card',
+            'directdebit' => 'Direct Debit',
+            'dotpay' => 'Dotpay',
+            'einvoice' => 'E-Invoicing',
+            'eps' => 'EPS',
+            'giropay' => 'GiroPay',
+            'ideal' => 'iDEAL',
+            'idealqr' => 'iDEAL QR',
+            'ing' => 'ING Home\'Pay',
+            'kbc' => 'KBC',
+            'klarnainvoice' => 'Klarna',
+            'maestro' => 'Maestro',
+            'mastercard' => 'Mastercard',
+            'mspbanktransfer' => 'Bank transfer',
+            'multisafepay' => 'MultiSafepay',
+            'paypalmsp' => 'PayPal',
+            'paysafecard' => 'Paysafecard',
+            'sofort' => 'SOFORT Banking',
+            'trustly' => 'Trustly',
+            'trustpay' => 'Trustpay',
+            'visa' => 'Visa',
+            'babygiftcard' => 'Babygiftcard',
+            'beautyandwellness' => 'Beauty and wellness',
+            'boekenbon' => 'Boekenbon',
+            'erotiekbon' => 'Erotiekbon',
+            'fashioncheque' => 'Fashioncheque',
+            'fashiongiftcard' => 'Fashiongiftcard',
+            'fietsenbon' => 'Fietsenbon',
+            'gezondheidsbon' => 'Gezondheidsbon',
+            'givacard' => 'Givacard',
+            'goodcard' => 'Goodcard',
+            'nationaletuinbon' => 'Nationale tuinbon',
+            'nationaleverwencadeaubon' => 'Nationale verwencadeaubon',
+            'parfumcadeaukaart' => 'Parfumcadeaukaart',
+            'podiumcadeaukaart' => 'Podium',
+            'sportenfit' => 'Sportenfit',
+            'vvvbon' => 'VVV Cadeaukaart',
+            'webshopgiftcard' => 'Webshop Giftcard',
+            'wellnessgiftcard' => 'Wellness Giftcards',
+            'wijncadeau' => 'Wijn Cadeau',
+            'winkelcheque' => 'Winkel Cheque',
+            'yourgift' => 'YourGift',
+        ];
+
+        $this->assertEquals($methods, $result);
     }
 }

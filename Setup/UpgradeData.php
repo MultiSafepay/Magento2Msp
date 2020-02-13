@@ -16,8 +16,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2018 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -53,7 +53,7 @@ class UpgradeData implements UpgradeDataInterface
     protected $notifier;
 
     /**
-     *  @var \Magento\Framework\App\Config\Storage\WriterInterface
+     * @var \Magento\Framework\App\Config\Storage\WriterInterface
      */
     protected $configWriter;
 
@@ -77,7 +77,11 @@ class UpgradeData implements UpgradeDataInterface
     ) {
         $installer = $setup;
 
-        $this->notifier->addNotice('MultiSafepay upgrade', 'MultiSafepay: Check out our documentation page for new features');
+        $this->notifier->addNotice(
+            'MultiSafepay upgrade',
+            'MultiSafepay: Check out our documentation page for new features',
+            'https://docs.multisafepay.com/integrations/magento2/'
+        );
 
         $installer->startSetup();
 
@@ -106,7 +110,7 @@ class UpgradeData implements UpgradeDataInterface
         $installer->endSetup();
 
         if (version_compare($context->getVersion(), '1.7.1', '<')) {
-            $this->configWriter->save('giftcards/vvvbon/title',  'VVV Cadeaukaart');
+            $this->configWriter->save('giftcards/vvvbon/title', 'VVV Cadeaukaart');
         }
     }
 }
