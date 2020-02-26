@@ -1,0 +1,127 @@
+name: Build
+on:
+  push:
+  schedule:
+    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
+jobs:
+  tests:
+    container: circleci/php:${{ matrix.php_version }}-apache-node-browsers
+    services:
+      mysql:
+        image: mariadb
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: magento
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php_version:
+          - '7.2'
+          - '7.3'
+        magento_version:
+          - '~2.3'
+          - '~2.2'
+          - '~2.1'
+    name: Magento ${{ matrix.magento_version }} - Php ${{ matrix.php_version }}
+    steps:
+      - name: Prepare composer builds
+        run: |
+          sudo sed -i s/"memory_limit = 128M"/"memory_limit = 4G"/g /usr/local/etc/php/php.ini-development
+          sudo cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+          sudo service apache2 restart
+          sudo mkdir ~/.composer
+          sudo chmod -R 777 ~
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install -y mariadb-client libicu-dev libxml2-dev libxslt1-dev zlib1g-dev libmcrypt-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+      - name: Install PHP extensions
+        run: |
+          sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+          sudo -E docker-php-ext-install -j$(nproc) intl soap xsl zip pdo pdo_mysql gd gettext mbstring bcmath
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Setup Magento 2 repo credentials
+        run: sudo composer config --global http-basic.repo.magento.com ${{ secrets.MAGENTO_CE_USER }} ${{ secrets.MAGENTO_CE_PASSWORD }}
+      - name: Download Magento 2
+        run: |
+          sudo composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:${{ matrix.magento_version }} /tmp/magento2
+          sudo chmod -R 777 /tmp/magento2
+      - name: Install Magento 2
+        working-directory: /tmp/magento2
+        run: |
+          php bin/magento setup:install --base-url=http://127.0.0.1/ \
+          --db-host=mysql --db-name=magento --db-user=root --db-password=password \
+          --admin-firstname=Magento --admin-lastname=User --admin-email=user@example.com \
+          --admin-user=admin --admin-password=admin123 --language=en_US \
+          --currency=EUR --timezone=Europe/Amsterdam --use-rewrites=1
+      - name: Place plugin in Magento2
+        run: |
+          mkdir -p /tmp/magento2/app/code/MultiSafepay/Connect
+          cp -r * /tmp/magento2/app/code/MultiSafepay/Connect/
+      - name: Update plugins list
+        working-directory: /tmp/magento2
+        run: php bin/magento setup:upgrade
+      - name: Create database for magento testing
+        run: mysql -u 'root' -p'password' -h 'mysql' -e "CREATE DATABASE \`magento_integration_tests\`"
+      - name: Setup magento testing
+        working-directory: /tmp/magento2/dev/tests/integration
+        run: |
+          cp phpunit.xml.dist phpunit.xml
+          sed -i.back "s|<const name=\"TESTS_CLEANUP\" value=\"enabled\"/>|<const name=\"TESTS_CLEANUP\" value=\"disabled\"/>|g" "phpunit.xml"
+          cp etc/install-config-mysql.php.dist etc/install-config-mysql.php
+          sed -i "s/'db-host' => 'localhost'/'db-host' => 'mysql'/g" etc/install-config-mysql.php
+          sed -i "s/'db-password' => '123123q'/'db-password' => 'password'/g" etc/install-config-mysql.php
+          sed -i -e  "s/'amqp-host' => '.*'/'amqp-host' => ''/" etc/install-config-mysql.php
+          sed -i -e  "s/'amqp-port' => '.*'/'amqp-port' => ''/" etc/install-config-mysql.php
+          sed -i -e  "s/'amqp-user' => '.*'/'amqp-user' => ''/" etc/install-config-mysql.php
+          sed -i -e  "s/'amqp-password' => '.*'/'amqp-password' => ''/" etc/install-config-mysql.php
+      - name: Run tests
+        working-directory: /tmp/magento2/app/code/MultiSafepay/Connect/
+        run: php ../../../../vendor/bin/phpunit --coverage-clover=/tmp/magento2/app/code/MultiSafepay/Connect/coverage.xml -v
+      - name: Send clover to codecov
+        working-directory: /tmp/magento2/app/code/MultiSafepay/Connect
+        run: bash -c "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }} -R . "
+  code_sniffer:
+    container: circleci/php:7.3-apache-node-browsers
+    services:
+      mysql:
+        image: mariadb
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: magento
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+    runs-on: ubuntu-latest
+    name: Coding standards
+    steps:
+      - name: Prepare composer builds
+        run: |
+          sudo sed -i s/"memory_limit = 128M"/"memory_limit = 4G"/g /usr/local/etc/php/php.ini-development
+          sudo cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+          sudo service apache2 restart
+          sudo mkdir ~/.composer
+          sudo chmod -R 777 ~
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install -y mariadb-client libicu-dev libxml2-dev libxslt1-dev zlib1g-dev libmcrypt-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+      - name: Install PHP extensions
+        run: |
+          sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+          sudo -E docker-php-ext-install -j$(nproc) intl soap xsl zip pdo pdo_mysql gd gettext mbstring bcmath
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Setup Magento 2 repo credentials
+        run: sudo composer config --global http-basic.repo.magento.com ${{ secrets.MAGENTO_CE_USER }} ${{ secrets.MAGENTO_CE_PASSWORD }}
+      - name: Download Magento 2
+        run: |
+          sudo composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:${{ matrix.magento_version }} /tmp/magento2
+          sudo chmod -R 777 /tmp/magento2
+      - name: Place plugin in Magento2
+        run: |
+          mkdir -p /tmp/magento2/app/code/MultiSafepay/Connect
+          cp -r * /tmp/magento2/app/code/MultiSafepay/Connect/
+      - name: Check coding standards
+        working-directory: /tmp/magento2
+        run: vendor/bin/phpcs --standard=app/code/MultiSafepay/Connect/phpcs.ruleset.xml app/code/MultiSafepay/Connect/

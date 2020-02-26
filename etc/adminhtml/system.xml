@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <tab id="multisafepay" translate="label" sortOrder="400">
-      <label>MultiSafepay (1.8.0)</label>
+      <label>MultiSafepay (1.9.0)</label>
     </tab>
     <section id="multisafepay" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
@@ -84,6 +84,15 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <comment>All API request will be stored within var/log/multisafepay.log</comment>
         </field>
+        <group id="advanced" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Advanced Settings</label>
+          <field id="custom_totals" translate="label" type="text" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Exclude custom totals</label>
+            <comment>
+              Fill in the custom total code(s) that shouldn't be visible on the MultiSafepay payment page. Semicolon (;) separated values.
+            </comment>
+          </field>
+        </group>
       </group>
     </section>
     <section id="gateways" translate="label" type="text" sortOrder="402" showInDefault="1" showInWebsite="1" showInStore="1">

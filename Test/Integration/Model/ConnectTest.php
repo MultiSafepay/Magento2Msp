@@ -63,4 +63,10 @@ class ConnectTest extends TestCase
             $this->assertEquals($unitPrice, $productPrice);
         }
     }
+
+    public function testIsAvailableShouldReturnFalseIfCodeIsConnect()
+    {
+        $result = $this->connectInstance->isAvailable();
+        $this->assertFalse($result);
+    }
 }

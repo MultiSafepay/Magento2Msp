@@ -41,6 +41,7 @@ use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\AppInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
@@ -61,14 +62,19 @@ use Magento\Sales\Model\Order\StatusResolver;
 use Magento\Sales\Model\OrderNotifier;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use MultiSafepay\Connect\Helper\AddressHelper;
 use MultiSafepay\Connect\Helper\Data as HelperData;
+use MultiSafepay\Connect\Helper\RefundHelper;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
-use MultiSafepay\Connect\Helper\RefundHelper;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
+    const KEY_SUB_TOTAL = 'subtotal';
+    const KEY_SHIPPING = 'shipping';
+    const KEY_TAX = 'tax';
+    const KEY_GRAND_TOTAL = 'grand_total';
 
     protected $_isInitializeNeeded = true;
     protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
@@ -221,6 +227,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $refundHelper;
     protected $restrictions;
 
+    protected $dataObjectFactory;
+    /**
+     * @var AddressHelper
+     */
+    protected $addressHelper;
+
     /**
      * Connect constructor.
      *
@@ -252,6 +264,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \MultiSafepay\Connect\Helper\Data                            $helperData
      * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
      * @param \Magento\Customer\Model\Session                              $customerSession
+     * @param \MultiSafepay\Connect\Helper\AddressHelper                   $addressHelper
      * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
      * @param \MultiSafepay\Connect\Model\GatewayRestrictions              $restrictions
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
@@ -289,7 +302,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
         RefundHelper $refundHelper,
+        AddressHelper $addressHelper,
         GatewayRestrictions $restrictions,
+        DataObjectFactory $dataObjectFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -306,6 +321,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $resourceCollection,
             $data
         );
+
+        $this->dataObjectFactory = $dataObjectFactory;
         $this->_customerSession = $customerSession;
         $this->_client = $mspClient;
         $this->_checkoutSession = $checkoutSession;
@@ -313,6 +330,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_urlBuilder = $urlBuilder;
         $this->_requestHttp = $requestHttp;
         $this->_currencyFactory = $currencyFactory;
+        $this->addressHelper = $addressHelper;
         $this->refundHelper = $refundHelper;
         $this->restrictions = $restrictions;
 
@@ -550,7 +568,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $forwarded_ip = $this->validateIP($order->getXForwardedFor());
 
         try {
-            $this->_client->orders->post([
+            $mspOrderData = [
                 "type" => $type,
                 "order_id" => $order->getIncrementId(),
                 "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
@@ -594,7 +612,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.8.0',
+                    "plugin_version" => ' - Plugin 1.9.0',
                     "partner" => "MultiSafepay",
                 ],
                 "gateway_info" => [
@@ -602,7 +620,19 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 ],
                 "shopping_cart" => $shoppingCart,
                 "checkout_options" => $checkoutData,
-            ]);
+            ];
+
+            $mspOrderDataObject = $this->dataObjectFactory->create();
+            $mspOrderDataObject->setData('orderData', $mspOrderData);
+
+            $this->_eventManager->dispatch(
+                'before_send_msp_transaction_request',
+                ['order' => $order, 'mspOrderData' => $mspOrderDataObject]
+            );
+
+            $mspOrderData = $mspOrderDataObject->getData('orderData');
+            $this->_client->orders->post($mspOrderData);
+
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             return false;
         }
@@ -937,6 +967,56 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             ]
         ];
 
+        /*
+         * Start support for custom totals
+         */
+        $storeId = $this->getStore();
+        $path = 'multisafepay/connect/advanced/custom_totals';
+        $customTotalConfig = $this->_scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
+        $customTotalList = array_map('trim', explode(';', $customTotalConfig));
+
+        $excludeTotals = [
+            self::KEY_SUB_TOTAL,
+            self::KEY_SHIPPING,
+            self::KEY_TAX,
+            self::KEY_GRAND_TOTAL
+        ];
+        $excludeTotals = array_merge($excludeTotals, $customTotalList);
+        $totals = $this->_checkoutSession->getQuote()->getTotals();
+
+        foreach ($totals as $total) {
+            $customTotalPrice = $total->getData('value');
+            if (empty($customTotalPrice)) {
+                continue;
+            }
+
+            $customTotalCode = $total->getCode();
+            if (in_array($customTotalCode, $excludeTotals, true)) {
+                continue;
+            }
+
+            $customTotalTitle = $total->getData('title');
+            $customTotalTax = 'CustomTotalTax_' . $customTotalCode;
+
+            $shoppingCart['shopping_cart']['items'][] = [
+                'name' => $customTotalTitle,
+                'description' => $customTotalTitle,
+                'unit_price' => $customTotalPrice,
+                'quantity' => '1',
+                'merchant_item_id' => $customTotalCode,
+                'tax_table_selector' => $customTotalTax,
+                'weight' => [
+                    'unit' => 'KG',
+                    'value' => '0',
+                ]
+            ];
+            $alternateTaxRates['tax_tables']['alternate'][] = [
+                'standalone' => 'true',
+                'name' => $customTotalTax,
+                'rules' => [
+                    ['rate' => '0.00']]
+            ];
+        }
 
         /*
          * Start Payment fee support for official MultiSafepay payment fee extension
@@ -1408,9 +1488,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $quote = $this->_checkoutSession->getQuote();
         }
         //Check amount restrictions
-        if ($quote && (
-                $quote->getBaseGrandTotal() < $this->_minAmount || ($this->_maxAmount && $quote->getBaseGrandTotal() > $this->_maxAmount))
-        ) {
+        if ($quote &&
+            (
+                $quote->getBaseGrandTotal() < $this->_minAmount ||
+                (
+                    $this->_maxAmount && $quote->getBaseGrandTotal() > $this->_maxAmount
+                )
+            )) {
             return false;
         }
 
@@ -1419,7 +1503,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
 
-        //Check currency rescrictions
+        //Check currency restrictions
         $allowedCurrencies = explode(',', $this->getConfigData('allowed_currency'));
         if (!in_array($quote->getQuoteCurrencyCode(), $allowedCurrencies)) {
             return false;
@@ -1686,9 +1770,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 return true;
             }
             return strpos($this->getConfigData('allowed_carrier'), $shippingMethod) !== false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**

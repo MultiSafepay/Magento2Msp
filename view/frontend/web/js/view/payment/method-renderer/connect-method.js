@@ -325,6 +325,12 @@ define(
                         }]
                     });
             },
+            /**
+             * @return {boolean}
+             */
+            isPayAfter: function () {
+                return this.item.method === 'betaalnaontvangst';
+            },
 
 
         });
