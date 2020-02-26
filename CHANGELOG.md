@@ -1,5 +1,5 @@
-## 1.9.0 - RC1
-Release date: January 30th, 2019
+## 1.9.0
+Release date: February 26th, 2020
 
 ### Added
 + PLGMAGTWOS-334: Add support for custom totals.
