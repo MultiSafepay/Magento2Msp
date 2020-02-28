@@ -51,7 +51,7 @@ After these changes, the template should be tested to confirm it is working.
 ## Support
 You can create issues on our repository. If you need any additional help or support, please contact <a href="mailto:integration@multisafepay.com">integration@multisafepay.com</a>
 
-We are also available on our [Magento Slack channel](https://magentocommeng.slack.com/) #multisafepay-payments. Feel free to start a conversation or provide suggestions as to how we can refine our Magento 2 extension.
+We are also available on our [Magento Slack channel](https://magentocommeng.slack.com/messages/multisafepay-payments/) #multisafepay-payments. Feel free to start a conversation or provide suggestions as to how we can refine our Magento 2 extension.
 
 ## License
 [Open Software License (OSL 3.0)](https://github.com/MultiSafepay/Magento2Msp/blob/master/LICENSE.md)
