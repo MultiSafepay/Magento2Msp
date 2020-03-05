@@ -38,7 +38,6 @@ define(
         'Magento_Checkout/js/checkout-data',
         'Magento_Checkout/js/model/payment/additional-validators',
         'mage/url',
-        'jquery/ui',
         'Magento_Ui/js/modal/modal',
         'ko',
         'mage/translate'
@@ -52,7 +51,6 @@ define(
         checkoutData,
         additionalValidators,
         url,
-        ui,
         modal,
         ko
     ) {
@@ -265,7 +263,7 @@ define(
 
                 //Get all tokens
                 var allTokens = this.getAllTokens();
-                
+
                 allTokens.forEach(function (value, index, array) {
                     data.push(value);
                 });
