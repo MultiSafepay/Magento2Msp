@@ -63,6 +63,7 @@ class Data
         'afterpaymsp' => ['code' => 'AFTERPAY', 'name' => 'AfterPay', 'type' => 'gateways'],
         'alipay' => ['code' => 'ALIPAY', 'name' => 'Alipay', 'type' => 'gateways'],
         'americanexpress' => ['code' => 'AMEX', 'name' => 'American Express', 'type' => 'gateways'],
+        'applepay' => ['code' => 'APPLEPAY', 'name' => 'Apple Pay', 'type' => 'gateways'],
         'bancontact' => ['code' => 'MISTERCASH', 'name' => 'Bancontact', 'type' => 'gateways'],
         'belfius' => ['code' => 'BELFIUS', 'name' => 'Belfius', 'type' => 'gateways'],
         'betaalnaontvangst'  => ['code' => 'PAYAFTER', 'name' => 'Pay After Delivery', 'type' => 'gateways'],

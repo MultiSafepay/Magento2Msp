@@ -498,7 +498,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "first_name" => $shipping->getFirstName(),
                 "last_name" => $shipping->getLastName(),
                 "address1" => $shipping_street,
-                "address2" => $shipping->getStreetLine(2),
                 "house_number" => $shipping_housenumber,
                 "zip_code" => trim($shipping->getPostcode()),
                 "city" => $shipping->getCity(),
@@ -599,7 +598,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "first_name" => $billing->getFirstName(),
                     "last_name" => $billing->getLastName(),
                     "address1" => $street,
-                    "address2" => $billing->getStreetLine(2),
                     "house_number" => $housenumber,
                     "zip_code" => trim($billing->getPostcode()),
                     "city" => $billing->getCity(),
@@ -612,7 +610,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.9.0',
+                    "plugin_version" => ' - Plugin 1.10.0',
                     "partner" => "MultiSafepay",
                 ],
                 "gateway_info" => [
@@ -1437,7 +1435,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $status = $this->_statusResolver->getOrderStatusByState($order, $state);
             $order->setState($state);
             $order->setStatus($status);
-            
+
             $this->_orderRepositoryInterface->save($order);
 
             //We get the created invoice and send the invoice id to MultiSafepay so it can be added to financial exports

@@ -1,3 +1,17 @@
+## 1.10.0
+Release date: March 17th, 2020
+
+### Added
++ PLGMAGTWOS-334: Add Apple Pay.
+
+### Fixed
++ Fix JQueryUI warning.
+
+### Removed
++ PLGMAGTWOS-581: Remove redundant address2 from the transaction request.
+
+***
+
 ## 1.9.0
 Release date: February 26th, 2020
 
