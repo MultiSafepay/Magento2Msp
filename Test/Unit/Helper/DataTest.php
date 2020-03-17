@@ -255,6 +255,7 @@ class DataTest extends TestCase
             'afterpaymsp' => 'AfterPay',
             'alipay' => 'Alipay',
             'americanexpress' => 'American Express',
+            'applepay' => 'Apple Pay',
             'bancontact' => 'Bancontact',
             'belfius' => 'Belfius',
             'betaalnaontvangst' => 'Pay After Delivery',

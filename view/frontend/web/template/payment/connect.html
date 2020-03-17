@@ -28,6 +28,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 -->
+<!-- ko if: isApplePayAllowed() -->
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
     <style>
         .luma {
@@ -187,3 +188,4 @@
         </div>
     </div>
 </div>
+<!--/ko-->

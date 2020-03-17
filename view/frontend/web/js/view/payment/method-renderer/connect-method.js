@@ -329,8 +329,18 @@ define(
             isPayAfter: function () {
                 return this.item.method === 'betaalnaontvangst';
             },
+            isApplePayAllowed: function () {
+                if(this.item.method !== 'applepay'){
+                    return true
+                }
 
-
+                try {
+                    return window.ApplePaySession && window.ApplePaySession.canMakePayments();
+                } catch (error) {
+                    console.warn('MultiSafepay error when trying to initialize Apple Pay:', error);
+                    return false;
+                }
+            }
         });
     }
 );

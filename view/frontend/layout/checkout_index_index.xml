@@ -180,6 +180,17 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
+
+                                                                <!-- Start Apple Pay-->
+                                                                <item name="applepay" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/applepay</item>
+                                                                    <item name="methods" xsi:type="array">
+
+                                                                        <item name="applepay" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
                                 
                                                                 <item name="einvoice" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/einvoice</item>
