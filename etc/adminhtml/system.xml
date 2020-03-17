@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <tab id="multisafepay" translate="label" sortOrder="400">
-      <label>MultiSafepay (1.9.0)</label>
+      <label>MultiSafepay (1.10.0)</label>
     </tab>
     <section id="multisafepay" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
@@ -165,7 +165,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Credit Card-->
       <group id="creditcard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Credit Card</label>
@@ -236,7 +236,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Visa-->
       <group id="visa" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Visa</label>
@@ -345,7 +345,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -368,7 +368,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Giropay-->
       <group id="giropay" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Giropay</label>
@@ -434,7 +434,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Bank transfer-->
       <group id="mspbanktransfer" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Bank transfer</label>
@@ -493,7 +493,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start SOFORT Banking-->
       <group id="sofort" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>SOFORT Banking</label>
@@ -536,7 +536,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -559,7 +559,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Maestro-->
       <group id="maestro" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Maestro</label>
@@ -602,7 +602,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -623,9 +623,9 @@
         <field id="sort_order" translate="label" type="text" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Sort Order</label>
           <frontend_class>validate-number</frontend_class>
-        </field>      
+        </field>
       </group>
-            
+
       <!--Start Bancontact-->
       <group id="bancontact" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Bancontact</label>
@@ -668,7 +668,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -689,9 +689,9 @@
         <field id="sort_order" translate="label" type="text" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Sort Order</label>
           <frontend_class>validate-number</frontend_class>
-        </field>      
+        </field>
       </group>
-            
+
       <!--Start American Express-->
       <group id="americanexpress" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>American Express</label>
@@ -734,7 +734,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -757,7 +757,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Direct Debit-->
       <group id="directdebit" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Direct Debit</label>
@@ -889,7 +889,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
+
       <!--Start Pay After Delivery -->
       <group id="betaalnaontvangst" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Pay After Delivery</label>
@@ -955,7 +955,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start E-invoicing-->
       <group id="einvoice" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>E-Invoicing</label>
@@ -1021,7 +1021,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
+
       <!--Start Klarna -->
       <group id="klarnainvoice" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Klarna</label>
@@ -1087,7 +1087,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
+
       <!--Start Betaalplan-->
       <group id="betaalplan" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Betaalplan</label>
@@ -1153,7 +1153,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start PayPal-->
       <group id="paypalmsp" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>PayPal</label>
@@ -1219,7 +1219,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Trustpay-->
       <group id="trustpay" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>TrustPay</label>
@@ -1285,7 +1285,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
+
       <!--Start KBC -->
       <group id="kbc" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>KBC</label>
@@ -1351,7 +1351,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
+
       <!--Start AliPay -->
       <group id="alipay" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>AliPay</label>
@@ -1417,7 +1417,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Belfius-->
       <group id="belfius" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Belfius</label>
@@ -1813,7 +1813,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-        
+
       <!--Start Trustly-->
       <group id="trustly" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Trustly</label>
@@ -1948,7 +1948,7 @@
           <label>Sort Order</label>
           <frontend_class>validate-number</frontend_class>
         </field>
-      </group>      
+      </group>
 
       <!--Start iDEAL QR-->
       <group id="idealqr" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1968,7 +1968,7 @@
           <label>Allowed Shipping Methods</label>
           <depends>
             <field id="allowed_carrier_active">1</field>
-          </depends>          
+          </depends>
           <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
         </field>
         <field id="allowed_currency" translate="label" type="multiselect" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1989,7 +1989,7 @@
           <label>Payment from Specific Countries</label>
           <depends>
             <field id="allowspecific">1</field>
-          </depends>          
+          </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
         </field>
@@ -2014,7 +2014,7 @@
           <label>Sort Order</label>
           <frontend_class>validate-number</frontend_class>
         </field>
-      </group>      
+      </group>
     </section>
     <section id="giftcards" translate="label" type="text" sortOrder="403" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
@@ -2086,7 +2086,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start FashionGiftcard-->
       <group id="fashiongiftcard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Fashiongiftcard</label>
@@ -2129,7 +2129,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2152,7 +2152,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Podium-->
       <group id="podium" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Podium</label>
@@ -2218,7 +2218,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start VVV Cadeaukaart-->
       <group id="vvvbon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>VVV Cadeaukaart</label>
@@ -2261,7 +2261,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2284,7 +2284,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Sport en Fit-->
       <group id="sportenfit" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Sport en Fit</label>
@@ -2327,7 +2327,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2393,7 +2393,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2416,7 +2416,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
+
       <!--Start Givacard-->
       <group id="givacard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Givacard</label>
@@ -2459,7 +2459,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2482,7 +2482,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Goodcard-->
       <group id="goodcard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Goodcard</label>
@@ -2525,7 +2525,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2548,7 +2548,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Nationale tuinbon-->
       <group id="nationaletuinbon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Nationale Tuinbon</label>
@@ -2591,7 +2591,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2614,7 +2614,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Nationale Verwencadeaubon-->
       <group id="nationaleverwencadeaubon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Nationale Verwencadeaubon</label>
@@ -2657,7 +2657,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2680,7 +2680,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Gezondheidsbon-->
       <group id="gezondheidsbon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Gezondheidsbon</label>
@@ -2746,7 +2746,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Babygiftcard-->
       <group id="babygiftcard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Babygiftcard</label>
@@ -2789,7 +2789,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2812,7 +2812,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Boekenbon-->
       <group id="boekenbon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Boekenbon</label>
@@ -2855,7 +2855,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2878,7 +2878,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Erotiekbon-->
       <group id="erotiekbon" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Erotiekbon</label>
@@ -2921,7 +2921,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -2944,7 +2944,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Fashioncheque-->
       <group id="fashioncheque" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Fashioncheque</label>
@@ -2987,7 +2987,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -3010,7 +3010,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Parfumcadeaukaart-->
       <group id="parfumcadeaukaart" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Parfumcadeaukaart</label>
@@ -3073,7 +3073,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-            
+
       <!--Start Webshopgiftcard-->
       <group id="webshopgiftcard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Webshopgiftcard</label>
@@ -3116,7 +3116,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -3137,9 +3137,9 @@
         <field id="sort_order" translate="label" type="text" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Sort Order</label>
           <frontend_class>validate-number</frontend_class>
-        </field>      
+        </field>
       </group>
-            
+
       <!--Start Beauty and wellness-->
       <group id="beautyandwellness" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Beauty and Wellness</label>
@@ -3182,7 +3182,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -3248,7 +3248,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -3314,7 +3314,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -3337,7 +3337,7 @@
           <frontend_class>validate-number</frontend_class>
         </field>
       </group>
-      
+
       <!--Winkel cheque-->
       <group id="winkelcheque" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Winkel Cheque</label>
@@ -3380,7 +3380,7 @@
           </depends>
           <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
           <can_be_empty>1</can_be_empty>
-        </field>        
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="98" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Minimum Order Total</label>
         </field>
@@ -3432,7 +3432,7 @@
             </field>
         </group>
         <!--  This one is disabled for now
-         
+
          <group id="fastcheckout_postnl" translate="label" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Post NL - Pick up</label>
             <field id="postnl_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
