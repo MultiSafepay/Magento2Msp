@@ -57,4 +57,4 @@ We are also available on our Magento Slack channel [#multisafepay-payments](http
 [Open Software License (OSL 3.0)](https://github.com/MultiSafepay/Magento2Msp/blob/master/LICENSE.md)
 
 ## Want to be part of the team?
-Are you a developer interested in working at MultiSafepay? [View](https://www.multisafepay.com/nl_nl/careers/#jobopenings) our job openings and feel free to get in touch with us.
+Are you a developer interested in working at MultiSafepay? [View](https://www.multisafepay.com/careers/#jobopenings) our job openings and feel free to get in touch with us.
