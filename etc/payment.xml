@@ -40,6 +40,9 @@
         <method name="belfius">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="directbanktransfer">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name="ing">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
