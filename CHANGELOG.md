@@ -1,3 +1,15 @@
+## 1.11.0
+Release date: April 2nd, 2020
+
+### Added
++ PLGMAGTWOS-597: Add Direct Bank Transfer
+
+### Changed
++ PLGMAGTWOS-544: Replace creditcard gateway with improved creditcard gateway
++ Discontinue support for Magento 2.1.x
+
+***
+
 ## 1.10.0
 Release date: March 17th, 2020
 
