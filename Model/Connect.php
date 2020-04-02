@@ -411,13 +411,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
         $this->_gatewayCode = $order->getPayment()->getMethodInstance()->_gatewayCode;
 
-        if (isset($params['creditcard'])) {
-            $this->_gatewayCode = $params['creditcard'];
-        } elseif (isset($params['recurring_hash'])
-            && in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported())) {
-            $this->_gatewayCode = $params['recurring_hash'];
-        }
-
         $recurring = null;
 
         if (isset($params['recurring_hash']) &&
@@ -430,6 +423,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $params['recurring_hash']
             );
             $recurring = $this->_mspToken->create()->load($recurringId);
+            $this->_gatewayCode = $recurring['cc_type'];
             if ($recurring['customer_id'] !== $this->_customerSession->getCustomer()->getId()) {
                 $recurring = null;
             }
@@ -543,9 +537,23 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $customerID = $this->_customerSession->getCustomer()->getId();
 
+        if ($this->canSaveCreditCardToken($params)) {
+            /** @var MultisafepayTokenization $model */
+            $model = $this->_mspToken->create();
+            $model->addData([
+                    "customer_id" => $this->_customerSession->getCustomer()->getId(),
+                    "recurring_hash" => $this->_mspHelper->getUniqueHash(),
+                    "order_id" => $order->getIncrementId(),
+                    "cc_type" => $this->_gatewayCode,
+                    "name" => trim($params['name']) === '' ? null : $params['name'],
+                ]);
+            $model->save();
+        }
+
         if (!is_null($customerID)
             && $this->_mspHelper->isEnabled('tokenization')
             && isset($params['save'])
+            && isset($params['recurring_hash'])
             && filter_var($params['save'], FILTER_VALIDATE_BOOLEAN)
             && (in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported()) || empty($params['recurring_hash']))
         ) {
@@ -1185,6 +1193,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                             $model->setData(
                                 "expiry_date",
                                 $msporder->payment_details->card_expiry_date
+                            );
+                            $model->setData(
+                                "cc_type",
+                                $msporder->payment_details->type
                             );
 
 
@@ -1916,5 +1928,30 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         return $size - $pos - strlen($needle);
+    }
+
+    public function canSaveCreditCardToken(array $params): bool
+    {
+        if ($this->_gatewayCode !== 'CREDITCARD') {
+            return false;
+        }
+
+        if (!isset($params['save'], $params['name'])) {
+            return false;
+        }
+
+        if (!(bool)$params['save']) {
+            return false;
+        }
+
+        if (!$this->_mspHelper->isEnabled('tokenization')) {
+            return false;
+        }
+
+        if ($this->_customerSession->getCustomer()->getId() === null) {
+            return false;
+        }
+
+        return true;
     }
 }

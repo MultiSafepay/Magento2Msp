@@ -1,3 +1,4 @@
+<?php
 /**
  *
  * NOTICE OF LICENSE
@@ -26,25 +27,32 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/*browser:true*/
-/*global define*/
-define(
-    [
-            'uiComponent',
-            'Magento_Checkout/js/model/payment/renderer-list'
-        ],
-    function (
-        Component,
-        rendererList
-    ) {
-            'use strict';
-            rendererList.push(
-                {
-                    type: 'creditcard',
-                    component: 'MultiSafepay_Connect/js/view/payment/method-renderer/creditcard-method'
-                    }
-            );
-            /** Add view logic here if needed */
-            return Component.extend({});
+
+namespace MultiSafepay\Connect\Test\Integration\Model\Gateways;
+
+use MultiSafepay\Connect\Model\Gateways\Creditcard;
+use PHPUnit\Framework\TestCase;
+use Magento\TestFramework\ObjectManager;
+
+class CreditCardTest extends TestCase
+{
+    /** @var Creditcard */
+    protected $creditCardInstance;
+    protected $objectManager;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->objectManager = ObjectManager::getInstance();
+        $this->creditCardInstance = $this->objectManager->get(Creditcard::class);
     }
-);
+
+    public function testSaveCreditcardTokenWithInvalidParameters()
+    {
+        $this->assertFalse($this->creditCardInstance->canSaveCreditCardToken([]));
+    }
+}

@@ -176,11 +176,6 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
-        <field id="allowed_creditcards" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Allowed Credit cards</label>
-          <source_model>MultiSafepay\Connect\Model\Config\Source\Creditcards</source_model>
-          <can_be_empty>0</can_be_empty>
-        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

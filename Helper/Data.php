@@ -68,7 +68,7 @@ class Data
         'belfius' => ['code' => 'BELFIUS', 'name' => 'Belfius', 'type' => 'gateways'],
         'betaalnaontvangst'  => ['code' => 'PAYAFTER', 'name' => 'Pay After Delivery', 'type' => 'gateways'],
         'betaalplan'  => ['code' => 'SANTANDER', 'name' => 'Betaalplan', 'type' => 'gateways'],
-        'creditcard'  => ['code' => '', 'name' => 'Credit card', 'type' => 'gateways'],
+        'creditcard'  => ['code' => 'CREDITCARD', 'name' => 'Credit card', 'type' => 'gateways'],
         'directdebit' => ['code' => 'DIRDEB', 'name' => 'Direct Debit', 'type' => 'gateways'],
         'directbanktransfer' => ['code' => 'DBRTP', 'name' => 'Direct Bank Transfer', 'type' => 'gateways'],
         'dotpay'  => ['code' => 'DOTPAY', 'name' => 'Dotpay', 'type' => 'gateways'],
