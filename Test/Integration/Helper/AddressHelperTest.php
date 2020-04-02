@@ -2,6 +2,7 @@
 
 namespace MultiSafepay\Connect\Test\Integration\Helper;
 
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Sales\Model\Order\Address;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
@@ -83,7 +84,9 @@ class AddressHelperTest extends TestCase
      */
     private function isSerialized($string): bool
     {
-        return unserialize($string) !== false;
+        $serializer = Bootstrap::getObjectManager()->create(SerializerInterface::class);
+
+        return $serializer->unserialize($string) !== false;
     }
 
     public function testSerializeAddressShouldReturnSerializedAddress()

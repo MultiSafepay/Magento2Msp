@@ -125,3 +125,4 @@ Newsletter,Nieuwsbrief
 "Notice: Captured amount %1 differs from MultiSafepay amount %2","Melding: Gefactureerd bedrag %1 verschilt van het via MultiSafepay betaalde bedrag %2"
 "Payment methods specification","Betaalmethodes specificatie"
 "This gateway does not allow a different billing and shipping address","Deze betaalmethode is alleen toegestaan als het verzendadres overeenkomt met het factuuradres"
+"Credit card will not be saved for Maestro.", "Credit card wordt niet opgeslagen voor Maestro."

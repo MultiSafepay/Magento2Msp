@@ -69,4 +69,9 @@ class ConnectTest extends TestCase
         $result = $this->connectInstance->isAvailable();
         $this->assertFalse($result);
     }
+
+    public function testSaveCreditcardTokenWhileNotUsingCreditCardGateway()
+    {
+        $this->assertFalse($this->connectInstance->canSaveCreditCardToken([]));
+    }
 }

@@ -260,17 +260,27 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
-                                
+
                                                                 <item name="belfius" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/belfius</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                                                        
+
                                                                         <item name="belfius" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>
                                                                 </item>
-                                
+
+                                                                <item name="directbanktransfer" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/directbanktransfer</item>
+                                                                    <item name="methods" xsi:type="array">
+
+                                                                        <item name="directbanktransfer" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+
                                                                 <item name="ing" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MultiSafepay_Connect/js/view/payment/gateways/ing</item>
                                                                     <item name="methods" xsi:type="array">

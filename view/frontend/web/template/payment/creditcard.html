@@ -28,7 +28,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 -->
-<!-- ko if: isApplePayAllowed() -->
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
     <style>
         .luma {
@@ -66,14 +65,13 @@
             cursor: pointer;
             margin-left: 3px;
         }
-
     </style>
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible(),
-                        event: {change: function(data, event){return clearSelectedRecurring()}}"/>
+                          event: {change: function(data, event){return clearSelectedToken()}}"/>
         <label data-bind="attr: {'for': getCode()}" class="label">
             <img data-bind="attr: {src: getGatewayImage()}" class="payment-icon"/>
             <span data-bind="text: getTitle()"></span></label>
@@ -83,62 +81,54 @@
         <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->
 
-        <!-- ko if: showIssuers() -->
-        <select name="issuerid" class="select bank"
-                data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
-			enable: true,
-			options: getIssuers(),
-			optionsValue: 'code',
-			optionsText: 'description',
-			optionsCaption: $t('Choose your bank...'),
-			value: issuerid">
-        </select>
-        <br/><br/>
-        <!-- /ko -->
-
-        <!-- ko if: showRecurring() -->
+        <!-- ko if: tokenizationEnabled() -->
+        <!-- ko if: hasTokens() -->
         <div class="msp-d-flex">
-            <select name="recurring" class="select creditcard"
+            <select name="token" class="select creditcard"
                     data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-type' : getCode() ,'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
 			enable: true,
-			options: getRecurrings(),
+			options: getTokens(),
 			optionsValue: 'value',
 			optionsText: 'label',
 			optionsCaption: $t('Choose your credit card...'),
-			event: {change: function(data, event){return setSelectedRecurring(data, event)}}
+			event: {change: function(data, event){return setActiveToken(data, event)}}
             ">
             </select>
             <a><span class="float-right luma trash float-right mspRecurringDelete"
-                     data-bind="visible: selectedRecurring, click: deleteRecurring"></span>
+                     data-bind="visible: selectedToken, click: deleteToken"></span>
             </a>
         </div>
         <br/><br/>
-        <!-- /ko -->
+        <!--/ko-->
 
-        <!-- ko if: showAddRecurringData() -->
-        <!-- ko ifnot: selectedRecurring() == "MAESTRO" -->
-        <!-- ko ifnot: selectedRecurring() -->
-        <div data-bind="visible: showTokenSave">
+        <!-- ko if: showSaveToken -->
+        <div class="field">
+        <div class="control _with-tooltip">
+            <label for="saveCreditCard">
             <input type="checkbox" name="saveCreditCard" id="saveCreditCard"
-                   data-bind="attr: {value:true}, checked: useCustomName">&nbsp;<label for="saveCreditCard">
-            <span><b><!-- ko i18n: 'Save your credit card details for a next purchase.' --><!-- /ko --> </b></span></label>
+                   data-bind="attr: {'data-type' : getCode()}, checked: showCustomName" style="width: auto;">&nbsp;
+                <span><b><!-- ko i18n: 'Save your credit card details for a next purchase.' --><!--/ko--></b></span>
+            </label>
+            <div id="mspTooltip" class="field-tooltip toggle">
+                <span id="tooltip-label" class="label">Tooltip</span>
+                <span class="field-tooltip-action action-help _active" tabindex="0" data-toggle="dropdown" data-bind="mageInit: {'dropdown':{'activeClass': '_active', 'parent': '#mspTooltop'}}" aria-labelledby="tooltip-label" aria-haspopup="true" aria-expanded="true" role="button"><span class="luma info"></span></span>
+                <div class="field-tooltip-content" data-target="dropdown" translate="'Credit card will not be saved for Maestro.'" aria-hidden="true"></div>
+            </div>
             <br/>
-            <div data-bind="if:useCustomName">
-                <input type="text" name="custom_name" placeholder="Name" data-bind="attr:{'data-type' : getCode()}">
+            <div data-bind="if:showCustomName">
+                <input type="text" name="custom_name" placeholder="Name" data-bind="attr:{'data-type' : getCode()}"/>
             </div>
             <br/>
         </div>
-        <!-- /ko -->
-        <!-- /ko -->
-        <!-- /ko -->
+        </div>
+        <!--/ko-->
+        <!--/ko-->
 
-        <!-- ko ifnot: isPayAfter() -->
         <div class="payment-method-billing-address">
             <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
-        <!-- /ko -->
 
         <div class="checkout-agreements-block">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
@@ -162,4 +152,3 @@
         </div>
     </div>
 </div>
-<!--/ko-->

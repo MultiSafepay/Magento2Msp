@@ -1,3 +1,5 @@
+<?php
+
 /**
  *
  * NOTICE OF LICENSE
@@ -26,25 +28,12 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/*browser:true*/
-/*global define*/
-define(
-    [
-            'uiComponent',
-            'Magento_Checkout/js/model/payment/renderer-list'
-        ],
-    function (
-        Component,
-        rendererList
-    ) {
-            'use strict';
-            rendererList.push(
-                {
-                    type: 'creditcard',
-                    component: 'MultiSafepay_Connect/js/view/payment/method-renderer/creditcard-method'
-                    }
-            );
-            /** Add view logic here if needed */
-            return Component.extend({});
-    }
-);
+
+namespace MultiSafepay\Connect\Model\Gateways;
+
+class Directbanktransfer extends \MultiSafepay\Connect\Model\Connect
+{
+
+    protected $_code = 'directbanktransfer';
+    public $_gatewayCode = 'DBRTP';
+}

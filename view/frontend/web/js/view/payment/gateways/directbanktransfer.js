@@ -40,8 +40,8 @@ define(
             'use strict';
             rendererList.push(
                 {
-                    type: 'creditcard',
-                    component: 'MultiSafepay_Connect/js/view/payment/method-renderer/creditcard-method'
+                    type: 'directbanktransfer',
+                    component: 'MultiSafepay_Connect/js/view/payment/method-renderer/connect-method'
                     }
             );
             /** Add view logic here if needed */
