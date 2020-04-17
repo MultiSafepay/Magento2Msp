@@ -32,6 +32,8 @@
 namespace MultiSafepay\Connect\Model\Observers;
 
 use Magento\Backend\App\Area\FrontNameResolver;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -75,22 +77,11 @@ class Order implements ObserverInterface
     public function execute(Observer $observer)
     {
         $paymentMethod = $this->_mspConnect;
-        /** @var $event Varien_Event */
-        $event = $observer->getEvent();
-
-        $orderId = $observer->getEvent()->getOrder()->getId();
-
 
         /** @var $order Mage_Sales_Model_Order */
         $order = $observer->getEvent()->getOrder();
 
-        $app_state = $this->_state;
-        $area_code = $app_state->getAreaCode();
-        if ($app_state->getAreaCode() != FrontNameResolver::AREA_CODE) {
-            return $this;
-        } else {
-            $paymentMethod->_isAdmin = true;
-        }
+        $paymentMethod->_isAdmin = true;
 
         if ($order->getEditIncrement()) {
             return $this;

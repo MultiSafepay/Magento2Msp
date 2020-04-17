@@ -41,6 +41,7 @@ use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\GatewayRestrictions;
 use MultiSafepay\Connect\Model\Gateways\Betaalnaontvangst;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+use MultiSafepay\Connect\Model\Url;
 use PHPUnit\Framework\TestCase;
 
 class BetaalnaontvangstTest extends TestCase
@@ -95,6 +96,7 @@ class BetaalnaontvangstTest extends TestCase
                 $this->objectManager->create(MultisafepayTokenizationFactory::class),
                 $this->objectManager->create(MspClient::class),
                 $this->objectManager->create(HelperData::class),
+                $this->objectManager->create(Url::class),
                 $this->objectManager->create(Creditcards::class),
                 $this->objectManager->create(\Magento\Customer\Model\Session::class),
                 $this->objectManager->create(RefundHelper::class),
