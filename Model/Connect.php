@@ -1774,10 +1774,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $order = $payment->getOrder();
             $order->setCanSendNewEmailFlag(false);
         }
-        $status = $this->getMainConfigData('order_status');
+
+        $status = $this->getNewOrderStatus();
+
         $stateObject->setState($this->_mspHelper->getAssignedState($status));
         $stateObject->setStatus($status);
         $stateObject->setIsNotified(false);
+    }
+
+    public function getNewOrderStatus()
+    {
+        return $this->getMainConfigData('order_status');
     }
 
     //Instructions will be visible within the order/e-mails

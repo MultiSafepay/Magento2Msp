@@ -506,6 +506,11 @@
         <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Title</label>
         </field>
+        <field id="banktransfer_new_order_status" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Bank Transfer New Order Status</label>
+          <comment><![CDATA[This will override the <strong>New Order Status</strong> in the <strong>MultiSafepay Settings</strong>]]></comment>
+          <source_model>MultiSafepay\Connect\Model\Config\Source\Order\Status\BanktransferStatus</source_model>
+        </field>
         <field id="allowed_carrier_active" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Shipping Method Restriction</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

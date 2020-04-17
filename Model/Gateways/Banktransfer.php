@@ -36,4 +36,17 @@ class Banktransfer extends \MultiSafepay\Connect\Model\Connect
 
     protected $_code = 'mspbanktransfer';
     public $_gatewayCode = 'BANKTRANS';
+
+    public function getNewOrderStatus()
+    {
+        $status = $this->getMainConfigData('order_status');
+
+        $order = $this->getInfoInstance()->getOrder();
+        $banktransferStatus = $this->getConfigData('banktransfer_new_order_status', $order->getStoreId(), $this->_code);
+
+        if ($banktransferStatus === null) {
+            return $status;
+        }
+        return $banktransferStatus;
+    }
 }
