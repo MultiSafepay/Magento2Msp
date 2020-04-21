@@ -17,12 +17,17 @@ jobs:
     strategy:
       matrix:
         php_version:
-          - '7.2'
+          - '7.1'
+          - '7.2'    
           - '7.3'
         magento_version:
-          - '~2.3'
-          - '~2.2'
-          - '~2.1'
+          - '~2.3.0'
+          - '~2.2.0'
+        exclude:
+          - php_version: '7.3'
+            magento_version: '~2.2.0'
+          - php_version: '7.1'
+            magento_version: '~2.3.0'
     name: Magento ${{ matrix.magento_version }} - Php ${{ matrix.php_version }}
     steps:
       - name: Prepare composer builds

@@ -14,6 +14,9 @@
         "ext-json": "*",
         "ext-pcre": "*"
     },
+    "require-dev": {
+        "php": ">=7.1"
+    },
     "autoload": {
         "files": [
             "registration.php"
