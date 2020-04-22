@@ -1069,11 +1069,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             /* We don't process fooman fee's for backend and rest api created orders */
             $app_state = $this->_appState;
             $area_code = $app_state->getAreaCode();
+
             $allowedAreas = [
                 Area::AREA_ADMINHTML,
                 Area::AREA_WEBAPI_REST,
-                Area::AREA_GRAPHQL
             ];
+            if (defined('\Magento\Framework\App\Area::AREA_GRAPHQL')) {
+                $allowedAreas[] = Area::AREA_GRAPHQL;
+            }
             if (!in_array($area_code, $allowedAreas)) {
                 $orderRepository = $this->_orderRepositoryInterface;
                 $order = $orderRepository->get($order->getId());
