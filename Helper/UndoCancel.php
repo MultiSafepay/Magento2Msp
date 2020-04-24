@@ -40,6 +40,7 @@ use Magento\InventorySales\Model\PlaceReservationsForSalesEvent;
 use Magento\InventorySalesApi\Api\Data\ItemToSellInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -83,7 +84,8 @@ class UndoCancel
         ScopeConfigInterface $scopeConfig,
         StockRegistryInterface $stockRegistry,
         ObjectManagerInterface $objectManager,
-        Manager $moduleManager
+        Manager $moduleManager,
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->storeManager = $storeManager;
         $this->scopeConfig = $scopeConfig;
@@ -91,6 +93,7 @@ class UndoCancel
         $this->priceIndexer = $priceIndexer;
         $this->objectManager = $objectManager;
         $this->moduleManager = $moduleManager;
+        $this->orderRepository = $orderRepository;
     }
 
     public function execute(Order $order): void
@@ -109,9 +112,10 @@ class UndoCancel
         $state = 'new';
         $new_status = 'pending';
 
-        $order->setStatus($new_status)->setState($state)->save();
-        $order->addStatusToHistory($new_status, 'Order has been reopened because a new transaction was started by the customer!');
-        $order->save();
+        $order->setStatus($new_status)
+            ->setState($state)
+            ->addStatusToHistory($new_status, 'Order has been reopened because a new transaction was started by the customer!');
+        $this->orderRepository->save($order);
 
         if ($this->getGlobalConfig('cataloginventory/options/can_subtract')) {
             $products = $order->getAllItems();
