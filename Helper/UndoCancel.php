@@ -74,10 +74,24 @@ class UndoCancel
     protected $objectManager;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    protected $orderRepository;
+
+    /**
      * @var Manager
      */
     protected $moduleManager;
 
+    /**
+     * @param Processor $priceIndexer
+     * @param StoreManagerInterface $storeManager
+     * @param ScopeConfigInterface $scopeConfig
+     * @param StockRegistryInterface $stockRegistry
+     * @param ObjectManagerInterface $objectManager
+     * @param Manager $moduleManager
+     * @param OrderRepositoryInterface $orderRepository
+     */
     public function __construct(
         Processor $priceIndexer,
         StoreManagerInterface $storeManager,
@@ -96,6 +110,9 @@ class UndoCancel
         $this->orderRepository = $orderRepository;
     }
 
+    /**
+     * @param Order $order
+     */
     public function execute(Order $order): void
     {
         $order->setBaseDiscountCanceled(0)
@@ -138,6 +155,9 @@ class UndoCancel
         }
     }
 
+    /**
+     * @param $product
+     */
     private function placeReservation($product)
     {
         $itemsToUndoCancel[] = $this->objectManager->create(ItemToSellInterface::class, [
@@ -154,6 +174,10 @@ class UndoCancel
         $this->priceIndexer->reindexRow($product->getProductId());
     }
 
+    /**
+     * @param $websiteId
+     * @return mixed
+     */
     private function getSalesChannel($websiteId)
     {
         $websiteRepository = $this->objectManager->get(WebsiteRepositoryInterface::class);
@@ -167,6 +191,10 @@ class UndoCancel
         ]);
     }
 
+    /**
+     * @param $objectId
+     * @return mixed
+     */
     private function getSalesEvent($objectId)
     {
         return $this->objectManager->create(SalesEventInterface::class, [
@@ -176,7 +204,12 @@ class UndoCancel
         ]);
     }
 
-    public function getGlobalConfig($path, $storeId = null)
+    /**
+     * @param $path
+     * @param null $storeId
+     * @return mixed
+     */
+    private function getGlobalConfig($path, $storeId = null)
     {
         if (null === $storeId) {
             $storeId = $this->getStore();
@@ -184,11 +217,18 @@ class UndoCancel
         return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    public function getStore()
+    /**
+     * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getStore()
     {
         return $this->storeManager->getStore();
     }
 
+    /**
+     * @return bool
+     */
     private function isMSIEnabled()
     {
         return $this->moduleManager->isEnabled('Magento_InventorySalesApi');
