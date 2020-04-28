@@ -66,6 +66,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\AddressHelper;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Helper\RefundHelper;
+use MultiSafepay\Connect\Helper\UndoCancel;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
@@ -238,6 +239,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $addressHelper;
 
     /**
+     * @var UndoCancel
+     */
+    protected $undoCancel;
+
+    /**
      * Connect constructor.
      *
      * @param \Magento\Framework\Model\Context                             $context
@@ -271,6 +277,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \Magento\Customer\Model\Session                              $customerSession
      * @param \MultiSafepay\Connect\Helper\AddressHelper                   $addressHelper
      * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
+     * @param \MultiSafepay\Connect\Helper\UndoCancel                      $undoCancel
      * @param \MultiSafepay\Connect\Model\GatewayRestrictions              $restrictions
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
@@ -309,6 +316,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Customer\Model\Session $customerSession,
         RefundHelper $refundHelper,
         AddressHelper $addressHelper,
+        UndoCancel $undoCancel,
         GatewayRestrictions $restrictions,
         DataObjectFactory $dataObjectFactory,
         AbstractResource $resource = null,
@@ -338,6 +346,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_currencyFactory = $currencyFactory;
         $this->addressHelper = $addressHelper;
         $this->refundHelper = $refundHelper;
+        $this->undoCancel = $undoCancel;
         $this->restrictions = $restrictions;
 
         $this->_mspHelper = $helperData;
@@ -1237,42 +1246,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
          *    Start undo cancel function
          */
         if ($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED && $status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED) {
-            foreach ($order->getItemsCollection() as $item) {
-                if ($item->getQtyCanceled() > 0) {
-                    $item->setQtyCanceled(0)->save();
-                }
-            }
-
-            $products = $order->getAllItems();
-
-            if ($this->getGlobalConfig('cataloginventory/options/can_subtract')) {
-                $products = $order->getAllItems();
-                foreach ($products as $itemId => $product) {
-                    $stockItem = $this->stockRegistry->getStockItem($product->getProductId());
-                    $new = $stockItem->getQty() - $product->getQtyOrdered();
-                    $stockItem->setQty($new);
-                    $stockItem->save();
-                }
-            }
-
-
-            $order->setBaseDiscountCanceled(0)
-                ->setBaseShippingCanceled(0)
-                ->setBaseSubtotalCanceled(0)
-                ->setBaseTaxCanceled(0)
-                ->setBaseTotalCanceled(0)
-                ->setDiscountCanceled(0)
-                ->setShippingCanceled(0)
-                ->setSubtotalCanceled(0)
-                ->setTaxCanceled(0)
-                ->setTotalCanceled(0);
-
-            $state = 'new';
-            $new_status = 'pending';
-
-            $order->setStatus($new_status)->setState($state)->save();
-            $order->addStatusToHistory($new_status, 'Order has been reopened because a new transaction was started by the customer!');
-            $order->save();
+            $this->undoCancel->execute($order);
         }
 
         $payment = $order->getPayment();
