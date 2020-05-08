@@ -1,3 +1,18 @@
+## 1.12.0
+Release date: May 8th, 2020
+
+### Added
++ PLGMAGTWOS-607: Add customizable order status for Bank Transfer
++ PLGMAGTWOS-611: Add REST endpoints to support PWA
+
+### Fixed
++ PLGMAGTWOS-613: Fix stock issues with MSI and reopening orders
+
+### Changed
++ Rename Santander Betaalplan to Santander Betaal per Maand
+
+***
+
 ## 1.11.0
 Release date: April 2nd, 2020
 
