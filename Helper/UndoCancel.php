@@ -49,11 +49,6 @@ use Magento\Store\Model\StoreManagerInterface;
 class UndoCancel
 {
     /**
-     * @var Processor
-     */
-    private $priceIndexer;
-
-    /**
      * @var StockRegistryInterface
      */
     protected $stockRegistry;
@@ -84,7 +79,6 @@ class UndoCancel
     protected $moduleManager;
 
     /**
-     * @param Processor $priceIndexer
      * @param StoreManagerInterface $storeManager
      * @param ScopeConfigInterface $scopeConfig
      * @param StockRegistryInterface $stockRegistry
@@ -93,7 +87,6 @@ class UndoCancel
      * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
-        Processor $priceIndexer,
         StoreManagerInterface $storeManager,
         ScopeConfigInterface $scopeConfig,
         StockRegistryInterface $stockRegistry,
@@ -104,7 +97,6 @@ class UndoCancel
         $this->storeManager = $storeManager;
         $this->scopeConfig = $scopeConfig;
         $this->stockRegistry = $stockRegistry;
-        $this->priceIndexer = $priceIndexer;
         $this->objectManager = $objectManager;
         $this->moduleManager = $moduleManager;
         $this->orderRepository = $orderRepository;
@@ -170,8 +162,6 @@ class UndoCancel
 
         $placeReservationsForSalesEvent = $this->objectManager->create(PlaceReservationsForSalesEvent::class);
         $placeReservationsForSalesEvent->execute($itemsToUndoCancel, $salesChannel, $salesEvent);
-
-        $this->priceIndexer->reindexRow($product->getProductId());
     }
 
     /**
