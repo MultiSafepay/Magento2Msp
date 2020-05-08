@@ -29,24 +29,61 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Model\Gateways;
+namespace MultiSafepay\Connect\Model;
 
-class Banktransfer extends \MultiSafepay\Connect\Model\Connect
+use Magento\Sales\Api\OrderRepositoryInterface;
+use MultiSafepay\Connect\Api\OrderInterface;
+use MultiSafepay\Connect\Helper\Data;
+
+class Order implements OrderInterface
 {
 
-    protected $_code = 'mspbanktransfer';
-    public $_gatewayCode = 'BANKTRANS';
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
 
-    public function getNewOrderStatus()
+    /**
+     * @var \Magento\Sales\Model\Order
+     */
+    protected $order;
+
+    /**
+     * @var Data
+     */
+    protected $mspHelper;
+
+    /**
+     * PaymentUrl constructor.
+     * @param \Magento\Sales\Model\Order $order
+     * @param OrderRepositoryInterface $orderRepository
+     * @param Data $data
+     */
+    public function __construct(
+        \Magento\Sales\Model\Order $order,
+        OrderRepositoryInterface $orderRepository,
+        Data $data
+    ) {
+        $this->order = $order;
+        $this->orderRepository = $orderRepository;
+        $this->mspHelper = $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrder($orderId, $hash)
     {
-        $status = $this->getMainConfigData('order_status');
-
-        $order = $this->getInfoInstance()->getOrder();
-        $banktransferStatus = $this->getConfigData('banktransfer_new_order_status', $order->getStoreId(), $this->_code);
-
-        if ($banktransferStatus === null) {
-            return $status;
+        if (!$this->mspHelper->validateOrderHash($orderId, $hash)) {
+            return '';
         }
-        return $banktransferStatus;
+
+        try {
+            $order = $this->order->loadByIncrementId($orderId);
+        } catch (\Exception $e) {
+            return 'Unable to load order';
+        }
+
+        return $this->orderRepository->get($order->getId());
     }
 }

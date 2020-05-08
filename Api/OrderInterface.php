@@ -29,24 +29,15 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Model\Gateways;
+namespace MultiSafepay\Connect\Api;
 
-class Banktransfer extends \MultiSafepay\Connect\Model\Connect
+interface OrderInterface
 {
-
-    protected $_code = 'mspbanktransfer';
-    public $_gatewayCode = 'BANKTRANS';
-
-    public function getNewOrderStatus()
-    {
-        $status = $this->getMainConfigData('order_status');
-
-        $order = $this->getInfoInstance()->getOrder();
-        $banktransferStatus = $this->getConfigData('banktransfer_new_order_status', $order->getStoreId(), $this->_code);
-
-        if ($banktransferStatus === null) {
-            return $status;
-        }
-        return $banktransferStatus;
-    }
+    /**
+     * GET for order api
+     * @param string $orderId
+     * @param string $hash
+     * @return \Magento\Sales\Api\Data\OrderInterface Order interface.
+     */
+    public function getOrder($orderId, $hash);
 }

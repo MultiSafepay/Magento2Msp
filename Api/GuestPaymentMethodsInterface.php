@@ -29,24 +29,14 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Model\Gateways;
+namespace MultiSafepay\Connect\Api;
 
-class Banktransfer extends \MultiSafepay\Connect\Model\Connect
+interface GuestPaymentMethodsInterface
 {
-
-    protected $_code = 'mspbanktransfer';
-    public $_gatewayCode = 'BANKTRANS';
-
-    public function getNewOrderStatus()
-    {
-        $status = $this->getMainConfigData('order_status');
-
-        $order = $this->getInfoInstance()->getOrder();
-        $banktransferStatus = $this->getConfigData('banktransfer_new_order_status', $order->getStoreId(), $this->_code);
-
-        if ($banktransferStatus === null) {
-            return $status;
-        }
-        return $banktransferStatus;
-    }
+    /**
+     * GET for payment-methods api
+     * @param string $cartId The cart ID.
+     * @return \Magento\Quote\Api\Data\PaymentMethodInterface[] Array of payment methods.
+     */
+    public function getList($cartId);
 }

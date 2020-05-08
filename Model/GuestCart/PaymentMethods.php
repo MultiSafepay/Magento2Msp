@@ -29,24 +29,40 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Model\Gateways;
+namespace MultiSafepay\Connect\Model\GuestCart;
 
-class Banktransfer extends \MultiSafepay\Connect\Model\Connect
+use Magento\Quote\Model\QuoteIdMaskFactory;
+
+class PaymentMethods implements \MultiSafepay\Connect\Api\GuestPaymentMethodsInterface
 {
+    /**
+     * @var QuoteIdMaskFactory
+     */
+    protected $quoteIdMaskFactory;
 
-    protected $_code = 'mspbanktransfer';
-    public $_gatewayCode = 'BANKTRANS';
+    /**
+     * @var \MultiSafepay\Connect\Model\PaymentMethods
+     */
+    protected $paymentMethods;
 
-    public function getNewOrderStatus()
+    public function __construct(
+        \MultiSafepay\Connect\Model\PaymentMethods $paymentMethods,
+        QuoteIdMaskFactory $quoteIdMaskFactory
+    ) {
+        $this->paymentMethods = $paymentMethods;
+        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getList($cartId)
     {
-        $status = $this->getMainConfigData('order_status');
+        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
 
-        $order = $this->getInfoInstance()->getOrder();
-        $banktransferStatus = $this->getConfigData('banktransfer_new_order_status', $order->getStoreId(), $this->_code);
-
-        if ($banktransferStatus === null) {
-            return $status;
+        if ($quoteIdMask->getQuoteId() === null) {
+            return false;
         }
-        return $banktransferStatus;
+        return $this->paymentMethods->getList($quoteIdMask->getQuoteId());
     }
 }

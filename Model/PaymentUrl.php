@@ -29,24 +29,56 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Model\Gateways;
+namespace MultiSafepay\Connect\Model;
 
-class Banktransfer extends \MultiSafepay\Connect\Model\Connect
+use Magento\Sales\Api\OrderRepositoryInterface;
+
+class PaymentUrl implements \MultiSafepay\Connect\Api\PaymentUrlInterface
 {
 
-    protected $_code = 'mspbanktransfer';
-    public $_gatewayCode = 'BANKTRANS';
+    /**
+     * @var OrderRepositoryInterface
+     */
+    protected $orderRepository;
 
-    public function getNewOrderStatus()
+    /**
+     * PaymentUrl constructor.
+     * @param OrderRepositoryInterface $orderRepository
+     */
+    public function __construct(
+        OrderRepositoryInterface $orderRepository
+    ) {
+        $this->orderRepository = $orderRepository;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPaymentUrl($orderId, $customerId, $cartId = false)
     {
-        $status = $this->getMainConfigData('order_status');
-
-        $order = $this->getInfoInstance()->getOrder();
-        $banktransferStatus = $this->getConfigData('banktransfer_new_order_status', $order->getStoreId(), $this->_code);
-
-        if ($banktransferStatus === null) {
-            return $status;
+        try {
+            $order = $this->orderRepository->get($orderId);
+        } catch (\Exception $e) {
+            return 'Unable to load order';
         }
-        return $banktransferStatus;
+
+        if ($cartId && $order->getQuoteId() !== $cartId) {
+            return '';
+        }
+
+        /**
+         * This is already checked on the order load
+         * \Magento\Sales\Model\ResourceModel\Order\Plugin\Authorization::afterLoad
+        */
+        if ($customerId && $customerId !== $order->getCustomerId()) {
+            return '';
+        }
+
+        $paymentUrl = $order->getPayment()->getAdditionalInformation('payment_link');
+        if ($paymentUrl === null) {
+            return '';
+        }
+
+        return $paymentUrl;
     }
 }

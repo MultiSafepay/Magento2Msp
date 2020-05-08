@@ -29,24 +29,44 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Model\Gateways;
+namespace MultiSafepay\Connect\Model\GuestCart;
 
-class Banktransfer extends \MultiSafepay\Connect\Model\Connect
+class PaymentUrl implements \MultiSafepay\Connect\Api\GuestPaymentUrlInterface
 {
+    /**
+     * @var \MultiSafepay\Connect\Model\PaymentUrl
+     */
+    protected $paymentUrlModel;
 
-    protected $_code = 'mspbanktransfer';
-    public $_gatewayCode = 'BANKTRANS';
+    /**
+     * @var \Magento\Quote\Model\QuoteIdMaskFactory
+     */
+    protected $quoteIdMaskFactory;
 
-    public function getNewOrderStatus()
+    /**
+     * PaymentUrl constructor.
+     * @param \MultiSafepay\Connect\Model\PaymentUrl $paymentUrlModel
+     * @param \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory
+     */
+    public function __construct(
+        \MultiSafepay\Connect\Model\PaymentUrl $paymentUrlModel,
+        \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory
+    ) {
+        $this->paymentUrlModel = $paymentUrlModel;
+        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPaymentUrl($orderId, $cartId)
     {
-        $status = $this->getMainConfigData('order_status');
+        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
 
-        $order = $this->getInfoInstance()->getOrder();
-        $banktransferStatus = $this->getConfigData('banktransfer_new_order_status', $order->getStoreId(), $this->_code);
-
-        if ($banktransferStatus === null) {
-            return $status;
+        if ($quoteIdMask->getQuoteId() === null) {
+            return false;
         }
-        return $banktransferStatus;
+
+        return $this->paymentUrlModel->getPaymentUrl($orderId, false, $quoteIdMask->getQuoteId());
     }
 }

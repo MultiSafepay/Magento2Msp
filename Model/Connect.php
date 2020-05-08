@@ -36,6 +36,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Directory\Model\CurrencyFactory;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\RequestInterface;
@@ -65,9 +66,11 @@ use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\AddressHelper;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Helper\RefundHelper;
+use MultiSafepay\Connect\Helper\UndoCancel;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
 use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
+use MultiSafepay\Connect\Model\Url;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -205,6 +208,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     /**
      * @var \Magento\Framework\App\RequestInterface
      */
+    /** @var $url Url */
+    protected $url;
     protected $_requestHttp;
     protected $_currencyFactory;
     protected $_client;
@@ -232,6 +237,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @var AddressHelper
      */
     protected $addressHelper;
+
+    /**
+     * @var UndoCancel
+     */
+    protected $undoCancel;
 
     /**
      * Connect constructor.
@@ -262,10 +272,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param \MultiSafepay\Connect\Model\MultisafepayTokenizationFactory  $multisafepayTokenizationFactory
      * @param \MultiSafepay\Connect\Model\Api\MspClient                    $mspClient
      * @param \MultiSafepay\Connect\Helper\Data                            $helperData
+     * @param \MultiSafepay\Connect\Model\Url                              $url
      * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
      * @param \Magento\Customer\Model\Session                              $customerSession
      * @param \MultiSafepay\Connect\Helper\AddressHelper                   $addressHelper
      * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
+     * @param \MultiSafepay\Connect\Helper\UndoCancel                      $undoCancel
      * @param \MultiSafepay\Connect\Model\GatewayRestrictions              $restrictions
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
@@ -299,10 +311,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         MultisafepayTokenizationFactory $multisafepayTokenizationFactory,
         MspClient $mspClient,
         HelperData $helperData,
+        Url $url,
         Creditcards $creditcards,
         \Magento\Customer\Model\Session $customerSession,
         RefundHelper $refundHelper,
         AddressHelper $addressHelper,
+        UndoCancel $undoCancel,
         GatewayRestrictions $restrictions,
         DataObjectFactory $dataObjectFactory,
         AbstractResource $resource = null,
@@ -332,11 +346,13 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_currencyFactory = $currencyFactory;
         $this->addressHelper = $addressHelper;
         $this->refundHelper = $refundHelper;
+        $this->undoCancel = $undoCancel;
         $this->restrictions = $restrictions;
 
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
         $this->_creditcards = $creditcards;
+        $this->url = $url;
 
         $this->_minAmount = $this->getConfigData('min_order_total');
         $this->_maxAmount = $this->getConfigData('max_order_total');
@@ -524,16 +540,23 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_gatewayCode = "";
         }
 
-        $notification = $this->_urlBuilder->getUrl('multisafepay/connect/notification/&type=initial', ['_nosid' => true]);
-        $redirecturl = substr($this->_urlBuilder->getUrl('multisafepay/connect/success', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
-        $cancelurl = substr($this->_urlBuilder->getUrl('multisafepay/connect/cancel', ['_nosid' => true]), 0, -1) . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
+        $hash = $this->_mspHelper->encryptOrder($order->getIncrementId());
+
+        $this->url->setRedirectUrl('multisafepay/connect/success', ['hash' => $hash])
+            ->setCancelUrl('multisafepay/connect/cancel', ['hash' => $hash]);
 
         if ($this->_isAdmin) {
             $store_id = $order->getStoreId();
-            $notification = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/notification/&type=initial';
-            $redirecturl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/success' . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
-            $cancelurl = $this->_storeManager->getStore($store_id)->getBaseUrl() . 'multisafepay/connect/cancel' . '?hash=' . $this->_mspHelper->encryptOrder($order->getIncrementId());
+
+            $this->url
+                ->setNotificationUrl('multisafepay/connect/notification', ['type' => 'initial'], $store_id)
+                ->setCancelUrl('multisafepay/connect/cancel', ['hash' => $hash], $store_id)
+                ->setRedirectUrl('multisafepay/connect/success', ['hash' => $hash], $store_id);
         }
+
+        $notification = $this->url->getNotificationUrl();
+        $redirecturl = $this->url->getRedirectUrl();
+        $cancelurl = $this->url->getCancelUrl();
 
         $customerID = $this->_customerSession->getCustomer()->getId();
 
@@ -618,7 +641,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.11.0',
+                    "plugin_version" => ' - Plugin 1.12.0',
                     "partner" => "MultiSafepay",
                 ],
                 "gateway_info" => [
@@ -1052,10 +1075,18 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             /*
              * Start Fooman Surcharge support
              */
-            /* We don't process fooman fee's for backend created orders */
+            /* We don't process fooman fee's for backend and rest api created orders */
             $app_state = $this->_appState;
             $area_code = $app_state->getAreaCode();
-            if ($app_state->getAreaCode() != \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+
+            $allowedAreas = [
+                Area::AREA_ADMINHTML,
+                Area::AREA_WEBAPI_REST,
+            ];
+            if (defined('\Magento\Framework\App\Area::AREA_GRAPHQL')) {
+                $allowedAreas[] = Area::AREA_GRAPHQL;
+            }
+            if (!in_array($area_code, $allowedAreas)) {
                 $orderRepository = $this->_orderRepositoryInterface;
                 $order = $orderRepository->get($order->getId());
 
@@ -1215,42 +1246,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
          *    Start undo cancel function
          */
         if ($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED && $status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED) {
-            foreach ($order->getItemsCollection() as $item) {
-                if ($item->getQtyCanceled() > 0) {
-                    $item->setQtyCanceled(0)->save();
-                }
-            }
-
-            $products = $order->getAllItems();
-
-            if ($this->getGlobalConfig('cataloginventory/options/can_subtract')) {
-                $products = $order->getAllItems();
-                foreach ($products as $itemId => $product) {
-                    $stockItem = $this->stockRegistry->getStockItem($product->getProductId());
-                    $new = $stockItem->getQty() - $product->getQtyOrdered();
-                    $stockItem->setQty($new);
-                    $stockItem->save();
-                }
-            }
-
-
-            $order->setBaseDiscountCanceled(0)
-                ->setBaseShippingCanceled(0)
-                ->setBaseSubtotalCanceled(0)
-                ->setBaseTaxCanceled(0)
-                ->setBaseTotalCanceled(0)
-                ->setDiscountCanceled(0)
-                ->setShippingCanceled(0)
-                ->setSubtotalCanceled(0)
-                ->setTaxCanceled(0)
-                ->setTotalCanceled(0);
-
-            $state = 'new';
-            $new_status = 'pending';
-
-            $order->setStatus($new_status)->setState($state)->save();
-            $order->addStatusToHistory($new_status, 'Order has been reopened because a new transaction was started by the customer!');
-            $order->save();
+            $this->undoCancel->execute($order);
         }
 
         $payment = $order->getPayment();
@@ -1755,10 +1751,17 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $order = $payment->getOrder();
             $order->setCanSendNewEmailFlag(false);
         }
-        $status = $this->getMainConfigData('order_status');
+
+        $status = $this->getNewOrderStatus();
+
         $stateObject->setState($this->_mspHelper->getAssignedState($status));
         $stateObject->setStatus($status);
         $stateObject->setIsNotified(false);
+    }
+
+    public function getNewOrderStatus()
+    {
+        return $this->getMainConfigData('order_status');
     }
 
     //Instructions will be visible within the order/e-mails

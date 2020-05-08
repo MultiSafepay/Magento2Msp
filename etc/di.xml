@@ -7,7 +7,6 @@
             </argument>
         </arguments>
     </virtualType>
-
     <type name="Magento\Config\Model\Config\TypePool">
         <arguments>
             <argument name="sensitive" xsi:type="array">
@@ -23,4 +22,10 @@
             </argument>
         </arguments>
     </type>
+    <preference for="MultiSafepay\Connect\Api\PaymentUrlInterface" type="MultiSafepay\Connect\Model\PaymentUrl"/>
+    <preference for="MultiSafepay\Connect\Api\GuestPaymentUrlInterface" type="MultiSafepay\Connect\Model\GuestCart\PaymentUrl"/>
+    <preference for="MultiSafepay\Connect\Api\OrderInterface" type="MultiSafepay\Connect\Model\Order"/>
+    <preference for="MultiSafepay\Connect\Api\PaymentMethodsInterface" type="MultiSafepay\Connect\Model\PaymentMethods"/>
+    <preference for="MultiSafepay\Connect\Api\GuestPaymentMethodsInterface" type="MultiSafepay\Connect\Model\GuestCart\PaymentMethods"/>
+    <preference for="MultiSafepay\Connect\Api\RestoreQuoteInterface" type="MultiSafepay\Connect\Model\RestoreQuote"/>
 </config>

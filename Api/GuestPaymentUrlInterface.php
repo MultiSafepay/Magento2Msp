@@ -29,24 +29,15 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace MultiSafepay\Connect\Model\Gateways;
+namespace MultiSafepay\Connect\Api;
 
-class Banktransfer extends \MultiSafepay\Connect\Model\Connect
+interface GuestPaymentUrlInterface
 {
-
-    protected $_code = 'mspbanktransfer';
-    public $_gatewayCode = 'BANKTRANS';
-
-    public function getNewOrderStatus()
-    {
-        $status = $this->getMainConfigData('order_status');
-
-        $order = $this->getInfoInstance()->getOrder();
-        $banktransferStatus = $this->getConfigData('banktransfer_new_order_status', $order->getStoreId(), $this->_code);
-
-        if ($banktransferStatus === null) {
-            return $status;
-        }
-        return $banktransferStatus;
-    }
+    /**
+     * GET for paymentUrl api
+     * @param int $orderId
+     * @param string $cartId
+     * @return string
+     */
+    public function getPaymentUrl($orderId, $cartId);
 }
