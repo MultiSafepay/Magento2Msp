@@ -90,7 +90,7 @@ class Redirect extends Action
         $transactionObject = $paymentMethod->transactionRequest($session, false);
 
         if (!empty($transactionObject->result->error_code)) {
-            $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
+            $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method.') . ' ' . __('Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
             $this->_redirect('checkout/cart');
         } else {
             $this->getResponse()->setRedirect($transactionObject->result->data->payment_url);
