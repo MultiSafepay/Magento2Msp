@@ -97,7 +97,7 @@ class Redirect extends Action
             if (!$transactionObject) {
                 $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method.'));
             } else {
-                $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method. Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
+                $this->messageManager->addError(__('There was an error processing your transaction request, please try again with another payment method.') . ' ' . __('Error: ' . $transactionObject->result->error_code . ' - ' . $transactionObject->result->error_info));
             }
             $session->restoreQuote();
             $this->_redirect('checkout/cart');
