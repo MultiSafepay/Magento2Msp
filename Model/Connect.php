@@ -544,10 +544,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $this->url->setRedirectUrl('multisafepay/connect/success', ['hash' => $hash])
             ->setCancelUrl('multisafepay/connect/cancel', ['hash' => $hash]);
+        
+        $store_id = $order->getStoreId();
 
         if ($this->_isAdmin) {
-            $store_id = $order->getStoreId();
-
             $this->url
                 ->setNotificationUrl('multisafepay/connect/notification', ['type' => 'initial'], $store_id)
                 ->setCancelUrl('multisafepay/connect/cancel', ['hash' => $hash], $store_id)
@@ -623,7 +623,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     "close_window" => "true"
                 ],
                 "customer" => [
-                    "locale" => $resolver->getLocale(),
+                    "locale" => $resolver->emulate($store_id),
                     "ip_address" => $ip_address,
                     "forwarded_ip" => $forwarded_ip,
                     "first_name" => $billing->getFirstName(),
@@ -641,7 +641,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.12.0',
+                    "plugin_version" => ' - Plugin 1.12.1',
                     "partner" => "MultiSafepay",
                 ],
                 "gateway_info" => [

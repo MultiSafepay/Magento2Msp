@@ -147,7 +147,7 @@ define(
                     window.location.replace(url.build('multisafepay/connect/redirect/?recurring_hash=' + hash + '&name=' + name + '&save=' + save));
                     } else if (this.item.method == 'creditcard') {
                     window.location.replace(url.build('multisafepay/connect/redirect/?creditcard=' + $('[name="creditcard"]').val()));
-                } else if (this.supportedTokenization.includes(this.item.method)) {
+                } else if (this.supportedTokenization.indexOf(this.item.method) > -1) {
                     var active = this.item.method;
                     var hash = $('[name="recurring"][data-type="' + active + '"]').val();
                     var name = $('[name="custom_name"][data-type="' + active + '"]').val();
@@ -183,7 +183,7 @@ define(
             },
             showRecurring: function () {
                 if (configConnect.recurrings.enabled) {
-                    if (this.supportedTokenization.includes(this.item.method)) {
+                    if (this.supportedTokenization.indexOf(this.item.method) > -1) {
                         var active = this.item.method;
                         if (configConnect.recurrings[active].hasRecurrings) {
                             return true;
@@ -195,7 +195,7 @@ define(
             },
             showAddRecurringData: function () {
                 if (configConnect.recurrings.enabled && customer.isLoggedIn()) {
-                    if (this.supportedTokenization.includes(this.item.method) || this.item.method == 'creditcard') {
+                    if (this.supportedTokenization.indexOf(this.item.method) > -1 || this.item.method == 'creditcard') {
                         return true;
                     }
                 }
@@ -247,7 +247,7 @@ define(
                 this.showSaveToken();
 
                 if($(target).attr('id') === 'creditcard_expiration') {
-                    if (creditcards.includes(value)) {
+                    if (creditcards.indexOf(value) > -1) {
                         return this.selectedRecurring(false);
                     }
                 }

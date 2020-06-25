@@ -1,3 +1,14 @@
+## 1.12.1
+Release date: Jun 25th, 2020
+
+### Fixed
++ PLGMAGTWOS-628: Fix reopened orders stuck on pending
++ Always set store locale as locale - by Hexmage
++ Solve IE error Object doesn't support property or method 'includes' - by lewisvoncken
++ Fix translatable error message - by peterjaap
+
+***
+
 ## 1.12.0
 Release date: May 8th, 2020
 
