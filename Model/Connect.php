@@ -641,7 +641,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.12.0',
+                    "plugin_version" => ' - Plugin 1.12.1',
                     "partner" => "MultiSafepay",
                 ],
                 "gateway_info" => [

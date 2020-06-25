@@ -40,6 +40,7 @@ use Magento\InventorySales\Model\PlaceReservationsForSalesEvent;
 use Magento\InventorySalesApi\Api\Data\ItemToSellInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
+use Magento\Sales\Api\OrderItemRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Api\WebsiteRepositoryInterface;
@@ -79,12 +80,19 @@ class UndoCancel
     protected $moduleManager;
 
     /**
+     * @var OrderItemRepositoryInterface
+     */
+    private $orderItemRepository;
+
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param ScopeConfigInterface $scopeConfig
      * @param StockRegistryInterface $stockRegistry
      * @param ObjectManagerInterface $objectManager
      * @param Manager $moduleManager
      * @param OrderRepositoryInterface $orderRepository
+     * @param OrderItemRepositoryInterface $orderItemRepository
      */
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -92,7 +100,8 @@ class UndoCancel
         StockRegistryInterface $stockRegistry,
         ObjectManagerInterface $objectManager,
         Manager $moduleManager,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        OrderItemRepositoryInterface $orderItemRepository
     ) {
         $this->storeManager = $storeManager;
         $this->scopeConfig = $scopeConfig;
@@ -100,6 +109,7 @@ class UndoCancel
         $this->objectManager = $objectManager;
         $this->moduleManager = $moduleManager;
         $this->orderRepository = $orderRepository;
+        $this->orderItemRepository = $orderItemRepository;
     }
 
     /**
@@ -140,9 +150,10 @@ class UndoCancel
             }
         }
 
-        foreach ($order->getItemsCollection() as $item) {
+        foreach ($order->getAllItems() as $item) {
             if ($item->getQtyCanceled() > 0) {
-                $item->setQtyCanceled(0)->save();
+                $item->setQtyCanceled(0);
+                $this->orderItemRepository->save($item);
             }
         }
     }
