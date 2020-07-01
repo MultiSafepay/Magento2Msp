@@ -31,8 +31,10 @@
 
 namespace MultiSafepay\Connect\Model;
 
+use Magento\Catalog\Model\Product\Type;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Directory\Model\CurrencyFactory;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -40,7 +42,6 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\AppInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Locale\Resolver;
@@ -52,7 +53,6 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\Method\Logger;
-use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
@@ -69,8 +69,6 @@ use MultiSafepay\Connect\Helper\RefundHelper;
 use MultiSafepay\Connect\Helper\UndoCancel;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
-use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
-use MultiSafepay\Connect\Model\Url;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -434,7 +432,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_mspHelper->isEnabled('tokenization') &&
             !in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported())
         ) {
-
             $recurringId = $this->_mspHelper->getRecurringIdByHash(
                 $params['recurring_hash']
             );
@@ -490,8 +487,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $phone = $billing->getTelephone();
         }
 
-
-
         //Shipping
         if ($order->canShip()) {
             $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1), $shipping->getStreetLine(2));
@@ -520,7 +515,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $delivery_data = [];
         }
 
-
         if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS"
             || $this->_gatewayCode == "EINVOICE" || !is_null($recurring)
         ) {
@@ -544,7 +538,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $this->url->setRedirectUrl('multisafepay/connect/success', ['hash' => $hash])
             ->setCancelUrl('multisafepay/connect/cancel', ['hash' => $hash]);
-        
+
         $store_id = $order->getStoreId();
 
         if ($this->_isAdmin) {
@@ -580,7 +574,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             && filter_var($params['save'], FILTER_VALIDATE_BOOLEAN)
             && (in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported()) || empty($params['recurring_hash']))
         ) {
-
             $model = $this->_mspToken->create();
             $model->addData(
                 [
@@ -604,7 +597,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
                 "currency" => $currency,
                 "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
-                "description" => __('Order')." #{$order->getIncrementId()} ". __('@') ." {$this->_mspHelper->getStoreName()}",
+                "description" => __('Order') . " #{$order->getIncrementId()} " . __('@') . " {$this->_mspHelper->getStoreName()}",
                 "var1" => "",
                 "var2" => "",
                 "var3" => "",
@@ -661,7 +654,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             $mspOrderData = $mspOrderDataObject->getData('orderData');
             $this->_client->orders->post($mspOrderData);
-
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             return false;
         }
@@ -752,7 +744,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $environment = $this->getMainConfigData('msp_env');
         $this->initializeClient($environment, $order);
 
-
         if ($this->_mspHelper->isFastcheckoutTransaction($transaction_details)) {
             $id = $order->getQuoteId();
         } else {
@@ -809,8 +800,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
             }
 
-            if ($item->getParentItem()) {
+            // Do not add bundled product type
+            if ($item->getProductType() === Type::TYPE_BUNDLE) {
                 continue;
+            }
+            // Do not add child of configurable type
+            if ($item->getParentItem() !== null) {
+                $parentProductType = $item->getParentItem()->getProductType();
+                if ($parentProductType === Configurable::TYPE_CODE) {
+                    continue;
+                }
             }
             $taxClass = ($item->getTaxPercent() == 0 ? 'none' : $item->getTaxPercent());
             $rate = $item->getTaxPercent() / 100;
@@ -845,7 +844,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $ndata = $item->getData();
 
             if ($ndata['price'] != 0) {
-
                 $storeId = $this->getStore();
                 if ($use_base_currency) {
                     $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
@@ -917,8 +915,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     }
                 }
 
-
-
                 $shoppingCart['shopping_cart']['items'][] = [
                     "name" => $itemName,
                     "description" => $item->getDescription(),
@@ -963,8 +959,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $shipping_cost_orig = $order->getShippingAmount();
         }
 
-
-
         if ($shipping_percentage == 1 || $shipping_cost_orig == 0) {
             $shipping_percentage = "0.00";
         }
@@ -981,7 +975,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 ["rate" => $shipping_percentage]
             ],
         ];
-
 
         $shoppingCart['shopping_cart']['items'][] = [
             "name" => $title,
@@ -1132,7 +1125,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
         }
 
-
         $checkoutData["shopping_cart"] = $shoppingCart['shopping_cart'];
         $checkoutData["checkout_options"] = $alternateTaxRates;
 
@@ -1164,7 +1156,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
         }
 
-
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = [], $query_string = false);
 
         //$this->logger->info(print_r($msporder, true));
@@ -1189,7 +1180,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $order->getIncrementId()
             );
             if (!empty($id)) {
-
                 $customerRecurringIds
                     = $this->_mspHelper->getRecurringIdsByCustomerId(
                         $customerID,
@@ -1199,7 +1189,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $lastElm = end($customerRecurringIds);
 
                 foreach ($customerRecurringIds as $customerRecurringId) {
-
                     $recurring = $this->_mspToken->create()->load(
                         $customerRecurringId
                     );
@@ -1229,7 +1218,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                 "cc_type",
                                 $msporder->payment_details->type
                             );
-
 
                             $model->save();
                         }
@@ -1471,7 +1459,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
                 $emailInvoice = $this->getMainConfigData('email_invoice');
                 $gateway = $payment->getMethodInstance()->_gatewayCode;
-
 
                 if ($emailInvoice && $gateway != 'PAYAFTER' && $gateway != 'KLARNA' && $gateway != 'AFTERPAY') {
                     $this->_invoiceSender->send($invoice, true);
@@ -1832,7 +1819,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $mspType = $this->_mspHelper->getPaymentType($code);
         $path = $mspType . '/' . $code . '/' . $field;
 
-
         if ($field == "test_api_key" || $field == "live_api_key") {
             return $this->getMainConfigData($field, $storeId);
         }
@@ -1863,7 +1849,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function getGlobalConfig($path, $storeId = null)
     {
-
         if (null === $storeId) {
             $storeId = $this->getStore();
         }
