@@ -291,11 +291,15 @@ class Data
      * Returns payment code based on MultiSafepay gateway
      *
      * @param string gateway
-     * @return string
+     * @return bool|string
      */
     public function getPaymentCode($gateway)
     {
-        return (isset($this->gateways[$gateway])) ? $this->gateways[$gateway]['code'] : null;
+        $gatewayIndex = array_search($gateway, array_column($this->gateways, 'code'), true);
+        if (!$gatewayIndex) {
+            return false;
+        }
+        return array_keys($this->gateways)[$gatewayIndex];
     }
 
     /**
