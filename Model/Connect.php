@@ -56,6 +56,7 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
+use Magento\Sales\Exception\CouldNotRefundException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Payment;
@@ -1553,6 +1554,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $data = $this->_requestHttp->getPost('creditmemo');
             //Do a status request for this order to receive already refunded item data from MSP transaction
             $msporder = $this->_client->orders->get('orders', $id, $body = [], $query_string = false);
+
+            // Prevent incorrect refund requests
+            if ($msporder->payment_details->type !== $gateway) {
+                throw new CouldNotRefundException(__("MultiSafepay Error: Refund not processed online as gateway did not match the order gateway."));
+            }
+
             $originalCart = $msporder->shopping_cart;
             $refundData = [];
 
