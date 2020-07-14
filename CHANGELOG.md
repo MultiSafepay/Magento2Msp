@@ -1,3 +1,17 @@
+## 1.12.2
+Release date: Jul 14th, 2020
+
+### Changed
++ The redirect_url (connect/success) will no longer create an invoice.
+ 
+### Fixed
++ PLGMAGTWOS-635: Prevent double invoices by not creating invoice on redirect_url
++ PLGMAGTWOS-634: Prevent incorrect refund call for billing suite payment methods
++ PLGMAGTWOS-633: Fix update paymentmethod when paid differently
++ Improve support for bundled products
+    
+***
+
 ## 1.12.1
 Release date: Jun 25th, 2020
 
