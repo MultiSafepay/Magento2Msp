@@ -1234,7 +1234,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         /**
          *    Start undo cancel function
          */
-        if ($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED && $status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED) {
+        if ($order->getState() == Order::STATE_CANCELED && $status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED) {
             $this->undoCancel->execute($order);
         }
 
@@ -1273,13 +1273,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 //We don't process this callback as the status would be the same as the new order status configured.
                 break;
             case \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED:
-                $order_email = $this->getMainConfigData('send_order_email');
-
-                if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
-                    $this->_orderNotifier->notify($order);
+                if (!$success) { // Only on notify
+                    $order_email = $this->getMainConfigData('send_order_email');
+                    if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
+                        $this->_orderNotifier->notify($order);
+                    }
                 }
 
-                $this->_registerPaymentCapture(true, $transactionid, $order, $msporder);
+                $this->_registerPaymentCapture(true, $transactionid, $order, $msporder, $success);
 
                 if ($fetch) {
                     return true;
@@ -1297,7 +1298,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
-                if ($cancelled == \Magento\Sales\Model\Order::STATE_CANCELED) {
+                if ($cancelled == Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($cancelled)->save();
@@ -1308,7 +1309,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $declined = $this->getMainConfigData('declined_order_status');
-                if ($declined == \Magento\Sales\Model\Order::STATE_CANCELED) {
+                if ($declined == Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction declined</b><br />')->save();
                 } else {
                     $order->setStatus($declined)->save();
@@ -1319,7 +1320,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $expired = $this->getMainConfigData('expired_order_status');
-                if ($expired == \Magento\Sales\Model\Order::STATE_CANCELED) {
+                if ($expired == Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($expired)->save();
@@ -1331,7 +1332,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
-                if ($cancelled == \Magento\Sales\Model\Order::STATE_CANCELED) {
+                if ($cancelled == Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($cancelled)->save();
@@ -1379,12 +1380,19 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param string $transactionid
      * @param Order $order
      * @param \stdClass $msporder
+     * @param bool $isRedirect
      * @return void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function _registerPaymentCapture($skipFraudDetection, $transactionid, $order, $msporder)
+    protected function _registerPaymentCapture($skipFraudDetection, $transactionid, $order, $msporder, $isRedirect)
     {
-        if (($order->canInvoice() || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) {
+        if ($order->canInvoice() || $order->getStatus() == Order::STATE_PENDING_PAYMENT || $order->getStatus() == Order::STATE_PAYMENT_REVIEW) {
+            if ($isRedirect) { // Only capture invoice on notify
+                $order->setState(Order::STATE_PROCESSING);
+                $order->setStatus($order->getConfig()->getStateDefaultStatus(Order::STATE_PROCESSING));
+                $this->_orderRepositoryInterface->save($order);
+                return;
+            }
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
 
