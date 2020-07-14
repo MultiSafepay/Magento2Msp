@@ -2,7 +2,7 @@
     "name": "multisafepay/magento2msp",
     "description": "MultiSafepay module for Magento2",
     "type": "magento2-module",
-    "version": "1.12.1",
+    "version": "1.12.2",
     "license": [
         "OSL-3.0"
     ],

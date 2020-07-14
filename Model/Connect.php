@@ -31,8 +31,10 @@
 
 namespace MultiSafepay\Connect\Model;
 
+use Magento\Catalog\Model\Product\Type;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Directory\Model\CurrencyFactory;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -40,7 +42,6 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\AppInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Locale\Resolver;
@@ -52,10 +53,10 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\Method\Logger;
-use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
+use Magento\Sales\Exception\CouldNotRefundException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Payment;
@@ -69,8 +70,6 @@ use MultiSafepay\Connect\Helper\RefundHelper;
 use MultiSafepay\Connect\Helper\UndoCancel;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
-use MultiSafepay\Connect\Model\MultisafepayTokenizationFactory;
-use MultiSafepay\Connect\Model\Url;
 
 class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -434,7 +433,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_mspHelper->isEnabled('tokenization') &&
             !in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported())
         ) {
-
             $recurringId = $this->_mspHelper->getRecurringIdByHash(
                 $params['recurring_hash']
             );
@@ -490,8 +488,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $phone = $billing->getTelephone();
         }
 
-
-
         //Shipping
         if ($order->canShip()) {
             $shippingaddressData = $this->parseCustomerAddress($shipping->getStreetLine(1), $shipping->getStreetLine(2));
@@ -520,7 +516,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $delivery_data = [];
         }
 
-
         if (!empty($this->issuer_id) || $this->_gatewayCode == "BANKTRANS"
             || $this->_gatewayCode == "EINVOICE" || !is_null($recurring)
         ) {
@@ -544,7 +539,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         $this->url->setRedirectUrl('multisafepay/connect/success', ['hash' => $hash])
             ->setCancelUrl('multisafepay/connect/cancel', ['hash' => $hash]);
-        
+
         $store_id = $order->getStoreId();
 
         if ($this->_isAdmin) {
@@ -580,7 +575,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             && filter_var($params['save'], FILTER_VALIDATE_BOOLEAN)
             && (in_array($params['recurring_hash'], $this->_creditcards->tokenizationSupported()) || empty($params['recurring_hash']))
         ) {
-
             $model = $this->_mspToken->create();
             $model->addData(
                 [
@@ -604,7 +598,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "recurring_id" => (!empty($recurring)) ? $this->_mspHelper->decrypt($recurring['recurring_id']) : "",
                 "currency" => $currency,
                 "amount" => $this->_mspHelper->getAmountInCents($order, $use_base_currency),
-                "description" => __('Order')." #{$order->getIncrementId()} ". __('@') ." {$this->_mspHelper->getStoreName()}",
+                "description" => __('Order') . " #{$order->getIncrementId()} " . __('@') . " {$this->_mspHelper->getStoreName()}",
                 "var1" => "",
                 "var2" => "",
                 "var3" => "",
@@ -641,7 +635,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.12.1',
+                    "plugin_version" => ' - Plugin 1.12.2',
                     "partner" => "MultiSafepay",
                 ],
                 "gateway_info" => [
@@ -661,7 +655,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
             $mspOrderData = $mspOrderDataObject->getData('orderData');
             $this->_client->orders->post($mspOrderData);
-
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             return false;
         }
@@ -752,7 +745,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $environment = $this->getMainConfigData('msp_env');
         $this->initializeClient($environment, $order);
 
-
         if ($this->_mspHelper->isFastcheckoutTransaction($transaction_details)) {
             $id = $order->getQuoteId();
         } else {
@@ -809,8 +801,16 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
             }
 
-            if ($item->getParentItem()) {
+            // Do not add bundled product type
+            if ($item->getProductType() === Type::TYPE_BUNDLE) {
                 continue;
+            }
+            // Do not add child of configurable type
+            if ($item->getParentItem() !== null) {
+                $parentProductType = $item->getParentItem()->getProductType();
+                if ($parentProductType === Configurable::TYPE_CODE) {
+                    continue;
+                }
             }
             $taxClass = ($item->getTaxPercent() == 0 ? 'none' : $item->getTaxPercent());
             $rate = $item->getTaxPercent() / 100;
@@ -845,7 +845,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $ndata = $item->getData();
 
             if ($ndata['price'] != 0) {
-
                 $storeId = $this->getStore();
                 if ($use_base_currency) {
                     $price = $ndata['base_price'] - ($item->getBaseDiscountAmount() / $quantity);
@@ -917,8 +916,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     }
                 }
 
-
-
                 $shoppingCart['shopping_cart']['items'][] = [
                     "name" => $itemName,
                     "description" => $item->getDescription(),
@@ -963,8 +960,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $shipping_cost_orig = $order->getShippingAmount();
         }
 
-
-
         if ($shipping_percentage == 1 || $shipping_cost_orig == 0) {
             $shipping_percentage = "0.00";
         }
@@ -981,7 +976,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 ["rate" => $shipping_percentage]
             ],
         ];
-
 
         $shoppingCart['shopping_cart']['items'][] = [
             "name" => $title,
@@ -1132,7 +1126,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
         }
 
-
         $checkoutData["shopping_cart"] = $shoppingCart['shopping_cart'];
         $checkoutData["checkout_options"] = $alternateTaxRates;
 
@@ -1164,7 +1157,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
         }
 
-
         $msporder = $this->_client->orders->get($endpoint = 'orders', $transactionid, $body = [], $query_string = false);
 
         //$this->logger->info(print_r($msporder, true));
@@ -1189,7 +1181,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $order->getIncrementId()
             );
             if (!empty($id)) {
-
                 $customerRecurringIds
                     = $this->_mspHelper->getRecurringIdsByCustomerId(
                         $customerID,
@@ -1199,7 +1190,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 $lastElm = end($customerRecurringIds);
 
                 foreach ($customerRecurringIds as $customerRecurringId) {
-
                     $recurring = $this->_mspToken->create()->load(
                         $customerRecurringId
                     );
@@ -1230,7 +1220,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                                 $msporder->payment_details->type
                             );
 
-
                             $model->save();
                         }
                     } else {
@@ -1245,7 +1234,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         /**
          *    Start undo cancel function
          */
-        if ($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED && $status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED) {
+        if ($order->getState() == Order::STATE_CANCELED && $status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED) {
             $this->undoCancel->execute($order);
         }
 
@@ -1284,13 +1273,14 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 //We don't process this callback as the status would be the same as the new order status configured.
                 break;
             case \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED:
-                $order_email = $this->getMainConfigData('send_order_email');
-
-                if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
-                    $this->_orderNotifier->notify($order);
+                if (!$success) { // Only on notify
+                    $order_email = $this->getMainConfigData('send_order_email');
+                    if ($order_email == "after_transaction_paid" && !$order->getEmailSent()) {
+                        $this->_orderNotifier->notify($order);
+                    }
                 }
 
-                $this->_registerPaymentCapture(true, $transactionid, $order, $msporder);
+                $this->_registerPaymentCapture(true, $transactionid, $order, $msporder, $success);
 
                 if ($fetch) {
                     return true;
@@ -1308,7 +1298,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
-                if ($cancelled == \Magento\Sales\Model\Order::STATE_CANCELED) {
+                if ($cancelled == Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($cancelled)->save();
@@ -1319,7 +1309,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $declined = $this->getMainConfigData('declined_order_status');
-                if ($declined == \Magento\Sales\Model\Order::STATE_CANCELED) {
+                if ($declined == Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction declined</b><br />')->save();
                 } else {
                     $order->setStatus($declined)->save();
@@ -1330,7 +1320,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $expired = $this->getMainConfigData('expired_order_status');
-                if ($expired == \Magento\Sales\Model\Order::STATE_CANCELED) {
+                if ($expired == Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($expired)->save();
@@ -1342,7 +1332,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     return false;
                 }
                 $cancelled = $this->getMainConfigData('cancelled_order_status');
-                if ($cancelled == \Magento\Sales\Model\Order::STATE_CANCELED) {
+                if ($cancelled == Order::STATE_CANCELED) {
                     $order->registerCancellation('<b>Transaction voided</b><br />')->save();
                 } else {
                     $order->setStatus($cancelled)->save();
@@ -1390,12 +1380,19 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
      * @param string $transactionid
      * @param Order $order
      * @param \stdClass $msporder
+     * @param bool $isRedirect
      * @return void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function _registerPaymentCapture($skipFraudDetection, $transactionid, $order, $msporder)
+    protected function _registerPaymentCapture($skipFraudDetection, $transactionid, $order, $msporder, $isRedirect)
     {
-        if (($order->canInvoice() || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) || ($order->getStatus() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW && $msporder->status == \MultiSafepay\Connect\Helper\Data::MSP_COMPLETED)) {
+        if ($order->canInvoice() || $order->getStatus() == Order::STATE_PENDING_PAYMENT || $order->getStatus() == Order::STATE_PAYMENT_REVIEW) {
+            if ($isRedirect) { // Only capture invoice on notify
+                $order->setState(Order::STATE_PROCESSING);
+                $order->setStatus($order->getConfig()->getStateDefaultStatus(Order::STATE_PROCESSING));
+                $this->_orderRepositoryInterface->save($order);
+                return;
+            }
             $payment = $order->getPayment();
             $payment->setTransactionId($msporder->transaction_id);
 
@@ -1471,7 +1468,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
                 $emailInvoice = $this->getMainConfigData('email_invoice');
                 $gateway = $payment->getMethodInstance()->_gatewayCode;
-
 
                 if ($emailInvoice && $gateway != 'PAYAFTER' && $gateway != 'KLARNA' && $gateway != 'AFTERPAY') {
                     $this->_invoiceSender->send($invoice, true);
@@ -1566,6 +1562,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $data = $this->_requestHttp->getPost('creditmemo');
             //Do a status request for this order to receive already refunded item data from MSP transaction
             $msporder = $this->_client->orders->get('orders', $id, $body = [], $query_string = false);
+
+            // Prevent incorrect refund requests
+            if ($msporder->payment_details->type !== $gateway) {
+                throw new CouldNotRefundException(__("MultiSafepay Error: Refund not processed online as gateway did not match the order gateway."));
+            }
+
             $originalCart = $msporder->shopping_cart;
             $refundData = [];
 
@@ -1832,7 +1834,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $mspType = $this->_mspHelper->getPaymentType($code);
         $path = $mspType . '/' . $code . '/' . $field;
 
-
         if ($field == "test_api_key" || $field == "live_api_key") {
             return $this->getMainConfigData($field, $storeId);
         }
@@ -1863,7 +1864,6 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function getGlobalConfig($path, $storeId = null)
     {
-
         if (null === $storeId) {
             $storeId = $this->getStore();
         }
