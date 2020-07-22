@@ -78,6 +78,7 @@ class Data
         'ideal'  => ['code' => 'IDEAL', 'name' => 'iDEAL', 'type' => 'gateways'],
         'idealqr' => ['code' => 'IDEALQR', 'name' => 'iDEAL QR', 'type' => 'gateways'],
         'ing' => ['code' => 'INGHOME', 'name' => 'ING Home\'Pay', 'type' => 'gateways'],
+        'cbc' => ['code' => 'CBC', 'name' => 'CBC', 'type' => 'gateways'],
         'kbc' => ['code' => 'KBC', 'name' => 'KBC', 'type' => 'gateways'],
         'klarnainvoice' => ['code' => 'KLARNA', 'name' => 'Klarna', 'type' => 'gateways'],
         'maestro' => ['code' => 'MAESTRO', 'name' => 'Maestro', 'type' => 'gateways'],
