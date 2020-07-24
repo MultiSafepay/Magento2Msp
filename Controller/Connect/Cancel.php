@@ -124,7 +124,9 @@ class Cancel extends \Magento\Framework\App\Action\Action
             //Cancel the order so a new one can created
             //You can disable the line below if you are using a fulfillment system that does not expect the order to be canceled,
             //but reopened again by second chance. Removing the line will keep the order pending. (PLGMAGTWOS-196)
-            $order->registerCancellation('Order canceled by customer')->save();
+            $order->registerCancellation('Order canceled by customer');
+            $this->_eventManager->dispatch('order_cancel_after', ['order' => $order]);
+            $order->save();
 
             $message = "The transaction was canceled or declined and the order was closed, please try again.";
 
