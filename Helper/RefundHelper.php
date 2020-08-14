@@ -30,49 +30,13 @@
 
 namespace MultiSafepay\Connect\Helper;
 
-use Magento\Sales\Model\Order;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Sales\Model\Order\Creditmemo;
 
 /**
  * Class RefundHelper
  */
 class RefundHelper
 {
-    protected $priceCurrency;
-
-    /**
-     * RefundHelper constructor.
-     * @param PriceCurrencyInterface $priceCurrency
-     */
-    public function __construct(PriceCurrencyInterface $priceCurrency)
-    {
-        $this->priceCurrency = $priceCurrency;
-    }
-
-
-    /**
-     * Calculate the adjustments amount.
-     *
-     * @param string|int $amount
-     * @param Order $order
-     * @return float|int|string
-     */
-    public function calculateAdjustments($amount, Order $order)
-    {
-        $amount = trim($amount);
-
-        if (substr($amount, -1) == '%') {
-            $amount = (double)substr($amount, 0, -1);
-            $amount = $order->getGrandTotal() * $amount / 100;
-        }
-
-        $amount = $this->priceCurrency->round($amount);
-        $amount = $this->priceCurrency->round($amount * $order->getBaseToOrderRate());
-
-        return $amount;
-    }
-
-
     /**
      * Create a default refund item rule for MultiSafepay refund Api request.
      *
@@ -101,26 +65,35 @@ class RefundHelper
     /**
      * Create the order lines for adjustments calculations.
      *
-     * @param array $refundData
-     * @param Order $order
+     * @param Creditmemo $creditmemo
      * @return array
      */
-    public function getAdjustmentOrderLines($refundData, Order $order)
+    public function getAdjustmentOrderLines(Creditmemo $creditmemo)
     {
         $mspRefundLines = [];
 
-        foreach ($refundData as $key => $refundLine) {
-            if (in_array($key, ['adjustment_positive', 'adjustment_negative']) && $refundLine > 0) {
-                $adjustmentAmount = $this->calculateAdjustments($refundLine, $order);
+        // Adjustment Refund
+        $adjustmentPositive = $creditmemo->getAdjustmentPositive();
+        if ($adjustmentPositive > 0) {
+            $mspRefundLines[] = $this->createRefundItem(
+                'adjustmentPositive',
+                $adjustmentPositive * $creditmemo->getBaseToOrderRate(),
+                1,
+                'adjustmentPositive',
+                'adjustment'
+            );
+        }
 
-                $mspRefundLines[] = $this->createRefundItem(
-                    $key,
-                    ($key === 'adjustment_negative') ? 0 - $adjustmentAmount : $adjustmentAmount,
-                    1,
-                    'adjustment',
-                    'adjustment'
-                );
-            }
+        // Adjustment Fee
+        $adjustmentNegative = $creditmemo->getAdjustmentNegative();
+        if ($adjustmentNegative > 0) {
+            $mspRefundLines[] = $this->createRefundItem(
+                'adjustmentNegative',
+                0 - ($adjustmentNegative *  $creditmemo->getBaseToOrderRate()),
+                1,
+                'adjustmentNegative',
+                'adjustment'
+            );
         }
 
         return $mspRefundLines;

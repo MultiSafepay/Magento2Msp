@@ -36,6 +36,7 @@ use Magento\TestFramework\ObjectManager;
 use MultiSafepay\Connect\Helper\AddressHelper;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Helper\RefundHelper;
+use MultiSafepay\Connect\Helper\ShoppingCartHelper;
 use MultiSafepay\Connect\Helper\UndoCancel;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
@@ -104,6 +105,7 @@ class BetaalnaontvangstTest extends TestCase
                 $this->objectManager->create(AddressHelper::class),
                 $this->objectManager->create(UndoCancel::class),
                 $this->objectManager->create(GatewayRestrictions::class),
+                $this->objectManager->create(ShoppingCartHelper::class),
                 $this->objectManager->create(DataObjectFactory::class),
                 $this->getMockBuilder(AbstractResource::class)->disableOriginalConstructor()->getMock(),
                 $this->getMockBuilder(AbstractDb::class)->disableOriginalConstructor()->getMock(),

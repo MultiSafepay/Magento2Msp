@@ -67,6 +67,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\AddressHelper;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Helper\RefundHelper;
+use MultiSafepay\Connect\Helper\ShoppingCartHelper;
 use MultiSafepay\Connect\Helper\UndoCancel;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
@@ -243,44 +244,52 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $undoCancel;
 
     /**
+     * @var ShoppingCartHelper
+     */
+    private $shoppingCartHelper;
+
+    /**
      * Connect constructor.
      *
-     * @param \Magento\Framework\Model\Context                             $context
-     * @param \Magento\Framework\Registry                                  $registry
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory            $extensionFactory
-     * @param \Magento\Framework\Api\AttributeValueFactory                 $customAttributeFactory
-     * @param \Magento\Payment\Helper\Data                                 $paymentData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface           $scopeConfig
-     * @param \Magento\Payment\Model\Method\Logger                         $logger
-     * @param \Magento\Framework\Module\ModuleListInterface                $moduleList
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface         $localeDate
-     * @param \Magento\Store\Model\StoreManagerInterface                   $storeManager
-     * @param \Magento\Checkout\Model\Session                              $checkoutSession
-     * @param \Magento\Framework\UrlInterface                              $urlBuilder
-     * @param \Magento\Framework\App\RequestInterface                      $requestHttp
-     * @param \Magento\CatalogInventory\Api\StockRegistryInterface         $stockRegistry
-     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender        $invoiceSender
-     * @param \Magento\Framework\App\ProductMetadataInterface              $productMetadataInterface
-     * @param \Magento\Sales\Api\InvoiceRepositoryInterface                $invoiceRepositoryInterface
-     * @param \Magento\Sales\Api\TransactionRepositoryInterface            $transactionRepositoryInterface
-     * @param \Magento\Framework\Locale\Resolver                           $localeResolver
-     * @param \Magento\Sales\Api\OrderRepositoryInterface                  $orderRepositoryInterface
-     * @param \Magento\Sales\Model\OrderNotifier                           $orderNotifier
-     * @param \Magento\Sales\Model\Order\StatusResolver                    $statusResolver
-     * @param \Magento\Directory\Model\CurrencyFactory                     $currencyFactory
-     * @param \MultiSafepay\Connect\Model\MultisafepayTokenizationFactory  $multisafepayTokenizationFactory
-     * @param \MultiSafepay\Connect\Model\Api\MspClient                    $mspClient
-     * @param \MultiSafepay\Connect\Helper\Data                            $helperData
-     * @param \MultiSafepay\Connect\Model\Url                              $url
-     * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
-     * @param \Magento\Customer\Model\Session                              $customerSession
-     * @param \MultiSafepay\Connect\Helper\AddressHelper                   $addressHelper
-     * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
-     * @param \MultiSafepay\Connect\Helper\UndoCancel                      $undoCancel
-     * @param \MultiSafepay\Connect\Model\GatewayRestrictions              $restrictions
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger $logger
+     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param \Magento\Framework\App\RequestInterface $requestHttp
+     * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadataInterface
+     * @param \Magento\Sales\Api\InvoiceRepositoryInterface $invoiceRepositoryInterface
+     * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepositoryInterface
+     * @param \Magento\Framework\Locale\Resolver $localeResolver
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepositoryInterface
+     * @param \Magento\Sales\Model\OrderNotifier $orderNotifier
+     * @param \Magento\Sales\Model\Order\StatusResolver $statusResolver
+     * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
+     * @param \MultiSafepay\Connect\Model\MultisafepayTokenizationFactory $multisafepayTokenizationFactory
+     * @param \MultiSafepay\Connect\Model\Api\MspClient $mspClient
+     * @param \MultiSafepay\Connect\Helper\Data $helperData
+     * @param \MultiSafepay\Connect\Model\Url $url
+     * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards $creditcards
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \MultiSafepay\Connect\Helper\RefundHelper $refundHelper
+     * @param \MultiSafepay\Connect\Helper\AddressHelper $addressHelper
+     * @param \MultiSafepay\Connect\Helper\UndoCancel $undoCancel
+     * @param \MultiSafepay\Connect\Model\GatewayRestrictions $restrictions
+     * @param ShoppingCartHelper $shoppingCartHelper
+     * @param DataObjectFactory $dataObjectFactory
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
-     * @param array                                                        $data
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -317,6 +326,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         AddressHelper $addressHelper,
         UndoCancel $undoCancel,
         GatewayRestrictions $restrictions,
+        ShoppingCartHelper $shoppingCartHelper,
         DataObjectFactory $dataObjectFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
@@ -347,6 +357,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->refundHelper = $refundHelper;
         $this->undoCancel = $undoCancel;
         $this->restrictions = $restrictions;
+        $this->shoppingCartHelper = $shoppingCartHelper;
 
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
@@ -635,7 +646,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.12.2',
+                    "plugin_version" => ' - Plugin 1.13.0',
                     "partner" => "MultiSafepay",
                 ],
                 "gateway_info" => [
@@ -801,17 +812,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
             }
 
-            // Do not add bundled product type
-            if ($item->getProductType() === Type::TYPE_BUNDLE) {
+            if (!$this->shoppingCartHelper->canAddtoShoppingCart($item)) {
                 continue;
             }
-            // Do not add child of configurable type
-            if ($item->getParentItem() !== null) {
-                $parentProductType = $item->getParentItem()->getProductType();
-                if ($parentProductType === Configurable::TYPE_CODE) {
-                    continue;
-                }
-            }
+
             $taxClass = ($item->getTaxPercent() == 0 ? 'none' : $item->getTaxPercent());
             $rate = $item->getTaxPercent() / 100;
 
@@ -1559,7 +1563,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if ($gateway == 'PAYAFTER' || $gateway == 'KLARNA' || $gateway == 'EINVOICE' || $gateway == 'AFTERPAY') {
             //Get the creditmemo data as this is not yet stored at this moment.
-            $data = $this->_requestHttp->getPost('creditmemo');
+            $creditmemo = $payment->getCreditmemo();
+            if ($creditmemo === null) {
+                throw new CouldNotRefundException(__("MultiSafepay Error: Refund not processed online as creditmemo was not available."));
+            }
+
             //Do a status request for this order to receive already refunded item data from MSP transaction
             $msporder = $this->_client->orders->get('orders', $id, $body = [], $query_string = false);
 
@@ -1575,8 +1583,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 if ($item->unit_price > 0) {
                     $refundData['checkout_data']['items'][] = $item;
                 }
-                foreach ($order->getCreditmemosCollection() as $creditmemo) {
-                    foreach ($creditmemo->getAllItems() as $product) {
+                foreach ($order->getCreditmemosCollection() as $createdCreditmemo) {
+                    foreach ($createdCreditmemo->getAllItems() as $product) {
                         $product_id = $product->getData('order_item_id');
                         if ($product_id == $item->merchant_item_id) {
                             $qty_refunded = $product->getData('qty');
@@ -1600,15 +1608,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     }
                 }
 
-                foreach ($data['items'] as $productid => $proddata) {
-                    if ($item->merchant_item_id == $productid) {
-                        if ($proddata['qty'] > 0) {
+                foreach ($creditmemo->getAllItems() as $creditmemoItem) {
+                    if ($item->merchant_item_id == $creditmemoItem->getOrderItemId()) {
+                        if ($creditmemoItem->getQty() > 0) {
                             if ($item->unit_price > 0) {
                                 $refundItem = new \stdclass();
                                 $refundItem->name = $item->name;
                                 $refundItem->description = $item->description;
                                 $refundItem->unit_price = 0 - $item->unit_price;
-                                $refundItem->quantity = $proddata['qty'];
+                                $refundItem->quantity = $creditmemoItem->getQty();
                                 $refundItem->merchant_item_id = $item->merchant_item_id;
                                 $refundItem->tax_table_selector = $item->tax_table_selector;
                                 $refundData['checkout_data']['items'][] = $refundItem;
@@ -1621,7 +1629,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 if ($item->merchant_item_id == 'msp-shipping') {
                     $storeId = $this->getStore();
                     $taxSalesDisplayShipping = $this->_scopeConfig->getValue('tax/sales_display/shipping', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
-                    if ($data['shipping_amount'] == $order->getShippingAmount() || ($taxSalesDisplayShipping == \Magento\Tax\Model\Config::DISPLAY_TYPE_INCLUDING_TAX && $data['shipping_amount'] == $order->getShippingInclTax())) {
+                    if ($creditmemo->getShippingAmount() == $order->getShippingAmount() || ($taxSalesDisplayShipping == \Magento\Tax\Model\Config::DISPLAY_TYPE_INCLUDING_TAX && $creditmemo->getShippingAmount() == $order->getShippingInclTax())) {
                         $refundItem = new \stdclass();
                         $refundItem->name = $item->name;
                         $refundItem->description = $item->description;
@@ -1635,7 +1643,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $refundItem->tax_table_selector = $item->tax_table_selector;
                         $refundData['checkout_data']['items'][] = $refundItem;
                     } else {
-                        if ($data['shipping_amount'] != 0) {
+                        if ($creditmemo->getShippingAmount() != 0) {
                             throw new \Magento\Framework\Exception\LocalizedException(__("Error: Refund not processed online as it did not match the complete shipping cost.  "));
                             $order->addStatusHistoryComment('MultiSafepay: Refund not processed online as it did not match the complete shipping cost.', false);
                             $order->save();
@@ -1676,7 +1684,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
 
             // Calculate adjustments
-            $adjustmentLines = $this->refundHelper->getAdjustmentOrderLines($data, $order);
+            $adjustmentLines = $this->refundHelper->getAdjustmentOrderLines($creditmemo);
             foreach ($adjustmentLines as $adjustmentLine) {
                 $refundData['checkout_data']['items'][] = $adjustmentLine;
             }

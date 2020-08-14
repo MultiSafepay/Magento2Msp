@@ -31,6 +31,9 @@
         <method name="trustpay">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="cbc">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name="kbc">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
