@@ -1,3 +1,18 @@
+## 1.13.0
+Release date: Aug 14th, 2020
+
+### Added
++ DAVAMS-264: Add CBC payment method
+
+### Fixed
++ Fix bundle products with fixed price
++ PLGMAGTWOS-642: Fix refund not working through REST API
+
+### Changed
++ Update composer dependencies to be compatible with Magento 2.4
+
+***
+
 ## 1.12.2
 Release date: Jul 14th, 2020
 
