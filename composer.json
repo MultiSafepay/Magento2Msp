@@ -8,7 +8,7 @@
     ],
     "require": {
         "magento/framework": "^101.0|^102.0|^103.0",
-        "magento/module-payment": "100.2.*|100.3.*",
+        "magento/module-payment": "100.2.*|100.3.*|100.4.*",
         "magento/module-sales": "^101.0|^102.0|^103.0",
         "php": ">=7.0",
         "ext-json": "*",
