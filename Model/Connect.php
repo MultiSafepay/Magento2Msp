@@ -1559,7 +1559,11 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
 
         if ($gateway == 'PAYAFTER' || $gateway == 'KLARNA' || $gateway == 'EINVOICE' || $gateway == 'AFTERPAY') {
             //Get the creditmemo data as this is not yet stored at this moment.
-            $data = $this->_requestHttp->getPost('creditmemo');
+            $creditmemo = $payment->getCreditmemo();
+            if ($creditmemo === null) {
+                throw new CouldNotRefundException(__("MultiSafepay Error: Refund not processed online as creditmemo was not available."));
+            }
+
             //Do a status request for this order to receive already refunded item data from MSP transaction
             $msporder = $this->_client->orders->get('orders', $id, $body = [], $query_string = false);
 
@@ -1575,8 +1579,8 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 if ($item->unit_price > 0) {
                     $refundData['checkout_data']['items'][] = $item;
                 }
-                foreach ($order->getCreditmemosCollection() as $creditmemo) {
-                    foreach ($creditmemo->getAllItems() as $product) {
+                foreach ($order->getCreditmemosCollection() as $createdCreditmemo) {
+                    foreach ($createdCreditmemo->getAllItems() as $product) {
                         $product_id = $product->getData('order_item_id');
                         if ($product_id == $item->merchant_item_id) {
                             $qty_refunded = $product->getData('qty');
@@ -1600,15 +1604,15 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                     }
                 }
 
-                foreach ($data['items'] as $productid => $proddata) {
-                    if ($item->merchant_item_id == $productid) {
-                        if ($proddata['qty'] > 0) {
+                foreach ($creditmemo->getAllItems() as $creditmemoItem) {
+                    if ($item->merchant_item_id == $creditmemoItem->getOrderItemId()) {
+                        if ($creditmemoItem->getQty() > 0) {
                             if ($item->unit_price > 0) {
                                 $refundItem = new \stdclass();
                                 $refundItem->name = $item->name;
                                 $refundItem->description = $item->description;
                                 $refundItem->unit_price = 0 - $item->unit_price;
-                                $refundItem->quantity = $proddata['qty'];
+                                $refundItem->quantity = $creditmemoItem->getQty();
                                 $refundItem->merchant_item_id = $item->merchant_item_id;
                                 $refundItem->tax_table_selector = $item->tax_table_selector;
                                 $refundData['checkout_data']['items'][] = $refundItem;
@@ -1621,7 +1625,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 if ($item->merchant_item_id == 'msp-shipping') {
                     $storeId = $this->getStore();
                     $taxSalesDisplayShipping = $this->_scopeConfig->getValue('tax/sales_display/shipping', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
-                    if ($data['shipping_amount'] == $order->getShippingAmount() || ($taxSalesDisplayShipping == \Magento\Tax\Model\Config::DISPLAY_TYPE_INCLUDING_TAX && $data['shipping_amount'] == $order->getShippingInclTax())) {
+                    if ($creditmemo->getShippingAmount() == $order->getShippingAmount() || ($taxSalesDisplayShipping == \Magento\Tax\Model\Config::DISPLAY_TYPE_INCLUDING_TAX && $creditmemo->getShippingAmount() == $order->getShippingInclTax())) {
                         $refundItem = new \stdclass();
                         $refundItem->name = $item->name;
                         $refundItem->description = $item->description;
@@ -1635,7 +1639,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                         $refundItem->tax_table_selector = $item->tax_table_selector;
                         $refundData['checkout_data']['items'][] = $refundItem;
                     } else {
-                        if ($data['shipping_amount'] != 0) {
+                        if ($creditmemo->getShippingAmount() != 0) {
                             throw new \Magento\Framework\Exception\LocalizedException(__("Error: Refund not processed online as it did not match the complete shipping cost.  "));
                             $order->addStatusHistoryComment('MultiSafepay: Refund not processed online as it did not match the complete shipping cost.', false);
                             $order->save();
@@ -1676,7 +1680,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             }
 
             // Calculate adjustments
-            $adjustmentLines = $this->refundHelper->getAdjustmentOrderLines($data, $order);
+            $adjustmentLines = $this->refundHelper->getAdjustmentOrderLines($creditmemo);
             foreach ($adjustmentLines as $adjustmentLine) {
                 $refundData['checkout_data']['items'][] = $adjustmentLine;
             }
