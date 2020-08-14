@@ -67,6 +67,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use MultiSafepay\Connect\Helper\AddressHelper;
 use MultiSafepay\Connect\Helper\Data as HelperData;
 use MultiSafepay\Connect\Helper\RefundHelper;
+use MultiSafepay\Connect\Helper\ShoppingCartHelper;
 use MultiSafepay\Connect\Helper\UndoCancel;
 use MultiSafepay\Connect\Model\Api\MspClient;
 use MultiSafepay\Connect\Model\Config\Source\Creditcards;
@@ -243,44 +244,52 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
     protected $undoCancel;
 
     /**
+     * @var ShoppingCartHelper
+     */
+    private $shoppingCartHelper;
+
+    /**
      * Connect constructor.
      *
-     * @param \Magento\Framework\Model\Context                             $context
-     * @param \Magento\Framework\Registry                                  $registry
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory            $extensionFactory
-     * @param \Magento\Framework\Api\AttributeValueFactory                 $customAttributeFactory
-     * @param \Magento\Payment\Helper\Data                                 $paymentData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface           $scopeConfig
-     * @param \Magento\Payment\Model\Method\Logger                         $logger
-     * @param \Magento\Framework\Module\ModuleListInterface                $moduleList
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface         $localeDate
-     * @param \Magento\Store\Model\StoreManagerInterface                   $storeManager
-     * @param \Magento\Checkout\Model\Session                              $checkoutSession
-     * @param \Magento\Framework\UrlInterface                              $urlBuilder
-     * @param \Magento\Framework\App\RequestInterface                      $requestHttp
-     * @param \Magento\CatalogInventory\Api\StockRegistryInterface         $stockRegistry
-     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender        $invoiceSender
-     * @param \Magento\Framework\App\ProductMetadataInterface              $productMetadataInterface
-     * @param \Magento\Sales\Api\InvoiceRepositoryInterface                $invoiceRepositoryInterface
-     * @param \Magento\Sales\Api\TransactionRepositoryInterface            $transactionRepositoryInterface
-     * @param \Magento\Framework\Locale\Resolver                           $localeResolver
-     * @param \Magento\Sales\Api\OrderRepositoryInterface                  $orderRepositoryInterface
-     * @param \Magento\Sales\Model\OrderNotifier                           $orderNotifier
-     * @param \Magento\Sales\Model\Order\StatusResolver                    $statusResolver
-     * @param \Magento\Directory\Model\CurrencyFactory                     $currencyFactory
-     * @param \MultiSafepay\Connect\Model\MultisafepayTokenizationFactory  $multisafepayTokenizationFactory
-     * @param \MultiSafepay\Connect\Model\Api\MspClient                    $mspClient
-     * @param \MultiSafepay\Connect\Helper\Data                            $helperData
-     * @param \MultiSafepay\Connect\Model\Url                              $url
-     * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards        $creditcards
-     * @param \Magento\Customer\Model\Session                              $customerSession
-     * @param \MultiSafepay\Connect\Helper\AddressHelper                   $addressHelper
-     * @param \MultiSafepay\Connect\Helper\RefundHelper                    $refundHelper
-     * @param \MultiSafepay\Connect\Helper\UndoCancel                      $undoCancel
-     * @param \MultiSafepay\Connect\Model\GatewayRestrictions              $restrictions
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger $logger
+     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param \Magento\Framework\App\RequestInterface $requestHttp
+     * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadataInterface
+     * @param \Magento\Sales\Api\InvoiceRepositoryInterface $invoiceRepositoryInterface
+     * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepositoryInterface
+     * @param \Magento\Framework\Locale\Resolver $localeResolver
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepositoryInterface
+     * @param \Magento\Sales\Model\OrderNotifier $orderNotifier
+     * @param \Magento\Sales\Model\Order\StatusResolver $statusResolver
+     * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
+     * @param \MultiSafepay\Connect\Model\MultisafepayTokenizationFactory $multisafepayTokenizationFactory
+     * @param \MultiSafepay\Connect\Model\Api\MspClient $mspClient
+     * @param \MultiSafepay\Connect\Helper\Data $helperData
+     * @param \MultiSafepay\Connect\Model\Url $url
+     * @param \MultiSafepay\Connect\Model\Config\Source\Creditcards $creditcards
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \MultiSafepay\Connect\Helper\RefundHelper $refundHelper
+     * @param \MultiSafepay\Connect\Helper\AddressHelper $addressHelper
+     * @param \MultiSafepay\Connect\Helper\UndoCancel $undoCancel
+     * @param \MultiSafepay\Connect\Model\GatewayRestrictions $restrictions
+     * @param ShoppingCartHelper $shoppingCartHelper
+     * @param DataObjectFactory $dataObjectFactory
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
-     * @param array                                                        $data
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -317,6 +326,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         AddressHelper $addressHelper,
         UndoCancel $undoCancel,
         GatewayRestrictions $restrictions,
+        ShoppingCartHelper $shoppingCartHelper,
         DataObjectFactory $dataObjectFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
@@ -347,6 +357,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $this->refundHelper = $refundHelper;
         $this->undoCancel = $undoCancel;
         $this->restrictions = $restrictions;
+        $this->shoppingCartHelper = $shoppingCartHelper;
 
         $this->_mspHelper = $helperData;
         $this->_mspToken = $multisafepayTokenizationFactory;
@@ -801,17 +812,10 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 }
             }
 
-            // Do not add bundled product type
-            if ($item->getProductType() === Type::TYPE_BUNDLE) {
+            if (!$this->shoppingCartHelper->canAddtoShoppingCart($item)) {
                 continue;
             }
-            // Do not add child of configurable type
-            if ($item->getParentItem() !== null) {
-                $parentProductType = $item->getParentItem()->getProductType();
-                if ($parentProductType === Configurable::TYPE_CODE) {
-                    continue;
-                }
-            }
+
             $taxClass = ($item->getTaxPercent() == 0 ? 'none' : $item->getTaxPercent());
             $rate = $item->getTaxPercent() / 100;
 
