@@ -88,31 +88,33 @@ class Success extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $params = $this->_requestHttp->getParams();
-
         if (!$this->validateParams($params) || !$this->_mspHelper->validateOrderHash($params['transactionid'], $params['hash'])) {
             $this->_redirect('checkout/cart');
             return;
         }
         $this->_mspHelper->lockProcess('multisafepay-' . $params['transactionid']);
         $session = $this->_session;
-
         $order = $this->_order;
         $order_information = $order->loadByIncrementId($params['transactionid']);
+        $orderId = $session->getLastRealOrder()->getId();
 
-        $session->unsQuoteId();
-        $session->getQuote()->setIsActive(false)->save();
+        $session->setLastOrderId($orderId);
+        $session->setLastRealOrderId($order_information->getIncrementId());
 
         // set some vars for the success page
         $session->setLastSuccessQuoteId($order_information->getQuoteId());
         $session->setLastQuoteId($order_information->getQuoteId());
-        $session->setLastOrderId($order_information->getEntityId());
-        $session->setLastRealOrderId($order_information->getIncrementId());
+
+        // clear quote from session
+        $session->setLoadInactive(false);
+
+        //PLGMAGTWOS-646: setting the correct quote and set status before saving because sometimes the quote is not closed after completing the order
+        $session->replaceQuote($session->getQuote()->setId($session->getLastRealOrder()->getQuoteId())->setIsActive(false)->save());
 
         //To a status request in order to update the order before redirect to thank you page. Doing this the status won't be payment pending so the order page can be viewed
         $paymentMethod = $this->_mspConnect;
         $paymentMethod->_invoiceSender = $this->_invoiceSender;
         $paymentMethod->notification($order_information, true);
-
         $this->_mspHelper->unlockProcess('multisafepay-' . $params['transactionid']);
         $this->_redirect('checkout/onepage/success?utm_nooverride=1');
         return;

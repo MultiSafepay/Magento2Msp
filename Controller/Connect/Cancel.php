@@ -35,6 +35,8 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Sales\Api\Data\OrderInterfaceFactory;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use MultiSafepay\Connect\Helper\Data;
 use MultiSafepay\Connect\Model\Api\MspClient;
@@ -56,7 +58,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
     protected $_coreRegistry = null;
     protected $_mspHelper;
     protected $_session;
-    protected $_order;
+    protected $orderFactory;
     protected $_cartRepository;
     protected $_client;
 
@@ -64,32 +66,38 @@ class Cancel extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_requestHttp;
+    /**
+     * @var \Magento\Sales\Api\OrderRepositoryInterface
+     */
+    protected $orderRepository;
 
     /**
-     * @param \Magento\Framework\App\Action\Context      $context
-     * @param \Magento\Framework\Registry                $coreRegistry
-     * @param \Magento\Sales\Model\Order                 $order
-     * @param \Magento\Checkout\Model\Session            $session
-     * @param \Magento\Quote\Api\CartRepositoryInterface $cartRepository
-     * @param \MultiSafepay\Connect\Helper\Data          $helperData
+     * @param \Magento\Framework\App\Action\Context         $context
+     * @param \Magento\Framework\Registry                   $coreRegistry
+     * @param \Magento\Sales\Api\Data\OrderInterfaceFactory $orderFactory
+     * @param \Magento\Checkout\Model\Session               $session
+     * @param \Magento\Quote\Api\CartRepositoryInterface    $cartRepository
+     * @param \MultiSafepay\Connect\Helper\Data             $helperData
+     * @param \Magento\Sales\Api\OrderRepositoryInterface   $orderRepository
      */
     public function __construct(
         Context $context,
         Registry $coreRegistry,
-        Order $order,
+        OrderInterfaceFactory $orderFactory,
         Session $session,
         CartRepositoryInterface $cartRepository,
-        Data $helperData
+        Data $helperData,
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_requestHttp = $context->getRequest();
         parent::__construct($context);
         $this->_client = new MspClient();
-        $this->_order = $order;
+        $this->orderFactory = $orderFactory;
         $this->_session = $session;
         $this->_cartRepository = $cartRepository;
-
         $this->_mspHelper = $helperData;
+        $this->orderRepository = $orderRepository;
     }
 
     public function execute()
@@ -105,8 +113,8 @@ class Cancel extends \Magento\Framework\App\Action\Action
         $incrementId = $params['transactionid'];
         $this->_session->restoreQuote();
 
-        /* @var $order \Magento\Sales\Model\Order */
-        $order = $this->_order->loadByIncrementId($incrementId);
+        /** @var Order $order */
+        $order = $this->orderFactory->create()->loadByIncrementId($incrementId);
 
         if ($order->getId()) {
             try {
@@ -124,7 +132,8 @@ class Cancel extends \Magento\Framework\App\Action\Action
             //Cancel the order so a new one can created
             //You can disable the line below if you are using a fulfillment system that does not expect the order to be canceled,
             //but reopened again by second chance. Removing the line will keep the order pending. (PLGMAGTWOS-196)
-            $order->registerCancellation('Order canceled by customer')->save();
+            $order->cancel()->addStatusHistoryComment('Order canceled by customer');
+            $this->orderRepository->save($order);
 
             $message = "The transaction was canceled or declined and the order was closed, please try again.";
 

@@ -1,3 +1,17 @@
+## 1.13.1
+Release date: Aug 19th, 2020
+
+### Fixed
++ PLGMAGTWOS-646: Fix quote is not always closed - by @thokiller #126
+
+### Changed
++ PLGMAGTWOS-639: Call order cancel to execute order_cancel_after event - by @EgorDm #125
+
+### Removed
++ Remove unused showRecurringModal function in checkout - by @onepack #130
+
+***
+
 ## 1.13.0
 Release date: Aug 14th, 2020
 
