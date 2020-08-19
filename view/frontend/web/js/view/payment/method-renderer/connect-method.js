@@ -38,7 +38,6 @@ define(
         'Magento_Checkout/js/checkout-data',
         'Magento_Checkout/js/model/payment/additional-validators',
         'mage/url',
-        'Magento_Ui/js/modal/modal',
         'ko',
         'mage/translate'
     ],
@@ -51,7 +50,6 @@ define(
         checkoutData,
         additionalValidators,
         url,
-        modal,
         ko
     ) {
         var configConnect = window.checkoutConfig.payment.connect;
@@ -203,7 +201,7 @@ define(
             },
             deleteRecurring: function () {
                 var $self = this;
-                if (confirm($.mage.__('Are you sure you want to delete this creditcard?'))) {
+                if (confirm($.mage.__('Are you sure you want to delete this credit card?'))) {
                     var active = this.item.method;
                     var target = $("select[name='recurring'][data-type='"+ active + "']");
                     if(target.length < 1){
@@ -298,30 +296,6 @@ define(
                     return this.showTokenSave(false);
                 }
                 return this.showTokenSave(true);
-            },
-            showRecurringModal: function () {
-                $('<div />').html('<ol>' +
-                    '<li><i class="fa fa-lock"></i> <strong>'+ $.mage.__('Guarantees from MultiSafepay') +'</strong><br>' +
-                    $.mage.__("Your credit card credentials will be saved in our secure bankserver. The webshop has for your safety no access to this information and will not be saved in any way") +
-                    '<li><i class="fa fa-check-square-o"></i> <strong>'+ $.mage.__("Fast and easy") +'</strong><br>' +
-                    $.mage.__("By registering your credentials, You can speed up your purchases. Because you don't need to fill in your credentials again") +
-                    '<li><i class="fa fa-check-square-o"></i> <strong>'+ $.mage.__("Free of charge") +'</strong><br>' +
-                    $.mage.__("Activating and using this function is free of charge, and you can disable it any time")+
-                    '</ol>')
-                    .modal({
-                        title: '',
-                        autoOpen: true,
-                        closed: function () {
-                            // on close
-                        },
-                        buttons: [{
-                            text: 'Confirm',
-                            attr: {
-                                'data-action': 'confirm'
-                            },
-                            'class': 'action-primary',
-                        }]
-                    });
             },
             /**
              * @return {boolean}
