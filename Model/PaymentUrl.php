@@ -70,7 +70,7 @@ class PaymentUrl implements \MultiSafepay\Connect\Api\PaymentUrlInterface
          * This is already checked on the order load
          * \Magento\Sales\Model\ResourceModel\Order\Plugin\Authorization::afterLoad
         */
-        if ($customerId && $customerId !== $order->getCustomerId()) {
+        if ($customerId && $customerId !== (int)$order->getCustomerId()) {
             return '';
         }
 
