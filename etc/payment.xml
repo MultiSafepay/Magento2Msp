@@ -49,6 +49,9 @@
         <method name="ing">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="in3">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name="mastercard">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
