@@ -350,6 +350,18 @@
                 <group>multisafepay_connect</group>
             </directbanktransfer>
 
+            <!-- Start in3 -->
+            <in3>
+                <active>0</active>
+                <title>in3</title>
+                <instructions></instructions>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\In3</model>
+                <group>multisafepay_connect</group>
+            </in3>
+
             <!-- Start ING Home'Pay -->
             <ing>
                 <active>0</active>
@@ -950,6 +962,18 @@
                 <model>MultiSafepay\Connect\Model\Gateways\Directbanktransfer</model>
                 <group>multisafepay_connect</group>
             </directbanktransfer>
+
+            <!-- Start in3 -->
+            <in3>
+                <active>0</active>
+                <title>in3</title>
+                <instructions></instructions>
+                <allowed_currency>EUR</allowed_currency>
+                <allowed_groups>0,1,2,3</allowed_groups>
+                <payment_action>true</payment_action>
+                <model>MultiSafepay\Connect\Model\Gateways\In3</model>
+                <group>multisafepay_connect</group>
+            </in3>
 
             <!-- Start ING Home'Pay -->
             <ing>

@@ -77,6 +77,7 @@ class Data
         'giropay' => ['code' => 'GIROPAY', 'name' => 'GiroPay', 'type' => 'gateways'],
         'ideal'  => ['code' => 'IDEAL', 'name' => 'iDEAL', 'type' => 'gateways'],
         'idealqr' => ['code' => 'IDEALQR', 'name' => 'iDEAL QR', 'type' => 'gateways'],
+        'in3' => ['code' => 'IN3', 'name' => 'in3', 'type' => 'gateways'],
         'ing' => ['code' => 'INGHOME', 'name' => 'ING Home\'Pay', 'type' => 'gateways'],
         'cbc' => ['code' => 'CBC', 'name' => 'CBC', 'type' => 'gateways'],
         'kbc' => ['code' => 'KBC', 'name' => 'KBC', 'type' => 'gateways'],
