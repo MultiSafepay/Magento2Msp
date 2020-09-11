@@ -115,7 +115,7 @@ class UpgradeData implements UpgradeDataInterface
             $this->configWriter->save('giftcards/vvvbon/title', 'VVV Cadeaukaart');
         }
         // Rebrand Direct Bank Transfer to Request to Pay
-        if (version_compare($context->getVersion(), '1.13.1', '<')) {
+        if (version_compare($context->getVersion(), '1.14.0', '<')) {
             $currentTitle = $this->scopeConfig->getValue(
                 'gateways/directbanktransfer/title',
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE
