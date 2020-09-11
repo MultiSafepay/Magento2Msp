@@ -1,3 +1,17 @@
+## 1.14.0
+Release date: Sep 11th, 2020
+
+### Added
++ DAVAMS-235: Add in3
+
+### Fixed
++ Fix paymenturl not returned on REST API
+
+### Changed
++ DAVAMS-291: Rebrand Direct Bank Transfer to Request to Pay
+
+***
+
 ## 1.13.1
 Release date: Aug 19th, 2020
 
