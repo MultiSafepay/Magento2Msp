@@ -64,11 +64,13 @@ class UpgradeData implements UpgradeDataInterface
     public function __construct(
         SalesSetupFactory $salesSetupFactory,
         NotifierInterface $notifier,
-        WriterInterface $configWriter
+        WriterInterface $configWriter,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->salesSetupFactory = $salesSetupFactory;
         $this->notifier = $notifier;
         $this->configWriter = $configWriter;
+        $this->scopeConfig = $scopeConfig;
     }
 
     public function upgrade(
@@ -111,6 +113,16 @@ class UpgradeData implements UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '1.7.1', '<')) {
             $this->configWriter->save('giftcards/vvvbon/title', 'VVV Cadeaukaart');
+        }
+        // Rebrand Direct Bank Transfer to Request to Pay
+        if (version_compare($context->getVersion(), '1.13.1', '<')) {
+            $currentTitle = $this->scopeConfig->getValue(
+                'gateways/directbanktransfer/title',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
+            if ($currentTitle === 'Direct Bank Transfer') {
+                $this->configWriter->save('gateways/directbanktransfer/title', 'Request to Pay');
+            }
         }
     }
 }

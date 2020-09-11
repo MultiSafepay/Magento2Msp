@@ -70,7 +70,7 @@ class Data
         'betaalplan'  => ['code' => 'SANTANDER', 'name' => 'Betaalplan', 'type' => 'gateways'],
         'creditcard'  => ['code' => 'CREDITCARD', 'name' => 'Credit card', 'type' => 'gateways'],
         'directdebit' => ['code' => 'DIRDEB', 'name' => 'Direct Debit', 'type' => 'gateways'],
-        'directbanktransfer' => ['code' => 'DBRTP', 'name' => 'Direct Bank Transfer', 'type' => 'gateways'],
+        'directbanktransfer' => ['code' => 'DBRTP', 'name' => 'Request to Pay', 'type' => 'gateways'],
         'dotpay'  => ['code' => 'DOTPAY', 'name' => 'Dotpay', 'type' => 'gateways'],
         'einvoice' => ['code' => 'EINVOICE', 'name' => 'E-Invoicing', 'type' => 'gateways'],
         'eps'  => ['code' => 'EPS', 'name' => 'EPS', 'type' => 'gateways'],

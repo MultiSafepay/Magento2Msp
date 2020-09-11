@@ -264,7 +264,7 @@ class DataTest extends TestCase
             'betaalplan' => 'Betaalplan',
             'creditcard' => 'Credit card',
             'directdebit' => 'Direct Debit',
-            'directbanktransfer' => 'Direct Bank Transfer',
+            'directbanktransfer' => 'Request to Pay',
             'dotpay' => 'Dotpay',
             'einvoice' => 'E-Invoicing',
             'eps' => 'EPS',

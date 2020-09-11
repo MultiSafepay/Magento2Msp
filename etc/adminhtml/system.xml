@@ -430,9 +430,9 @@
         </field>
       </group>
 
-      <!--Start Direct Bank Transfer-->
+      <!--Start Request to Pay-->
       <group id="directbanktransfer" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Direct Bank Transfer</label>
+        <label>Request to Pay</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
