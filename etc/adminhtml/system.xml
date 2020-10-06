@@ -1088,9 +1088,9 @@
         </field>
       </group>
 
-      <!--Start Klarna -->
+      <!--Start Klarna - buy now, pay later -->
       <group id="klarnainvoice" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Klarna</label>
+        <label>Klarna - buy now, pay later</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

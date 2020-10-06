@@ -116,12 +116,22 @@ class UpgradeData implements UpgradeDataInterface
         }
         // Rebrand Direct Bank Transfer to Request to Pay
         if (version_compare($context->getVersion(), '1.14.0', '<')) {
+            // Rebrand Direct Bank Transfer to Request to Pay
             $currentTitle = $this->scopeConfig->getValue(
                 'gateways/directbanktransfer/title',
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE
             );
             if ($currentTitle === 'Direct Bank Transfer') {
                 $this->configWriter->save('gateways/directbanktransfer/title', 'Request to Pay');
+            }
+
+            // Rebrand Klarna
+            $currentTitle = $this->scopeConfig->getValue(
+                'gateways/klarnainvoice/title',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
+            if ($currentTitle === 'Klarna') {
+                $this->configWriter->save('gateways/klarnainvoice/title', 'Klarna - buy now, pay later');
             }
         }
     }

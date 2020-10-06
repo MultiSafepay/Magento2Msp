@@ -276,7 +276,7 @@ class DataTest extends TestCase
             'ing' => 'ING Home\'Pay',
             'cbc' => 'CBC',
             'kbc' => 'KBC',
-            'klarnainvoice' => 'Klarna',
+            'klarnainvoice' => 'Klarna - buy now, pay later',
             'maestro' => 'Maestro',
             'mastercard' => 'Mastercard',
             'mspbanktransfer' => 'Bank transfer',
