@@ -38,10 +38,14 @@ define(
         rendererList
     ) {
             'use strict';
+
+            let isCreditcardComponentsEnabled = window.checkoutConfig.payment.connect.useCreditcardComponent;
+            let creditcardRenderer = 'MultiSafepay_Connect/js/view/payment/method-renderer/' +
+                    (isCreditcardComponentsEnabled ? 'creditcard-component' : 'creditcard-method');
             rendererList.push(
                 {
                     type: 'creditcard',
-                    component: 'MultiSafepay_Connect/js/view/payment/method-renderer/creditcard-method'
+                    component: creditcardRenderer
                     }
             );
             /** Add view logic here if needed */

@@ -73,7 +73,11 @@ class ConnectConfigProvider implements
                     'creditcards'   => $this->getCreditcards(),
                     'years'         => $this->getYears(),
                     'active_method' => $this->getActiveMethod(),
-                    'images'        => $this->getImageURLs()
+                    'images'        => $this->getImageURLs(),
+                    'useCreditcardComponent' => $this->isCreditcardComponentsEnabled(),
+                    'apitoken' => $this->getApiToken(),
+                    'environment' => $this->getEnvironment(),
+                    'locale' => $this->localeResolver->getLocale(),
                 ],
             ],
             ]
@@ -210,5 +214,37 @@ class ConnectConfigProvider implements
             }
         }
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCreditcardComponentsEnabled()
+    {
+        return (bool)$this->_scopeConfig->getValue(
+            'gateways/creditcard/creditcard_components_enabled',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getApiToken()
+    {
+        if ($this->isCreditcardComponentsEnabled()) {
+            return json_decode($this->_connect->getApiToken())->api_token;
+        }
+        return false;
+    }
+
+    public function getEnvironment()
+    {
+        $mspEnv = $this->_scopeConfig->getValue(
+            'multisafepay/connect/msp_env',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+
+        if ($mspEnv) {
+            return 'TEST';
+        }
+        return 'LIVE';
     }
 }

@@ -673,6 +673,7 @@
             <!-- Start Credit Card -->
             <creditcard>
                 <active>0</active>
+                <creditcard_components_enabled>false</creditcard_components_enabled>
                 <title>Credit Card</title>
                 <instructions>Credit Card</instructions>
                 <allowed_currency>EUR</allowed_currency>
