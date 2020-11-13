@@ -45,15 +45,15 @@ class Customfields
         return [
             [
                 "value" => 0,
-                "label" => 'Disabled'
+                "label" => __('Disabled')
             ],
             [
                 "value" => 1,
-                "label" => 'Mandatory'
+                "label" => __('Mandatory')
             ],
             [
                 "value" => 2,
-                "label" => 'Optional'
+                "label" => __('Optional')
             ]
         ];
     }
