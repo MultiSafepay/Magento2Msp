@@ -1,3 +1,15 @@
+## 1.14.1
+Release date: Nov 13th, 2020
+
+### Fixed
++ Fixed order item ids missing if an order was placed through adminhtml, graphql, restapi or soapapi - by Hexmage
++ Added translatable labels to config source models - by vmalyk
+
+### Changed
++ DAVAMS-309: Rebrand Klarna to Klarna - buy now, pay later
+
+***
+
 ## 1.14.0
 Release date: Sep 11th, 2020
 

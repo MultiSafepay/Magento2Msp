@@ -81,7 +81,7 @@ class Data
         'ing' => ['code' => 'INGHOME', 'name' => 'ING Home\'Pay', 'type' => 'gateways'],
         'cbc' => ['code' => 'CBC', 'name' => 'CBC', 'type' => 'gateways'],
         'kbc' => ['code' => 'KBC', 'name' => 'KBC', 'type' => 'gateways'],
-        'klarnainvoice' => ['code' => 'KLARNA', 'name' => 'Klarna', 'type' => 'gateways'],
+        'klarnainvoice' => ['code' => 'KLARNA', 'name' => 'Klarna - buy now, pay later', 'type' => 'gateways'],
         'maestro' => ['code' => 'MAESTRO', 'name' => 'Maestro', 'type' => 'gateways'],
         'mastercard' => ['code' => 'MASTERCARD', 'name' => 'Mastercard', 'type' => 'gateways'],
         'mspbanktransfer' => ['code' => 'BANKTRANS', 'name' => 'Bank transfer', 'type' => 'gateways'],

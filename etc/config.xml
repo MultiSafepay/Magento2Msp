@@ -228,10 +228,10 @@
                 <group>multisafepay_connect</group>
             </einvoice>
       
-            <!-- Start Klarna -->
+            <!-- Start Klarna - buy now, pay later -->
             <klarnainvoice>
                 <active>0</active>
-                <title>Klarna</title>
+                <title>Klarna - buy now, pay later</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>
@@ -673,6 +673,7 @@
             <!-- Start Credit Card -->
             <creditcard>
                 <active>0</active>
+                <creditcard_components_enabled>false</creditcard_components_enabled>
                 <title>Credit Card</title>
                 <instructions>Credit Card</instructions>
                 <allowed_currency>EUR</allowed_currency>
@@ -840,10 +841,10 @@
                 <group>multisafepay_connect</group>
             </einvoice>
       
-            <!-- Start Klarna -->
+            <!-- Start Klarna - buy now, pay later -->
             <klarnainvoice>
                 <active>0</active>
-                <title>Klarna</title>
+                <title>Klarna - buy now, pay later</title>
                 <instructions></instructions>
                 <allowed_currency>EUR</allowed_currency>
                 <allowed_groups>0,1,2,3</allowed_groups>

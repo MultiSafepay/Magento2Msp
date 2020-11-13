@@ -45,15 +45,15 @@ class Email
         return [
             [
                 "value" => "place_order",
-                "label" => "When placing the order"
+                "label" => __('When placing the order')
             ],
             [
                 "value" => "after_transaction",
-                "label" => "After transaction"
+                "label" => __('After transaction')
             ],
             [
                 "value" => "after_transaction_paid",
-                "label" => "After paid transaction"
+                "label" => __('After paid transaction')
             ],
         ];
     }

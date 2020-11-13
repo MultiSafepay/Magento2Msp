@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <tab id="multisafepay" translate="label" sortOrder="400">
-      <label>MultiSafepay (1.14.0)</label>
+      <label>MultiSafepay (1.14.1)</label>
     </tab>
     <section id="multisafepay" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
       <class>separator-top</class>
@@ -1088,9 +1088,9 @@
         </field>
       </group>
 
-      <!--Start Klarna -->
+      <!--Start Klarna - buy now, pay later -->
       <group id="klarnainvoice" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Klarna</label>
+        <label>Klarna - buy now, pay later</label>
         <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

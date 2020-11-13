@@ -535,6 +535,12 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             $type = 'redirect';
         }
 
+        $payload = null;
+        if ($this->_gatewayCode == "CREDITCARD" && !empty($params['payload'])) {
+            $type = 'direct';
+            $payload = $params['payload'];
+        }
+
         /** @var \Magento\Framework\Locale\Resolver $resolver */
         $resolver =$this->_localeResolver;
 
@@ -646,7 +652,7 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 "plugin" => [
                     "shop" => $magentoInfo->getName() . ' ' . $magentoInfo->getVersion() . ' ' . $magentoInfo->getEdition(),
                     "shop_version" => $magentoInfo->getVersion(),
-                    "plugin_version" => ' - Plugin 1.14.0',
+                    "plugin_version" => ' - Plugin 1.14.1',
                     "partner" => "MultiSafepay",
                 ],
                 "gateway_info" => [
@@ -654,6 +660,9 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
                 ],
                 "shopping_cart" => $shoppingCart,
                 "checkout_options" => $checkoutData,
+                'payment_data' => [
+                    'payload' => $payload,
+                ],
             ];
 
             $mspOrderDataObject = $this->dataObjectFactory->create();
@@ -728,6 +737,34 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
         return $issuers;
+    }
+
+    public function getApiToken()
+    {
+        $environment = $this->getMainConfigData('msp_env');
+
+        $api_key = null;
+
+        if ($environment == true) {
+            $this->_client->setApiKey($this->getMainConfigData('test_api_key'));
+            $api_key = $this->getMainConfigData('test_api_key');
+            $this->_client->setApiUrl('https://testapi.multisafepay.com/v1/connect/');
+        } else {
+            $this->_client->setApiKey($this->getMainConfigData('live_api_key'));
+            $api_key = $this->getMainConfigData('live_api_key');
+            $this->_client->setApiUrl('https://api.multisafepay.com/v1/connect/');
+        }
+
+        if (empty($api_key)) {
+            return false;
+        }
+
+        try {
+            $apiToken = $this->_client->processAPIRequest('GET', 'auth/api_token');
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            return false;
+        }
+        return $apiToken;
     }
 
     public function shipOrder($order)
