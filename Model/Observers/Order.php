@@ -31,21 +31,32 @@
 
 namespace MultiSafepay\Connect\Model\Observers;
 
-use Magento\Backend\App\Area\FrontNameResolver;
-use Magento\Catalog\Model\Product;
-use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Sales\Model\OrderRepository;
 use MultiSafepay\Connect\Helper\Data;
 use MultiSafepay\Connect\Model\Connect;
 
 class Order implements ObserverInterface
 {
+    /**
+     * @var Connect
+     */
     protected $_mspConnect;
+    /**
+     * @var State
+     */
     protected $_state;
+    /**
+     * @var Data
+     */
     protected $_mspData;
+    /**
+     * @var OrderRepository
+     */
+    protected $_orderRepository;
 
     /*
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -57,17 +68,20 @@ class Order implements ObserverInterface
      * @param State $state
      * @param Connect $connect
      * @param Data $data
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
         ManagerInterface $messageManager,
         State $state,
         Connect $connect,
-        Data $data
+        Data $data,
+        OrderRepository $orderRepository
     ) {
         $this->_messageManager = $messageManager;
         $this->_mspConnect = $connect;
         $this->_mspData = $data;
         $this->_state = $state;
+        $this->_orderRepository = $orderRepository;
     }
 
     /**
@@ -78,7 +92,7 @@ class Order implements ObserverInterface
     {
         $paymentMethod = $this->_mspConnect;
 
-        /** @var $order Mage_Sales_Model_Order */
+        /** @var \Magento\Sales\Model\Order $order  */
         $order = $observer->getEvent()->getOrder();
 
         $paymentMethod->_isAdmin = true;
@@ -100,6 +114,8 @@ class Order implements ObserverInterface
         $resetGateway = $paymentMethod->getMainConfigData('reset_paylink_gateway', $order->getStoreId());
 
         $paymentMethod->_manualGateway = $payment->_gatewayCode;
+
+        $this->_orderRepository->save($order);
 
         $transactionObject = $paymentMethod->transactionRequest($order, $resetGateway);
 

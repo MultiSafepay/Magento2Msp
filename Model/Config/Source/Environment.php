@@ -48,11 +48,11 @@ class Environment
         return [
             [
                 "value" => self::TEST_MODE,
-                "label" => "Test account"
+                "label" => __('Test account')
             ],
             [
                 "value" => self::LIVE_MODE,
-                "label" => "Live account"
+                "label" => __('Live account')
             ],
         ];
     }
