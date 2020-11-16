@@ -83,9 +83,9 @@ class Shipment implements ObserverInterface
         }
 
         $shipped = $paymentMethod->shipOrder($order);
-        if ($shipped['success']) {
+        if ($shipped) {
             $this->_messageManager->addSuccess(__('Your shipment has been processed. Your transaction has also been updated at MultiSafepay'));
-        } elseif ($shipped['error']) {
+        } else {
             $this->_messageManager->addError(__('Your shipment has been processed, but the transaction could not be updated at MultiSafepay. If needed you need to update your transaction manually using MultiSafepay Control'));
         }
         return $this;
