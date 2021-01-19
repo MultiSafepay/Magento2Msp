@@ -774,20 +774,23 @@ class Connect extends \Magento\Payment\Model\Method\AbstractMethod
         $transactionRepository = $this->_transactionRepositoryInterface;
         $transaction = $transactionRepository->getByTransactionId($transaction_id, $payment->getId(), $order->getId());
 
+        $shipped = [];
+        $shipped['success'] = false;
+        $shipped['error'] = false;
+
         if ($transaction == null) {
-            return true;
+            $shipped['error'] = true;
+            return $shipped;
         }
 
         $transaction_details = $transaction->getAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS);
 
-        $shipped = [];
-        $shipped['success'] = false;
-        $shipped['error'] = false;
         $payment = $order->getPayment()->getMethodInstance();
 
         //Check if the payment method is a MultiSafepay method. If its a MultiSafepay method then the payment object has a _gatewayCode property. So if it doesn't exist then return true to stop MultiSafepay shipment update but continue Magento shipment process.
         if (!property_exists($payment, '_gatewayCode')) {
-            return true;
+            $shipped['error'] = true;
+            return $shipped;
         }
 
         $environment = $this->getMainConfigData('msp_env');
