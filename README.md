@@ -2,9 +2,10 @@
   <img src="https://www.multisafepay.com/img/multisafepaylogo.svg" width="400px" position="center">
 </p>
 
-# MultiSafepay plugin for Magento 2
+# MultiSafepay plugin for Magento 2 (Deprecated)
 
-Easily integrate MultiSafepay payment solutions into your Magento 2 webshop with the free and completely new MultiSafepay Magento 2 plugin.
+:warning: This plugin is marked as deprecated and will not receive any significant new features in the future. 
+It has been replaced by our [New Magento 2 plugin](https://github.com/MultiSafepay/magento2). 
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/multisafepay/magento2msp.svg)](https://packagist.org/packages/multisafepay/magento2msp)
 [![Total Downloads](https://img.shields.io/packagist/dt/multisafepay/magento2msp.svg)](https://packagist.org/packages/multisafepay/magento2msp)
