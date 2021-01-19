@@ -79,7 +79,6 @@ define(
                 this.msp = new MultiSafepay({
                     env: configConnect.environment,
                     apiToken: configConnect.apitoken,
-                    // envApiEndpoint: 'https://devapi.multisafepay.com/v1/',
                     order: {
                         customer: {
                             country: quote.billingAddress().countryId,
@@ -89,7 +88,7 @@ define(
                         amount: quote.totals()['base_grand_total'] * 100,
                         template: {
                             settings: {
-                                embed_mode: false
+                                embed_mode: true
                             }
                         }
                     }
