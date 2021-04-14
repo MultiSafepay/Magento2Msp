@@ -1,3 +1,14 @@
+***
+
+## 1.14.2
+Release date: Apr 13th, 2021
+
+### Added
++ Added notification about plugin deprecation in admin panel and system configuration page
+
+***
+
+
 ## 1.14.1
 Release date: Nov 13th, 2020
 
