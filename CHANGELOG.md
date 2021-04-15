@@ -1,13 +1,18 @@
 ***
 
 ## 1.14.2
-Release date: Apr 13th, 2021
+Release date: Apr 15th, 2021
+
+### Changed
++ Mark plugin as deprecated
 
 ### Added
 + Added notification about plugin deprecation in admin panel and system configuration page
 
-***
+### Fixed
++ Unable to save shipment in combination with PHP7.4
 
+***
 
 ## 1.14.1
 Release date: Nov 13th, 2020
