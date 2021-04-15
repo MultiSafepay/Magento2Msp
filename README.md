@@ -2,9 +2,10 @@
   <img src="https://www.multisafepay.com/img/multisafepaylogo.svg" width="400px" position="center">
 </p>
 
-# MultiSafepay plugin for Magento 2
+# MultiSafepay plugin for Magento 2 (Deprecated)
 
-Easily integrate MultiSafepay payment solutions into your Magento 2 webshop with the free and completely new MultiSafepay Magento 2 plugin.
+:warning: This plugin is marked as deprecated and will not receive any significant new features in the future. 
+It has been replaced by our [New Magento 2 plugin](https://github.com/MultiSafepay/magento2). 
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/multisafepay/magento2msp.svg)](https://packagist.org/packages/multisafepay/magento2msp)
 [![Total Downloads](https://img.shields.io/packagist/dt/multisafepay/magento2msp.svg)](https://packagist.org/packages/multisafepay/magento2msp)
@@ -49,15 +50,8 @@ After these changes, the template should be tested to confirm it is working.
 *Note*: This can also be implemented directly in the email template files.
 
 ## Support
-You can create issues on our repository. If you need any additional help or support, please contact <a href="mailto:integration@multisafepay.com">integration@multisafepay.com</a>
-
-We are also available on our Magento Slack channel [#multisafepay-payments](https://magentocommeng.slack.com/messages/multisafepay-payments/). Feel free to start a conversation or provide suggestions as to how we can refine our Magento 2 extension.
-
-## A gift for your contribution
-We look forward to receiving your input. Have you seen an opportunity to change things for better? We would like to invite you to create a pull request on GitHub.
-Are you missing something and would like us to fix it? Suggest an improvement by sending us an [email](mailto:integration@multisafepay.com) or by creating an issue.
-
-What will you get in return? A brand new designed MultiSafepay t-shirt which will make you part of the team!
+:warning: This plugin is deprecated and we are not providing support for it anymore. 
+Please, upgrade to our [New Magento 2 plugin](https://github.com/MultiSafepay/magento2). 
 
 ## License
 [Open Software License (OSL 3.0)](https://github.com/MultiSafepay/Magento2Msp/blob/master/LICENSE.md)

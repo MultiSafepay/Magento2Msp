@@ -230,7 +230,7 @@ class ConnectConfigProvider implements
     public function getApiToken()
     {
         if ($this->isCreditcardComponentsEnabled()) {
-            return json_decode($this->_connect->getApiToken())->api_token;
+            return json_decode($this->_connect->getApiToken())->data->api_token;
         }
         return false;
     }
